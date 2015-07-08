@@ -28,3 +28,5 @@ proguard/
 
 # Android Studio
 .idea/
+# Windows thumbnail db
+.DS_Store
