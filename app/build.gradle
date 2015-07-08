@@ -5,8 +5,8 @@ android {
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "com.easylinknj"
-        minSdkVersion 22
+        applicationId "com.suanduoyi.easylinknj"
+        minSdkVersion 10
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
