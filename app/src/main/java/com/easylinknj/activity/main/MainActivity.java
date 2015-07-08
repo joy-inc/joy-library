@@ -1,6 +1,8 @@
-package com.easylinknj.activity;
+package com.easylinknj.activity.main;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -84,4 +86,10 @@ public class MainActivity extends Activity {
         sdvTest.setImageURI(Uri.parse("http://inthecheesefactory.com/uploads/source/glidepicasso/cover.jpg"));
     }
 
+    public static void startActivity(Activity activity){
+
+        Intent intent = new Intent();
+        intent.setClass(activity, MainActivity.class);
+        activity.startActivity(intent);
+    }
 }
