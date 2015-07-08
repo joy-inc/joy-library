@@ -1,6 +1,7 @@
 package com.easylinknj.activity;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -13,6 +14,7 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.easylinknj.R;
 import com.easylinknj.utils.CircleTransform;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 /**
  * Created by KEVIN.DAI on 15/7/8.
@@ -75,8 +77,11 @@ public class MainActivity extends Activity {
         ImageView ivTest = (ImageView) findViewById(R.id.ivTest);
         Glide.with(this)
                 .load("http://inthecheesefactory.com/uploads/source/glidepicasso/cover.jpg")
-                .transform(new CircleTransform(this))
+                .transform(new CircleTransform(this))// 转换为圆图
                 .into(ivTest);
+
+        SimpleDraweeView sdvTest = (SimpleDraweeView) findViewById(R.id.sdvTest);
+        sdvTest.setImageURI(Uri.parse("http://inthecheesefactory.com/uploads/source/glidepicasso/cover.jpg"));
     }
 
 }

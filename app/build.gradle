@@ -26,4 +26,6 @@ dependencies {
     compile 'com.android.support:support-v4:22.0.0'
 
     compile 'com.mcxiaoke.volley:library:1.0.16'
+
+    compile 'com.facebook.fresco:fresco:0.5.3'
 }
