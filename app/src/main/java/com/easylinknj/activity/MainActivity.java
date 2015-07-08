@@ -12,6 +12,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.easylinknj.R;
+import com.easylinknj.utils.CircleTransform;
 
 /**
  * Created by KEVIN.DAI on 15/7/8.
@@ -74,6 +75,7 @@ public class MainActivity extends Activity {
         ImageView ivTest = (ImageView) findViewById(R.id.ivTest);
         Glide.with(this)
                 .load("http://inthecheesefactory.com/uploads/source/glidepicasso/cover.jpg")
+                .transform(new CircleTransform(this))
                 .into(ivTest);
     }
 
