@@ -2,7 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#ffffff">
+
+    <include
+        android:id="@+id/tbMain"
+        layout="@layout/view_titlebar" />
 
     <ImageView
         android:id="@+id/ivTest"
@@ -10,7 +15,8 @@
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/sdvTest"
@@ -20,9 +26,19 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:background="#ffff00"
+        android:visibility="gone"
         fresco:roundAsCircle="true"
         fresco:roundWithOverlayColor="#ff0000"
         fresco:roundedCornerRadius="10dp"
         fresco:roundingBorderColor="#00ff00"
         fresco:roundingBorderWidth="1dp" />
+
+    <ListView
+        android:id="@+id/lvCity"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tbMain"
+        android:divider="@color/black_trans12"
+        android:dividerHeight="1dp"
+        android:listSelector="@android:color/transparent" />
 </RelativeLayout>

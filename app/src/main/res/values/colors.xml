@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- title bar -->
+    <color name="bg_title_bar">#CE93D8</color>
+    <!-- status bar -->
+    <color name="bg_status_bar">#CC65DD</color>
+
+    <color name="black_trans6">#0F000000</color>
+    <color name="black_trans8">#14000000</color>
+    <color name="black_trans10">#19000000</color>
+    <color name="black_trans12">#1E000000</color>
+    <color name="black_trans26">#42000000</color>
+    <color name="black_trans30">#4D000000</color>
+    <color name="black_trans50">#80000000</color>
+    <color name="black_trans54">#89000000</color>
+    <color name="black_trans87">#dd000000</color>
+
+    <color name="white_trans50">#7FFFFFFF</color>
+    <color name="white_trans90">#E5FFFFFF</color>
+    <color name="white_trans54">#8aFFFFFF</color>
+    <color name="white_trans87">#deFFFFFF</color>
+    <color name="white_trans70">#BBFFFFFF</color>
+</resources>

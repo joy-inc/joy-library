@@ -1,4 +1,4 @@
-package com.easylinknj.utils;
+package com.easylinknj.utils.glide;
 
 import android.content.Context;
 
@@ -24,5 +24,4 @@ public class GlideConfiguration implements GlideModule {
 
         // register ModelLoaders here.
     }
-
 }

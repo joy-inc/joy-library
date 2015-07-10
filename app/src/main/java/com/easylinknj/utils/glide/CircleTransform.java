@@ -1,4 +1,4 @@
-package com.easylinknj.utils;
+package com.easylinknj.utils.glide;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -57,5 +57,4 @@ public class CircleTransform extends BitmapTransformation {
 
         return getClass().getName();
     }
-
 }

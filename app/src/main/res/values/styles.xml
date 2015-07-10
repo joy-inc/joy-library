@@ -1,8 +1,10 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="ex_theme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:statusBarColor" tools:targetApi="21">@color/bg_status_bar</item>
+        <item name="android:colorControlHighlight" tools:targetApi="21">@color/bg_title_bar</item>
+        <item name="android:colorEdgeEffect" tools:targetApi="21">@color/bg_title_bar</item>
     </style>
 
 </resources>
