@@ -8,6 +8,8 @@ import android.text.TextUtils;
 import com.easylinknj.BuildConfig;
 import com.easylinknj.EasyApplication;
 
+import java.lang.reflect.Field;
+
 /**
  * Created by KEVIN.DAI on 15/7/10.
  */
@@ -38,5 +40,29 @@ public class DeviceUtil {
         }
 
         return imei;
+    }
+
+    /**
+     * @return 状态栏的高度
+     */
+    public static int getStatusBarHeight() {
+
+        int height = 0;
+
+        try {
+
+            Class<?> c = Class.forName("com.android.internal.R$dimen");
+            Object obj = c.newInstance();
+            Field field = c.getField("status_bar_height");
+            int id = Integer.parseInt(field.get(obj).toString());
+            height = EasyApplication.getContext().getResources().getDimensionPixelSize(id);
+
+        } catch (Exception e) {
+
+            if (BuildConfig.DEBUG)
+                e.printStackTrace();
+        }
+
+        return height;
     }
 }

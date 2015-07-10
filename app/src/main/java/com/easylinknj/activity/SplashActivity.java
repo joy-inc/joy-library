@@ -12,7 +12,7 @@ import com.easylinknj.activity.main.MainActivity;
 /**
  * 闪屏页面
  */
-public class SplashActivity extends Activity{
+public class SplashActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +34,9 @@ public class SplashActivity extends Activity{
 
                     finishToEnterActivity();
                 }
-            };
+            }
+
+            ;
 
         }.sendEmptyMessageDelayed(0, 2000);
     }
