@@ -3,17 +3,18 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".EasyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/ex_theme">
+        android:theme="@style/ex_base_theme">
         <activity
             android:name=".activity.SplashActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/ex_base_theme">
+            android:theme="@style/theme_translucent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,6 +24,13 @@
         <activity
             android:name=".activity.main.MainActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.main.DetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.main.FullScreenActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/theme_translucent" />
     </application>
 
 </manifest>

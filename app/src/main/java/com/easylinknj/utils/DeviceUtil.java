@@ -1,6 +1,9 @@
 package com.easylinknj.utils;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Build;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -64,5 +67,39 @@ public class DeviceUtil {
         }
 
         return height;
+    }
+
+    public static int getScreenWidth() {
+
+        return EasyApplication.getContext().getResources().getDisplayMetrics().widthPixels;
+    }
+
+    public static int getScreenHeight() {
+
+        return EasyApplication.getContext().getResources().getDisplayMetrics().heightPixels;
+    }
+
+    public static boolean isNetworkEnable() {
+
+        ConnectivityManager conManager = (ConnectivityManager) EasyApplication.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = conManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isAvailable();
+    }
+
+    public static boolean isNetworkDisable() {
+
+        ConnectivityManager conManager = (ConnectivityManager) EasyApplication.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = conManager.getActiveNetworkInfo();
+        return networkInfo == null || !networkInfo.isAvailable();
+    }
+
+    public static boolean isLollipopOrUpper() {
+
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+    }
+
+    public static boolean isLollipopLower() {
+
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP;
     }
 }

@@ -3,9 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/bg_title_bar"
-        android:scaleType="centerCrop" />
+        android:background="@color/color_primary"
+        android:gravity="center"
+        android:text="splashActivity"
+        android:textSize="50dp"
+        android:textStyle="bold" />
 </FrameLayout>

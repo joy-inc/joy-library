@@ -3,12 +3,11 @@ package com.easylinknj.activity.main;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-import com.easylinknj.BuildConfig;
 import com.easylinknj.R;
 import com.easylinknj.adapter.CityAdapter;
 import com.easylinknj.bean.HotCityItem;
@@ -48,49 +47,30 @@ public class MainActivity extends BaseActivity<List<HotCityItem>> {
     @Override
     protected void initTitleView() {
 
+        setTitleText("列表页");
     }
 
     @Override
     protected void initContentView() {
 
-//        // Glide
-//        ImageView ivTest = (ImageView) findViewById(R.id.ivTest);
-//        Glide.with(this)
-//                .load("http://inthecheesefactory.com/uploads/source/glidepicasso/cover.jpg")
-//                .transform(new CircleTransform(this))// 转换为圆图
-//                .into(ivTest);
-//
-//        // Fresco
-//        SimpleDraweeView sdvTest = (SimpleDraweeView) findViewById(R.id.sdvTest);
-//        sdvTest.setImageURI(Uri.parse("http://inthecheesefactory.com/uploads/source/glidepicasso/cover.jpg"));
-
         ListView lvCity = (ListView) findViewById(R.id.lvCity);
         mCityAdapter = new CityAdapter();
-        lvCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvCity.setAdapter(mCityAdapter);
+        lvCity.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                startActivity(MainActivity.this);
-
+                View v = view.findViewById(R.id.sdvPhoto);
+                String url = mCityAdapter.getItem(position).getPhoto();
+                DetailActivity.startActivity(MainActivity.this, v, url);
             }
         });
-//        mCityAdapter.setOnItemViewClickListener(new OnItemViewClickListener() {
-//
-//            @Override
-//            public void onItemViewClick(int position, View clickView) {
-//
-//                startActivity(MainActivity.this);
-//            }
-//        });
-        lvCity.setAdapter(mCityAdapter);
     }
 
     @Override
-    protected void onSuccessResponse(List<HotCityItem> datas) {
+    protected void onObjResponse(List<HotCityItem> datas) {
 
-        if (BuildConfig.DEBUG)
-            Log.d("MainActivity", "~~onSuccessResponse: " + datas.size());
         mCityAdapter.setData(datas);
         mCityAdapter.notifyDataSetChanged();
     }
@@ -98,20 +78,14 @@ public class MainActivity extends BaseActivity<List<HotCityItem>> {
     @Override
     protected void onFailedResponse(String msg) {
 
-        if (BuildConfig.DEBUG)
-            Log.d("MainActivity", "~~onErrorResponse: ");
     }
 
     public static void startActivity(Activity act) {
 
-        Intent intent = new Intent();
-        intent.setClass(act, MainActivity.class);
+        if (act == null)
+            return;
+
+        Intent intent = new Intent(act, MainActivity.class);
         act.startActivity(intent);
-    }
-
-    @Override
-    protected void onDestroy() {
-
-        super.onDestroy();
     }
 }

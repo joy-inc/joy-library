@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- title bar -->
-    <color name="bg_title_bar">#CE93D8</color>
-    <!-- status bar -->
-    <color name="bg_status_bar">#CC65DD</color>
+    <color name="color_primary">#4054b2</color>
+    <color name="color_accent">#f74782</color>
 
     <color name="black_trans6">#0F000000</color>
     <color name="black_trans8">#14000000</color>
@@ -20,4 +19,7 @@
     <color name="white_trans54">#8aFFFFFF</color>
     <color name="white_trans87">#deFFFFFF</color>
     <color name="white_trans70">#BBFFFFFF</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
 </resources>

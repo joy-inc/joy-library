@@ -1,6 +1,5 @@
 package com.easylinknj.activity;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,7 +21,6 @@ public class SplashActivity extends Activity {
         delayStartMainActivity();
     }
 
-    @SuppressLint("HandlerLeak")
     private void delayStartMainActivity() {
 
         new Handler() {
@@ -35,9 +33,6 @@ public class SplashActivity extends Activity {
                     finishToEnterActivity();
                 }
             }
-
-            ;
-
         }.sendEmptyMessageDelayed(0, 2000);
     }
 
