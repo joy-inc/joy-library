@@ -1,2 +1,2 @@
 # EasyLinkNJ
-易中联农机专业合作社
+Android快速开发框架
