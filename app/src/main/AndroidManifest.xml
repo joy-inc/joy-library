@@ -22,10 +22,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.main.MainActivity"
+            android:name=".activity.main.ListTestActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.main.DetailActivity"
+            android:name=".activity.main.DetailTestActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.main.FullScreenActivity"

@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="ex_base_theme" parent="android:Theme.Material" tools:targetApi="21">
+    <style name="ex_base_theme">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@color/white</item>
         <item name="android:windowTranslucentStatus" tools:targetApi="19">true</item>

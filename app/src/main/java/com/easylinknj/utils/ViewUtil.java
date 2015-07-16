@@ -1,7 +1,6 @@
 package com.easylinknj.utils;
 
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.easylinknj.EasyApplication;
+import com.easylinknj.R;
 
 public class ViewUtil {
 
@@ -23,13 +23,14 @@ public class ViewUtil {
 
         ListView lv = new ListView(context);
         lv.setId(id);
-        lv.setDividerHeight(0);
         lv.setDivider(null);
+        lv.setDividerHeight(0);
         lv.setFadingEdgeLength(0);
-        lv.setFooterDividersEnabled(false);
         lv.setHeaderDividersEnabled(false);
-        lv.setSelector(new ColorDrawable(0X00000000));
+        lv.setFooterDividersEnabled(false);
         lv.setScrollingCacheEnabled(false);
+        if (DeviceUtil.isLollipopLower())
+            lv.setSelector(context.getResources().getDrawable(R.drawable.sel_listview_item));
         return lv;
     }
 

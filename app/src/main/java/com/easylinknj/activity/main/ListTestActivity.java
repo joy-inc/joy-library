@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by KEVIN.DAI on 15/7/8.
  */
-public class MainActivity extends BaseActivity<List<HotCityItem>> {
+public class ListTestActivity extends BaseLvActivity<List<HotCityItem>> {
 
     private CityAdapter mCityAdapter;
 
@@ -63,7 +63,7 @@ public class MainActivity extends BaseActivity<List<HotCityItem>> {
 
                 View v = view.findViewById(R.id.sdvPhoto);
                 String url = mCityAdapter.getItem(position).getPhoto();
-                DetailActivity.startActivity(MainActivity.this, v, url);
+                DetailTestActivity.startActivity(ListTestActivity.this, v, url);
             }
         });
     }
@@ -85,7 +85,7 @@ public class MainActivity extends BaseActivity<List<HotCityItem>> {
         if (act == null)
             return;
 
-        Intent intent = new Intent(act, MainActivity.class);
+        Intent intent = new Intent(act, ListTestActivity.class);
         act.startActivity(intent);
     }
 }

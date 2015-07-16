@@ -6,7 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.easylinknj.R;
-import com.easylinknj.activity.main.MainActivity;
+import com.easylinknj.activity.main.ListTestActivity;
 
 /**
  * 闪屏页面
@@ -38,7 +38,7 @@ public class SplashActivity extends Activity {
 
     private void finishToEnterActivity() {
 
-        MainActivity.startActivity(this);
+        ListTestActivity.startActivity(this);
         finish();
     }
 }

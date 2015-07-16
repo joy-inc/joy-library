@@ -13,7 +13,7 @@ import com.easylinknj.R;
 /**
  * Created by KEVIN.DAI on 15/7/11.
  */
-public class DetailActivity extends BaseActivity<Object> {
+public class DetailTestActivity extends BaseActivity<Object> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +62,7 @@ public class DetailActivity extends BaseActivity<Object> {
             @Override
             public void onClick(View v) {
 
-                FullScreenActivity.startActivity(DetailActivity.this);
+                FullScreenActivity.startActivity(DetailTestActivity.this);
             }
         });
     }
@@ -92,7 +92,7 @@ public class DetailActivity extends BaseActivity<Object> {
         if (act == null || view == null)
             return;
 
-        Intent intent = new Intent(act, DetailActivity.class);
+        Intent intent = new Intent(act, DetailTestActivity.class);
         intent.putExtra("photoUrl", photoUrl);
 
         if (isLollipopOrUpper()) {

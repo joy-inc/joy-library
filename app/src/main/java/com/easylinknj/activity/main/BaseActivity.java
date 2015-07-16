@@ -3,9 +3,6 @@ package com.easylinknj.activity.main;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -38,7 +35,6 @@ public abstract class BaseActivity<T> extends Activity implements DimenCons {
     private TextView mTvTitle;
     private ImageView mIvTip;
     private ProgressBar mProgressbar;
-    private SwipeRefreshLayout mSwipeRefreshWidget;
     private int mTipResId;
     private final int FAILED_RES_ID = R.mipmap.ic_net_error;
     private final int DISABLED_RES_ID = R.mipmap.ic_tip_null;
@@ -83,7 +79,9 @@ public abstract class BaseActivity<T> extends Activity implements DimenCons {
         addTitleView(flFrame);
 
         // content view
-        addContentViewWithSwipeRefresh(contentView, flFrame);
+        LayoutParams contentLp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        contentLp.topMargin = STATUS_BAR_HEIGHT + TITLE_BAR_HEIGHT;
+        flFrame.addView(contentView, contentLp);
 
         // tip view
         addTipView(flFrame);
@@ -101,33 +99,6 @@ public abstract class BaseActivity<T> extends Activity implements DimenCons {
         for (int i = 0; i < mVgTitleBar.getChildCount(); i++)
             mVgTitleBar.getChildAt(i).setTranslationY(STATUS_BAR_HEIGHT / 2);// 纵向正偏移，使其纵向居中
         frame.addView(mVgTitleBar, new LayoutParams(LayoutParams.MATCH_PARENT, STATUS_BAR_HEIGHT + TITLE_BAR_HEIGHT));
-    }
-
-    private void addContentViewWithSwipeRefresh(View contentView, ViewGroup frame) {
-
-        // swipe refresh widget
-        mSwipeRefreshWidget = new SwipeRefreshLayout(this);
-        mSwipeRefreshWidget.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
-        mSwipeRefreshWidget.setOnRefreshListener(new OnRefreshListener() {// default listener
-
-            @Override
-            public void onRefresh() {
-
-                new Handler().postDelayed(new Runnable() {
-
-                    @Override
-                    public void run() {
-
-                        stopSwipeRefresh();
-                    }
-                }, 5000);
-            }
-        });
-        mSwipeRefreshWidget.addView(contentView);
-
-        LayoutParams contentLp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        contentLp.topMargin = STATUS_BAR_HEIGHT + TITLE_BAR_HEIGHT;
-        frame.addView(mSwipeRefreshWidget, contentLp);
     }
 
     private void addTipView(ViewGroup frame) {
@@ -217,36 +188,6 @@ public abstract class BaseActivity<T> extends Activity implements DimenCons {
         setTitleText(getString(resId));
     }
 
-    protected void setColorSchemeResources(int... colorResIds) {
-
-        mSwipeRefreshWidget.setColorSchemeResources(colorResIds);
-    }
-
-    protected void setOnRefreshListener(OnRefreshListener lisn) {
-
-        mSwipeRefreshWidget.setOnRefreshListener(lisn);
-    }
-
-    protected boolean isSwipeRefreshing() {
-
-        return mSwipeRefreshWidget.isRefreshing();
-    }
-
-    protected void startSwipeRefresh() {
-
-        if (isSwipeRefreshing())
-            return;
-
-        mSwipeRefreshWidget.setRefreshing(true);
-    }
-
-    protected void stopSwipeRefresh() {
-
-        if (!isSwipeRefreshing())
-            return;
-
-        mSwipeRefreshWidget.setRefreshing(false);
-    }
 
     protected abstract void initData();
 
