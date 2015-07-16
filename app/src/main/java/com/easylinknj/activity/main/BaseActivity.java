@@ -1,12 +1,12 @@
 package com.easylinknj.activity.main;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -14,6 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -36,7 +37,7 @@ public abstract class BaseActivity<T> extends Activity implements DimenCons {
     private ViewGroup mVgTitleBar;
     private TextView mTvTitle;
     private ImageView mIvTip;
-    private ProgressDialog mProgressDialog;
+    private ProgressBar mProgressbar;
     private SwipeRefreshLayout mSwipeRefreshWidget;
     private int mTipResId;
     private final int FAILED_RES_ID = R.mipmap.ic_net_error;
@@ -98,7 +99,7 @@ public abstract class BaseActivity<T> extends Activity implements DimenCons {
         mVgTitleBar = (ViewGroup) inflateLayout(R.layout.view_titlebar);
         mTvTitle = (TextView) mVgTitleBar.findViewById(R.id.tvTitle);
         for (int i = 0; i < mVgTitleBar.getChildCount(); i++)
-            mVgTitleBar.getChildAt(i).setTranslationY(STATUS_BAR_HEIGHT / 2);
+            mVgTitleBar.getChildAt(i).setTranslationY(STATUS_BAR_HEIGHT / 2);// 纵向正偏移，使其纵向居中
         frame.addView(mVgTitleBar, new LayoutParams(LayoutParams.MATCH_PARENT, STATUS_BAR_HEIGHT + TITLE_BAR_HEIGHT));
     }
 
@@ -147,13 +148,11 @@ public abstract class BaseActivity<T> extends Activity implements DimenCons {
 
     private void addLoadingView(ViewGroup frame) {
 
-        mProgressDialog = new ProgressDialog(this, android.R.style.Theme_Material_Light);
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-
-//        mIvLoading = new ImageView(this);
-//        hideImageView(mIvLoading);
-//        mIvLoading.setScaleType(ScaleType.CENTER_INSIDE);
-//        frame.addView(mIvLoading, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, Gravity.CENTER));
+        mProgressbar = new ProgressBar(this);
+        mProgressbar.setIndeterminate(true);
+        mProgressbar.setTranslationY(STATUS_BAR_HEIGHT);// 纵向正偏移，使其纵向居中
+        hideView(mProgressbar);// 默认隐藏
+        frame.addView(mProgressbar, new LayoutParams(DP_1_PX * 80, DP_1_PX * 80, Gravity.CENTER));
     }
 
     protected void onFrameTipViewClick() {
@@ -189,20 +188,12 @@ public abstract class BaseActivity<T> extends Activity implements DimenCons {
 
     protected void showLoading() {
 
-        mProgressDialog.show();
-
-//        showImageView(mIvLoading, android.R.drawable.);
-//        Animation anim = AnimationUtils.loadAnimation(this, R.anim.anim_rotate);
-//        anim.setInterpolator(new LinearInterpolator());
-//        mIvLoading.startAnimation(anim);
+        showView(mProgressbar);
     }
 
     protected void hideLoading() {
 
-        mProgressDialog.dismiss();
-
-//        mIvLoading.clearAnimation();
-//        hideImageView(mIvLoading);
+        goneView(mProgressbar);
     }
 
     protected void setTitleBackgroundColor(int color) {

@@ -30,6 +30,4 @@ dependencies {
     compile 'com.facebook.fresco:fresco:0.5.3'
 
     compile 'com.alibaba:fastjson:1.2.6'
-
-    compile 'com.android.support:appcompat-v7:22.2.0'
 }

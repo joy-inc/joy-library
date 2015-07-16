@@ -19,6 +19,7 @@
         android:background="@drawable/info_background"
         android:gravity="center"
         android:text="GO"
+        android:textColor="@color/white_trans87"
         android:textSize="25dp"
         android:textStyle="bold"
         android:transitionName="@string/detail_2_fullscreen" />
