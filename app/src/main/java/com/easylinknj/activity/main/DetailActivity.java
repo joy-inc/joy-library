@@ -23,6 +23,15 @@ public class DetailActivity extends BaseActivity<Object> {
     }
 
     @Override
+    protected void onPause() {
+
+        super.onPause();
+        if (isFinishing()) {
+
+        }
+    }
+
+    @Override
     protected void onDestroy() {
 
         super.onDestroy();
@@ -43,7 +52,10 @@ public class DetailActivity extends BaseActivity<Object> {
     protected void initContentView() {
 
         ImageView ivPhoto = (ImageView) findViewById(R.id.ivDetailPhoto);
-        Glide.with(this).load(getIntent().getStringExtra("photoUrl")).into(ivPhoto);
+        Glide.with(this)
+                .load(getIntent().getStringExtra("photoUrl"))
+                .placeholder(R.color.transparent)
+                .into(ivPhoto);
 
         findViewById(R.id.tvTest).setOnClickListener(new View.OnClickListener() {
 
@@ -53,6 +65,12 @@ public class DetailActivity extends BaseActivity<Object> {
                 FullScreenActivity.startActivity(DetailActivity.this);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        super.onBackPressed();
     }
 
     @Override

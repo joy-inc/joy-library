@@ -133,7 +133,7 @@ public abstract class BaseActivity<T> extends Activity implements DimenCons {
     private void addTipView(ViewGroup frame) {
 
         mIvTip = new ImageView(this);
-        hideImageView(mIvTip);
+        mIvTip.setTranslationY(STATUS_BAR_HEIGHT);// 纵向正偏移，使其纵向居中
         mIvTip.setScaleType(ScaleType.CENTER_INSIDE);
         mIvTip.setOnClickListener(new OnClickListener() {
 
@@ -143,14 +143,15 @@ public abstract class BaseActivity<T> extends Activity implements DimenCons {
                 onFrameTipViewClick();
             }
         });
+        hideImageView(mIvTip);
         frame.addView(mIvTip, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
     }
 
     private void addLoadingView(ViewGroup frame) {
 
         mProgressbar = new ProgressBar(this);
-        mProgressbar.setIndeterminate(true);
         mProgressbar.setTranslationY(STATUS_BAR_HEIGHT);// 纵向正偏移，使其纵向居中
+        mProgressbar.setIndeterminate(true);
         hideView(mProgressbar);// 默认隐藏
         frame.addView(mProgressbar, new LayoutParams(DP_1_PX * 80, DP_1_PX * 80, Gravity.CENTER));
     }
