@@ -1,4 +1,6 @@
-package com.easylinknj.adapter;
+package com.easylinknj.adapter.frame;
+
+import com.easylinknj.adapter.frame.ExViewHolder;
 
 public abstract class ExViewHolderBase implements ExViewHolder {
 

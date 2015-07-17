@@ -1,4 +1,4 @@
-package com.easylinknj.adapter;
+package com.easylinknj.adapter.frame;
 
 import android.view.View;
 

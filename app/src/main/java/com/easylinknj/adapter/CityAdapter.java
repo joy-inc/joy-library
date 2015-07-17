@@ -5,6 +5,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.easylinknj.R;
+import com.easylinknj.adapter.frame.ExAdapter;
+import com.easylinknj.adapter.frame.ExViewHolder;
+import com.easylinknj.adapter.frame.ExViewHolderBase;
 import com.easylinknj.bean.HotCityItem;
 import com.facebook.drawee.view.SimpleDraweeView;
 
@@ -27,7 +30,7 @@ public class CityAdapter extends ExAdapter<HotCityItem> {
         @Override
         public int getConvertViewRid() {
 
-            return R.layout.item_list;
+            return R.layout.item_listview;
         }
 
         @Override

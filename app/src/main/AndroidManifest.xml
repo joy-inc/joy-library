@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:theme="@style/ex_base_theme">
         <activity
-            android:name=".activity.SplashActivity"
+            android:name=".activity.main.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/theme_translucent">
             <intent-filter>

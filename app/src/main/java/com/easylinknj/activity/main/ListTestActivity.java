@@ -2,13 +2,12 @@ package com.easylinknj.activity.main;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
 
 import com.easylinknj.R;
+import com.easylinknj.activity.frame.BaseHttpLvActivity;
 import com.easylinknj.adapter.CityAdapter;
 import com.easylinknj.bean.HotCityItem;
 import com.easylinknj.httptask.TestHtpUtil;
@@ -18,30 +17,19 @@ import java.util.List;
 /**
  * Created by KEVIN.DAI on 15/7/8.
  */
-public class ListTestActivity extends BaseLvActivity<List<HotCityItem>> {
-
-    private CityAdapter mCityAdapter;
+public class ListTestActivity extends BaseHttpLvActivity<List<HotCityItem>> {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void finish() {
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.act_main);
-    }
-
-    @Override
-    protected void onPause() {
-
-        super.onPause();
-        if (isFinishing())
-            if (mReqQueue != null)
-                mReqQueue.cancelAll(0);
+        removeRequestFromQueue(0);
+        super.finish();
     }
 
     @Override
     protected void initData() {
 
-        executeAPI(TestHtpUtil.getTestUrl(), 0, HotCityItem.class);
+        addRequest2Queue(TestHtpUtil.getTestUrl(), 0, HotCityItem.class);
     }
 
     @Override
@@ -53,31 +41,24 @@ public class ListTestActivity extends BaseLvActivity<List<HotCityItem>> {
     @Override
     protected void initContentView() {
 
-        ListView lvCity = (ListView) findViewById(R.id.lvCity);
-        mCityAdapter = new CityAdapter();
-        lvCity.setAdapter(mCityAdapter);
-        lvCity.setOnItemClickListener(new OnItemClickListener() {
+        setAdapter(new CityAdapter());
+        setOnItemClickListener(new OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 View v = view.findViewById(R.id.sdvPhoto);
-                String url = mCityAdapter.getItem(position).getPhoto();
+                String url = ((CityAdapter) getAdapter()).getItem(position).getPhoto();
                 DetailTestActivity.startActivity(ListTestActivity.this, v, url);
             }
         });
     }
 
     @Override
-    protected void onObjResponse(List<HotCityItem> datas) {
+    protected void onHttpFailed(String msg) {
 
-        mCityAdapter.setData(datas);
-        mCityAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    protected void onFailedResponse(String msg) {
-
+//        super.onHttpFailed(msg);
+        showToast("~~" + msg);
     }
 
     public static void startActivity(Activity act) {

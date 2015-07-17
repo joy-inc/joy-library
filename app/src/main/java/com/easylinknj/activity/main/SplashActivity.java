@@ -1,4 +1,4 @@
-package com.easylinknj.activity;
+package com.easylinknj.activity.main;
 
 import android.app.Activity;
 import android.os.Bundle;

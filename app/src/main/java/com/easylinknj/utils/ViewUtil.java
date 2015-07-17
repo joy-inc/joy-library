@@ -1,38 +1,14 @@
 package com.easylinknj.utils;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ListView;
 
 import com.easylinknj.EasyApplication;
-import com.easylinknj.R;
 
 public class ViewUtil {
-
-    /**
-     * 获取ListView，该ListView对公共的样式做了清除
-     *
-     * @param context
-     * @return
-     */
-    public static ListView getCleanListView(Context context, int id) {
-
-        ListView lv = new ListView(context);
-        lv.setId(id);
-        lv.setDivider(null);
-        lv.setDividerHeight(0);
-        lv.setFadingEdgeLength(0);
-        lv.setHeaderDividersEnabled(false);
-        lv.setFooterDividersEnabled(false);
-        lv.setScrollingCacheEnabled(false);
-        if (DeviceUtil.isLollipopLower())
-            lv.setSelector(context.getResources().getDrawable(R.drawable.sel_listview_item));
-        return lv;
-    }
 
     public static void showView(View v) {
 

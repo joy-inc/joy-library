@@ -9,32 +9,18 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.easylinknj.R;
+import com.easylinknj.activity.frame.BaseUiActivity;
 
 /**
  * Created by KEVIN.DAI on 15/7/11.
  */
-public class DetailTestActivity extends BaseActivity<Object> {
+public class DetailTestActivity extends BaseUiActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_detail);
-    }
-
-    @Override
-    protected void onPause() {
-
-        super.onPause();
-        if (isFinishing()) {
-
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-
-        super.onDestroy();
     }
 
     @Override
@@ -71,16 +57,6 @@ public class DetailTestActivity extends BaseActivity<Object> {
     public void onBackPressed() {
 
         super.onBackPressed();
-    }
-
-    @Override
-    protected void onFailedResponse(String msg) {
-
-    }
-
-    @Override
-    protected void onObjResponse(Object datas) {
-
     }
 
     /**
