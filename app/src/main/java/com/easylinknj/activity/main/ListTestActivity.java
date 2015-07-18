@@ -29,7 +29,7 @@ public class ListTestActivity extends BaseHttpLvActivity<List<HotCityItem>> {
     @Override
     protected void initData() {
 
-        addRequest2Queue(TestHtpUtil.getTestUrl(), 0, HotCityItem.class);
+        addRequest2QueueHasCache(TestHtpUtil.getTestUrl(), 0, HotCityItem.class);
     }
 
     @Override

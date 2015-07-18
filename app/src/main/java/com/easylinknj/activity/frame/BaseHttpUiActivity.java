@@ -110,11 +110,9 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
 
     protected void executeRefreshAndCache() {
 
-
     }
 
     protected void executeRefresh() {
-
 
     }
 
@@ -153,11 +151,22 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
     protected void onHttpFailed(String msg) {
     }
 
-    protected void addRequest2Queue(String url, Object tag, Class clazz) {
+    protected void addRequest2QueueNoCache(String url, Object tag, Class clazz) {
 
         showLoading();
+        addRequest2Queue(url, false, tag, clazz);
+    }
+
+    protected void addRequest2QueueHasCache(String url, Object tag, Class clazz) {
+
+        showLoading();
+        addRequest2Queue(url, true, tag, clazz);
+    }
+
+    private void addRequest2Queue(String url, boolean shouldCache, Object tag, Class clazz) {
 
         ObjectRequest<T> req = new ObjectRequest(url, getObjLis(), getErrorLis(), clazz);
+        req.setShouldCache(false);
         req.setTag(tag);
         mReqQueue.add(req);
     }
