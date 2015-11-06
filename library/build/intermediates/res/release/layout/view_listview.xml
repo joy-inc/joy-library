@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:divider="@color/black_trans12"
-    android:dividerHeight="1dp"
-    android:theme="@style/ex_theme" /><!-- From: file:/Users/KEVIN/Documents/Android/workspace/joy-android/joy-library-android/library/res/layout/view_listview.xml -->
