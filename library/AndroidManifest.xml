@@ -1,9 +1,3 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.joy.library"
-    android:versionCode="1"
-    android:versionName="1.0">
+<manifest package="com.joy.library">
 
-    <uses-sdk
-        android:minSdkVersion="12"
-        android:targetSdkVersion="21" />
 </manifest>
