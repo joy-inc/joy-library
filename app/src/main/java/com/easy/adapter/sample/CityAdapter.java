@@ -1,4 +1,4 @@
-package com.easy.adapter;
+package com.easy.adapter.sample;
 
 import android.net.Uri;
 import android.view.View;

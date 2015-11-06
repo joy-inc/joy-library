@@ -1,4 +1,4 @@
-package com.easy.httptask;
+package com.easy.httptask.frame;
 
 public class QyerResponse<T> {
 

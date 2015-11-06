@@ -16,7 +16,7 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.easy.R;
-import com.easy.httptask.ObjectRequest;
+import com.easy.httptask.frame.ObjectRequest;
 
 /**
  * Created by KEVIN.DAI on 15/7/10.

@@ -1,4 +1,4 @@
-package com.easy.activity.main;
+package com.easy.activity.sample;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,9 +8,9 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.easy.R;
 import com.easy.activity.frame.BaseHttpLvActivity;
-import com.easy.adapter.CityAdapter;
+import com.easy.adapter.sample.CityAdapter;
 import com.easy.bean.HotCityItem;
-import com.easy.httptask.TestHtpUtil;
+import com.easy.httptask.sample.TestHtpUtil;
 
 import java.util.List;
 

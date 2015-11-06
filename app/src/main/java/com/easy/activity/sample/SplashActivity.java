@@ -1,4 +1,4 @@
-package com.easy.activity.main;
+package com.easy.activity.sample;
 
 import android.app.Activity;
 import android.os.Bundle;

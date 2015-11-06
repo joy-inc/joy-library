@@ -1,4 +1,4 @@
-package com.easy.httptask;
+package com.easy.httptask.sample;
 
 import java.util.HashMap;
 import java.util.Map;

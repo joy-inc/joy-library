@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:theme="@style/ex_base_theme">
         <activity
-            android:name="com.easy.activity.main.SplashActivity"
+            android:name="com.easy.activity.sample.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/theme_translucent">
             <intent-filter>
@@ -22,13 +22,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.easy.activity.main.ListTestActivity"
+            android:name="com.easy.activity.sample.ListTestActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.easy.activity.main.DetailTestActivity"
+            android:name="com.easy.activity.sample.DetailTestActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.easy.activity.main.FullScreenActivity"
+            android:name="com.easy.activity.sample.FullScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/theme_translucent" />
     </application>
