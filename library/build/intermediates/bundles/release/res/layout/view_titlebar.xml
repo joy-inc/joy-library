@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_primary"
+    android:elevation="@dimen/elevation">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="25dp"
+        android:textAppearance="@android:style/TextAppearance.Material.Title"
+        android:textColor="@color/white_trans87"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        tools:targetApi="21" />
+</RelativeLayout><!-- From: file:/Users/KEVIN/Documents/Android/workspace/joy-android/joy-library-android/library/res/layout/view_titlebar.xml -->

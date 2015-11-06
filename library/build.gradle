@@ -1,0 +1,45 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+        }
+
+        lintOptions {
+            abortOnError false
+        }
+
+        // moves the whole sourceSet (and its sub folders) to a new folder. This moves src/androidTest/* to tests/*
+        androidTest.setRoot('tests')
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    compile 'com.github.bumptech.glide:glide:3.6.1'
+    compile 'com.android.support:support-v4:22.0.0'
+
+    compile 'com.mcxiaoke.volley:library:1.0.16'
+
+    compile 'com.facebook.fresco:fresco:0.5.3'
+
+    compile 'com.alibaba:fastjson:1.2.6'
+}
