@@ -1,6 +1,6 @@
 package com.joy.library.activity.frame;
 
-import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,13 +10,13 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.ProgressBar;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
+import com.joy.library.BaseApplication;
 import com.joy.library.R;
 import com.joy.library.httptask.frame.ObjectRequest;
+import com.joy.library.httptask.frame.ObjectResponseListener;
 
 /**
  * Created by KEVIN.DAI on 15/7/10.
@@ -28,22 +28,7 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
     private int mTipResId;
     private final int FAILED_RES_ID = R.mipmap.ic_net_error;
     private final int DISABLED_RES_ID = R.mipmap.ic_tip_null;
-
-    protected RequestQueue mReqQueue;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
-        super.onCreate(savedInstanceState);
-        mReqQueue = Volley.newRequestQueue(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-
-        super.onDestroy();
-        mReqQueue = null;
-    }
+    private boolean mIsNeedCache;
 
     @Override
     protected void wrapContentView(ViewGroup rootView, View contentView) {
@@ -103,16 +88,32 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
         }
     }
 
-    private boolean isNeedCache() {
+    protected boolean isNeedCache() {
 
-        return false;// TODO anyting
+        return mIsNeedCache;
+    }
+
+    protected void executeRefresh() {
+
+        ObjectRequest<T> req = getObjectRequest();
+        addRequest2QueueNoCache(req, req.getIdentifier());
+    }
+
+    protected void executeCache() {
+
+        ObjectRequest<T> req = getObjectRequest();
+        addRequest2QueueHasCache(req, req.getIdentifier());
     }
 
     protected void executeRefreshAndCache() {
 
+        mIsNeedCache = true;
+
+        ObjectRequest<T> req = getObjectRequest();
+        addRequest2QueueHasCache(req, req.getIdentifier());
     }
 
-    protected void executeRefresh() {
+    protected void executeCacheAndRefresh() {
 
     }
 
@@ -122,7 +123,7 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
         showImageView(mIvTip, mTipResId);
     }
 
-    protected void hideTip() {
+    protected void hideTipView() {
 
         hideImageView(mIvTip);
     }
@@ -148,65 +149,80 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
     /**
      * 子类可以继承此方法得到失败时的错误信息，用于Toast提示
      */
-    protected void onHttpFailed(String msg) {
+    protected void onHttpFailed(Object tag, String msg) {
     }
 
-    protected void addRequest2QueueNoCache(String url, Object tag, Class clazz) {
+    protected RequestQueue getRequestQueue() {
+
+        return ((BaseApplication) getApplication()).getRequestQueue();
+    }
+
+    protected abstract ObjectRequest<T> getObjectRequest();
+
+    protected void addRequest2QueueNoCache(ObjectRequest<T> req, Object tag) {
+
+        addRequest2Queue(req, tag, false);
+    }
+
+    protected void addRequest2QueueHasCache(ObjectRequest<T> req, Object tag) {
+
+        addRequest2Queue(req, tag, true);
+    }
+
+    protected void addRequest2Queue(ObjectRequest<T> req, Object tag, boolean shouldCache) {
 
         showLoading();
-        addRequest2Queue(url, false, tag, clazz);
-    }
+        hideTipView();
 
-    protected void addRequest2QueueHasCache(String url, Object tag, Class clazz) {
-
-        showLoading();
-        addRequest2Queue(url, true, tag, clazz);
-    }
-
-    private void addRequest2Queue(String url, boolean shouldCache, Object tag, Class clazz) {
-
-        ObjectRequest<T> req = new ObjectRequest(url, getObjLis(), getErrorLis(), clazz);
-        req.setShouldCache(false);
+        req.setResponseListener(getObjRespLis());
+        req.setShouldCache(shouldCache);
         req.setTag(tag);
-        mReqQueue.add(req);
+        getRequestQueue().add(req);
+    }
+
+    private ObjectResponseListener<T> getObjRespLis() {
+
+        return new ObjectResponseListener<T>() {
+
+            @Override
+            public void onSuccess(Object tag, T t) {
+
+                if (isFinishing())
+                    return;
+
+                hideLoading();
+                invalidateContent(t);
+            }
+
+            @Override
+            public void onError(Object tag, VolleyError error) {
+
+                if (isFinishing())
+                    return;
+
+                Log.e("BaseHttpUiActivity", "~~onError tag: " + tag + " msg: " + error);
+
+                hideLoading();
+                showFailedTip();
+                onHttpFailed(tag, error == null ? "" : error.getMessage());
+            }
+        };
     }
 
     protected void removeRequestFromQueue(Object tag) {
 
-        if (mReqQueue != null)
-            mReqQueue.cancelAll(tag);
+        getRequestQueue().cancelAll(tag);
     }
 
-    private Listener<T> getObjLis() {
+    protected void removeAllRequestFromQueue() {
 
-        return new Listener<T>() {
-
-            @Override
-            public void onResponse(T response) {
-
-                if (isFinishing())
-                    return;
-
-                hideLoading();
-                invalidateContent(response);
-            }
-        };
-    }
-
-    private ErrorListener getErrorLis() {
-
-        return new ErrorListener() {
+        getRequestQueue().cancelAll(new RequestQueue.RequestFilter() {
 
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public boolean apply(Request<?> request) {
 
-                if (isFinishing())
-                    return;
-
-                hideLoading();
-                showFailedTip();
-                onHttpFailed(error.getMessage());
+                return true;
             }
-        };
+        });
     }
 }

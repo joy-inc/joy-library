@@ -7,9 +7,7 @@ import com.android.volley.Cache.Entry;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.VolleyError;
 
 import org.json.JSONObject;
 
@@ -20,59 +18,80 @@ import java.io.UnsupportedEncodingException;
  */
 public class ObjectRequest<T> extends Request<T> {
 
-    private Listener<T> mObjLis;
     private Class mClazz;
+    private ObjectResponseListener<T> mObjRespLis;
 
     /**
      * Creates a new request with the given method.
      *
-     * @param method   the request {@link Method} to use
-     * @param url      URL to fetch the Object
-     * @param objLis   Listener to receive the Object response
-     * @param errorLis Error listener, or null to ignore errors
-     * @param clazz    the Object class to return
+     * @param method the request {@link Method} to use
+     * @param url    URL to fetch the Object
+     * @param clazz  the Object class to return
      */
-    public ObjectRequest(int method, String url, Listener<T> objLis, ErrorListener errorLis, Class clazz) {
+    public ObjectRequest(int method, String url, Class clazz) {
 
-        super(method, url, errorLis);
-        mObjLis = objLis;
+        super(method, url, null);
         mClazz = clazz;
     }
 
     /**
      * Creates a new GET request.
      *
-     * @param url      URL to fetch the Object
-     * @param objLis   Listener to receive the Object response
-     * @param errorLis Error listener, or null to ignore errors
-     * @param clazz    the Object class to return
+     * @param url   URL to fetch the Object
+     * @param clazz the Object class to return
      */
-    public ObjectRequest(String url, Listener<T> objLis, ErrorListener errorLis, Class clazz) {
+    public ObjectRequest(String url, Class clazz) {
 
-        this(Method.GET, url, objLis, errorLis, clazz);
+        this(Method.GET, url, clazz);
+    }
+
+    /**
+     * @param lisn Listener to receive the Object response
+     */
+    public void setResponseListener(ObjectResponseListener<T> lisn) {
+
+        mObjRespLis = lisn;
+    }
+
+    public void setCacheAndRefresh() {
+
+    }
+
+    public void setLoadFromCache() {
+
     }
 
     @Override
-    protected void deliverResponse(T response) {
+    protected void deliverResponse(T t) {
 
-        mObjLis.onResponse(response);
+        if (mObjRespLis != null)
+            mObjRespLis.onSuccess(getTag(), t);
     }
 
     @Override
-    protected Response<T> parseNetworkResponse(NetworkResponse response) {
+    public void deliverError(VolleyError error) {
+
+//        super.deliverError(error);
+        if (mObjRespLis != null)
+            mObjRespLis.onError(getTag(), error);
+    }
+
+    @Override
+    public Response<T> parseNetworkResponse(NetworkResponse response) {
 
         String parsed;
         try {
 
-            String charsetName = HttpHeaderParser.parseCharset(response.headers);
+            String charsetName = VolleyHtpHeaderParser.parseCharset(response.headers);
             parsed = new String(response.data, charsetName);
         } catch (UnsupportedEncodingException e) {
 
             parsed = new String(response.data);
+            e.printStackTrace();
         }
 
         T t = onResponse(parsed).getData();
-        Entry entry = HttpHeaderParser.parseCacheHeaders(response);
+        Entry entry = VolleyHtpHeaderParser.parseCacheHeaders(response);
         return Response.success(t, entry);
     }
 
@@ -100,13 +119,11 @@ public class ObjectRequest<T> extends Request<T> {
                     resp.setData((T) mClazz.newInstance());
                 } else {
 
-                    if (jsonText.startsWith("[")) {
+                    if (jsonText.startsWith("[")) {// JsonArray
 
-                        // JsonArray
                         resp.setData(((T) JSON.parseArray(jsonText, mClazz)));
-                    } else {
+                    } else {// JsonObj
 
-                        // JsonObj
                         resp.setData((T) JSON.parseObject(jsonText, mClazz));
                     }
                 }
@@ -114,8 +131,15 @@ public class ObjectRequest<T> extends Request<T> {
         } catch (Exception e) {
 
             resp.setParseBrokenStatus();
+            e.printStackTrace();
         }
-
         return resp;
+    }
+
+    @Override
+    protected void onFinish() {
+
+//        super.onFinish();
+        mObjRespLis = null;
     }
 }

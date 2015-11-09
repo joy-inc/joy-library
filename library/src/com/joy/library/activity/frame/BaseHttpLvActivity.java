@@ -1,8 +1,8 @@
 package com.joy.library.activity.frame;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.View;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.HeaderViewListAdapter;
@@ -21,6 +21,9 @@ public abstract class BaseHttpLvActivity<T extends List<?>> extends BaseHttpUiAc
 
     private SwipeRefreshLayout mSwipeRefreshWidget;
     private ListView mListView;
+    private int mPageLimit = 20;
+    private static final int PAGE_START_INDEX = 1;// 默认从第一页开始
+    private int mCurrentPageIndex = PAGE_START_INDEX;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +32,16 @@ public abstract class BaseHttpLvActivity<T extends List<?>> extends BaseHttpUiAc
 
         mListView = getDefaultListView();
         setContentView(wrapSwipeRefresh(mListView));
+    }
+
+    @Override
+    protected void onPause() {
+
+        super.onPause();
+        if (isFinishing()) {
+
+            // TODO abort all http task.
+        }
     }
 
     /**
@@ -46,28 +59,83 @@ public abstract class BaseHttpLvActivity<T extends List<?>> extends BaseHttpUiAc
         // swipe refresh widget
         mSwipeRefreshWidget = new SwipeRefreshLayout(this);
         mSwipeRefreshWidget.setColorSchemeResources(R.color.holo_blue_bright, R.color.holo_green_light, R.color.holo_orange_light, R.color.holo_red_light);
-        mSwipeRefreshWidget.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {// default listener
+        mSwipeRefreshWidget.setOnRefreshListener(getDefaultRefreshLisn());
+        mSwipeRefreshWidget.addView(contentView);
+        return mSwipeRefreshWidget;
+    }
+
+    private OnRefreshListener getDefaultRefreshLisn() {
+
+        return new OnRefreshListener() {
 
             @Override
             public void onRefresh() {
 
-                new Handler().postDelayed(new Runnable() {
-
-                    @Override
-                    public void run() {
-
-                        stopSwipeRefresh();
-                    }
-                }, 5000);
+                onManualRefresh();
             }
-        });
-        mSwipeRefreshWidget.addView(contentView);
-        return mSwipeRefreshWidget;
+        };
+    }
+
+    private void onManualRefresh() {
+
+        if (isNetworkEnable()) {
+
+            startManualRefresh();
+        } else {
+
+//            abortSwipeRefresh();
+            showToast(R.string.toast_common_no_network);
+        }
+    }
+
+    private void startManualRefresh() {
+
+        // TODO abort load more http task.
+
+        mCurrentPageIndex = PAGE_START_INDEX;// 重置起始页码
+
+        if (isNeedCache()) {
+
+            executeRefreshAndCache();
+        } else {
+
+            executeRefresh();
+        }
+    }
+
+    private void startLoadMoreRefresh() {
+
+//        mSwipeRefreshWidget.stopSwipeRefresh();// 中断下拉刷新
+//
+//        HttpFrameParams hfp = getXListViewHttpParams(mCurrentPageIndex + 1, mPageLimit);
+//        mLoadMoreHttpTask = new HttpTask(hfp.params);
+//        mLoadMoreHttpTask.setListener(getLodMoreListener(hfp));
+//        mLoadMoreHttpTask.execute();
     }
 
     protected ListView getListView() {
 
         return mListView;
+    }
+
+    /**
+     * 设置分页大小
+     *
+     * @param pageLimit
+     */
+    protected void setPageLimit(int pageLimit) {
+
+        mPageLimit = pageLimit;
+    }
+
+    protected int getPageLimit() {
+
+        return mPageLimit;
+    }
+
+    protected int getCurrentPageIndex() {
+
+        return mCurrentPageIndex;
     }
 
     protected void addHeaderView(View v) {
@@ -101,6 +169,20 @@ public abstract class BaseHttpLvActivity<T extends List<?>> extends BaseHttpUiAc
         }
     }
 
+    @Override
+    protected void showLoading() {
+
+        super.showLoading();
+        showSwipeRefresh();
+    }
+
+    @Override
+    protected void hideLoading() {
+
+        super.hideLoading();
+        hideSwipeRefresh();
+    }
+
     protected ExAdapter<?> getAdapter() {
 
         ListAdapter la = getListView().getAdapter();
@@ -123,7 +205,7 @@ public abstract class BaseHttpLvActivity<T extends List<?>> extends BaseHttpUiAc
         mSwipeRefreshWidget.setColorSchemeResources(colorResIds);
     }
 
-    protected void setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener lisn) {
+    protected void setOnRefreshListener(OnRefreshListener lisn) {
 
         mSwipeRefreshWidget.setOnRefreshListener(lisn);
     }
@@ -133,7 +215,7 @@ public abstract class BaseHttpLvActivity<T extends List<?>> extends BaseHttpUiAc
         return mSwipeRefreshWidget.isRefreshing();
     }
 
-    protected void startSwipeRefresh() {
+    protected void showSwipeRefresh() {
 
         if (isSwipeRefreshing())
             return;
@@ -141,7 +223,7 @@ public abstract class BaseHttpLvActivity<T extends List<?>> extends BaseHttpUiAc
         mSwipeRefreshWidget.setRefreshing(true);
     }
 
-    protected void stopSwipeRefresh() {
+    protected void hideSwipeRefresh() {
 
         if (!isSwipeRefreshing())
             return;

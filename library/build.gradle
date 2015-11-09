@@ -24,6 +24,17 @@ android {
         // Enabling multidex support. Requires Build-Tools 21.1.0, and Support repository rev 8.
         multiDexEnabled false
     }
+    buildTypes {
+        debug {
+            debuggable true
+        }
+        release {
+            debuggable false
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -38,8 +49,5 @@ android {
         }
         // moves the whole sourceSet (and its sub folders) to a new folder. This moves src/androidTest/* to tests/*
         androidTest.setRoot('tests')
-    }
-    lintOptions {
-        abortOnError false
     }
 }

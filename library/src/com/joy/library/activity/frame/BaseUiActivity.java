@@ -67,11 +67,14 @@ public abstract class BaseUiActivity extends Activity implements DimenCons {
         rootView.addView(contentView, contentLp);
     }
 
-    protected abstract void initData();
+    protected void initData() {
+    }
 
-    protected abstract void initTitleView();
+    protected void initTitleView() {
+    }
 
-    protected abstract void initContentView();
+    protected void initContentView() {
+    }
 
     protected void setTitleBackgroundColor(int color) {
 

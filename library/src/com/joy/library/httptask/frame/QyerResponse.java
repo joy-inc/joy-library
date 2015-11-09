@@ -6,7 +6,6 @@ public class QyerResponse<T> {
     public static final int STATUS_NONE = 0;
     public static final int STATUS_SUCCESS = 1;
 
-
     private int status;
     private String info = "";
     private T data;
@@ -30,7 +29,6 @@ public class QyerResponse<T> {
 
             info = info.trim();
         }
-
         this.info = info;
     }
 

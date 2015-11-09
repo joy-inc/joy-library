@@ -1,9 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">EasyLibrary</string>
     <!-- toast common -->
     <string name="toast_common_no_network">无网络连接，请检查你的网络设置</string>
-    <string name="list_2_detail">list_2_detail</string>
-    <string name="detail_2_fullscreen">detail_2_fullscreen</string>
-
+    <string name="toast_exit_tip">再按一次退出应用</string>
 </resources>
