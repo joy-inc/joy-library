@@ -8,6 +8,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 
 import org.json.JSONObject;
 
@@ -82,7 +83,7 @@ public class ObjectRequest<T> extends Request<T> {
         String parsed;
         try {
 
-            String charsetName = VolleyHtpHeaderParser.parseCharset(response.headers);
+            String charsetName = HttpHeaderParser.parseCharset(response.headers);
             parsed = new String(response.data, charsetName);
         } catch (UnsupportedEncodingException e) {
 
@@ -91,7 +92,7 @@ public class ObjectRequest<T> extends Request<T> {
         }
 
         T t = onResponse(parsed).getData();
-        Entry entry = VolleyHtpHeaderParser.parseCacheHeaders(response);
+        Entry entry = HttpHeaderParser.parseCacheHeaders(response);
         return Response.success(t, entry);
     }
 

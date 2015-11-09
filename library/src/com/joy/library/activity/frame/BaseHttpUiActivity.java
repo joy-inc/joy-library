@@ -10,11 +10,13 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.ProgressBar;
 
+import com.android.volley.Cache;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.joy.library.BaseApplication;
 import com.joy.library.R;
+import com.joy.library.httptask.frame.CacheEntry;
 import com.joy.library.httptask.frame.ObjectRequest;
 import com.joy.library.httptask.frame.ObjectResponseListener;
 
@@ -115,6 +117,12 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
 
     protected void executeCacheAndRefresh() {
 
+        ObjectRequest<T> req = getObjectRequest();
+        Cache.Entry entry = new CacheEntry();
+        req.setCacheEntry(entry);
+
+        Log.e("daisw", "~~" + entry.refreshNeeded() + " " + entry.isExpired());
+        addRequest2QueueHasCache(req, req.getIdentifier());
     }
 
     protected void showFailedTip() {
