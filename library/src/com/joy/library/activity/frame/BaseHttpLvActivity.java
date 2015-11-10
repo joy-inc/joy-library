@@ -51,7 +51,7 @@ public abstract class BaseHttpLvActivity<T extends List<?>> extends BaseHttpUiAc
      */
     protected ListView getDefaultListView() {
 
-        return (ListView) inflateLayout(R.layout.view_listview);
+        return (ListView) inflateLayout(R.layout.lib_view_listview);
     }
 
     private View wrapSwipeRefresh(View contentView) {

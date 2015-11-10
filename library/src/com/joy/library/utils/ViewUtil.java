@@ -1,12 +1,8 @@
 package com.joy.library.utils;
 
 import android.graphics.drawable.Drawable;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-
-import com.joy.library.BaseApplication;
 
 public class ViewUtil {
 
@@ -82,15 +78,5 @@ public class ViewUtil {
         if (v.getVisibility() != View.GONE)
             v.setVisibility(View.GONE);
         v.setImageDrawable(null);
-    }
-
-    public static View inflateLayout(int resource) {
-
-        return inflateLayout(resource, null);
-    }
-
-    public static View inflateLayout(int resource, ViewGroup root) {
-
-        return LayoutInflater.from(BaseApplication.getContext()).inflate(resource, root);
     }
 }

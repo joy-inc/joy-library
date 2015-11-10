@@ -4,9 +4,9 @@
     <color name="color_primary_dark">#303F9F</color>
     <color name="color_primary_light">#C5CAE9</color>
     <color name="color_accent">#FF4081</color>
-    <color name="color_primary_text">#212121</color>
-    <color name="color_secondary_text">#727272</color>
-    <color name="color_text">#FFFFFF</color>
+    <color name="color_primary_text">@color/white</color>
+    <color name="color_secondary_text">@color/white</color>
+    <color name="color_text">@color/white</color>
     <color name="color_divider">#B6B6B6</color>
 
     <color name="black_trans12">#1F000000</color>

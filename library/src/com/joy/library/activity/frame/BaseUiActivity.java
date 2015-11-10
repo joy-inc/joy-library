@@ -1,12 +1,22 @@
 package com.joy.library.activity.frame;
 
 import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 
+import com.joy.library.R;
 import com.joy.library.utils.DeviceUtil;
 import com.joy.library.utils.DimenCons;
 import com.joy.library.utils.ToastUtil;
@@ -18,8 +28,7 @@ import com.joy.library.utils.ViewUtil;
  */
 public abstract class BaseUiActivity extends AppCompatActivity implements DimenCons {
 
-//    private ViewGroup mVgTitleBar;
-//    private TextView mTvTitle;
+    private Toolbar mToolbar;
 
     @Override
     public void setContentView(int layoutResId) {
@@ -39,30 +48,19 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
         initContentView();
     }
 
-    protected void wrapContentView(ViewGroup rootView, View contentView) {
+    protected void wrapContentView(FrameLayout rootView, View contentView) {
 
-        // title bar
-//        addTitleView(rootView);
+        // toolbar
+        mToolbar = (Toolbar) inflateLayout(R.layout.lib_view_toolbar);
+        setSupportActionBar(mToolbar);
+        LayoutParams toolbarLp = new LayoutParams(LayoutParams.MATCH_PARENT, TITLE_BAR_HEIGHT);
+        toolbarLp.gravity = Gravity.TOP;
+        rootView.addView(mToolbar, toolbarLp);
 
         // content view
-        addContentView(rootView, contentView);
-    }
-
-//    private void addTitleView(ViewGroup rootView) {
-//
-//        mVgTitleBar = (ViewGroup) inflateLayout(R.layout.view_titlebar);
-//        mTvTitle = (TextView) mVgTitleBar.findViewById(R.id.tvTitle);
-//        for (int i = 0; i < mVgTitleBar.getChildCount(); i++)
-//            mVgTitleBar.getChildAt(i).setTranslationY(STATUS_BAR_HEIGHT / 2);// 纵向正偏移，使其纵向居中
-//        rootView.addView(mVgTitleBar, new LayoutParams(LayoutParams.MATCH_PARENT, STATUS_BAR_HEIGHT + TITLE_BAR_HEIGHT));
-//    }
-
-    private void addContentView(ViewGroup rootView, View contentView) {
-
-//        LayoutParams contentLp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-//        contentLp.topMargin = STATUS_BAR_HEIGHT + TITLE_BAR_HEIGHT;
-//        rootView.addView(contentView, contentLp);
-        rootView.addView(contentView);
+        LayoutParams contentLp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        contentLp.topMargin = TITLE_BAR_HEIGHT;
+        rootView.addView(contentView, contentLp);
     }
 
     protected void initData() {
@@ -74,25 +72,73 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
     protected void initContentView() {
     }
 
-//    protected void setTitleBackgroundColor(int color) {
-//
-//        mVgTitleBar.setBackgroundColor(color);
-//    }
+    protected Toolbar getToolbar() {
 
-//    protected void setTitleBackgroundColorResId(int colorResId) {
-//
-//        setTitleBackgroundColor(getResources().getColor(colorResId));
-//    }
+        return mToolbar;
+    }
 
-//    protected void setTitleText(String text) {
-//
-//        mTvTitle.setText(text);
-//    }
+    protected void setTitleBgColor(@ColorInt int color) {
 
-//    protected void setTitleText(int resId) {
-//
-//        setTitleText(getString(resId));
-//    }
+        mToolbar.setBackgroundColor(color);
+    }
+
+    protected void setTitleBgColorResId(@ColorRes int colorResId) {
+
+        setTitleBgColor(getResources().getColor(colorResId));
+    }
+
+    protected void setTitleText(String text) {
+
+        mToolbar.setTitle(text);
+    }
+
+    protected void setTitleText(@StringRes int resId) {
+
+        setTitleText(getString(resId));
+    }
+
+    protected void setSubtitle(String text) {
+
+        mToolbar.setSubtitle(text);
+    }
+
+    protected void setSubTitle(@StringRes int resId) {
+
+        setSubtitle(getString(resId));
+    }
+
+    protected void setTitleTextColor(@ColorInt int color) {
+
+        mToolbar.setTitleTextColor(color);
+    }
+
+    protected void setSubtitleTextColor(@ColorInt int color) {
+
+        mToolbar.setSubtitleTextColor(color);
+    }
+
+    protected void setTitleLogo(@DrawableRes int resId) {
+
+        mToolbar.setLogo(resId);
+    }
+
+    protected void addTitleLeftBackView() {
+
+        addTitleLeftView(R.drawable.abc_ic_ab_back_mtrl_am_alpha, new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                finish();
+            }
+        });
+    }
+
+    protected void addTitleLeftView(@DrawableRes int resId, View.OnClickListener listener) {
+
+        mToolbar.setNavigationIcon(resId);
+        mToolbar.setNavigationOnClickListener(listener);
+    }
 
     protected boolean isNetworkEnable() {
 
@@ -164,13 +210,13 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
         ViewUtil.goneImageView(v);
     }
 
-    protected View inflateLayout(int resource) {
+    protected View inflateLayout(@LayoutRes int resource) {
 
-        return ViewUtil.inflateLayout(resource);
+        return inflateLayout(resource, null);
     }
 
-    protected View inflateLayout(int resource, ViewGroup root) {
+    protected View inflateLayout(@LayoutRes int resource, @Nullable ViewGroup root) {
 
-        return ViewUtil.inflateLayout(resource, root);
+        return getLayoutInflater().inflate(resource, root);
     }
 }

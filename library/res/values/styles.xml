@@ -1,13 +1,19 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="ex_base_theme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:windowNoTitle">true</item>
+    <style name="ex_base_theme" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <item name="android:colorControlHighlight" tools:targetApi="21">@color/white_trans26</item>
+
         <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorAccent">@color/color_accent</item>
+
         <item name="android:textColorPrimary">@color/color_primary_text</item>
         <item name="android:textColorSecondary">@color/color_secondary_text</item>
+
         <item name="android:windowBackground">@color/white</item>
         <item name="android:navigationBarColor" tools:targetApi="21">@color/color_primary</item>
 
@@ -18,8 +24,8 @@
         <item name="android:windowAllowReturnTransitionOverlap" tools:targetApi="21">true</item>
     </style>
 
-    <style name="ex_theme" parent="ex_base_theme">
-        <item name="android:colorControlHighlight" tools:targetApi="21">@color/color_primary</item>
+    <style name="lib_theme_lv">
+        <item name="android:colorControlHighlight" tools:targetApi="21">@color/ripple_material_light</item>
         <item name="android:colorEdgeEffect" tools:targetApi="21">@color/color_primary</item>
     </style>
 

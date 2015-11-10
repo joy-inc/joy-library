@@ -5,6 +5,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -33,7 +34,7 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
     private boolean mIsNeedCache;
 
     @Override
-    protected void wrapContentView(ViewGroup rootView, View contentView) {
+    protected void wrapContentView(FrameLayout rootView, View contentView) {
 
         super.wrapContentView(rootView, contentView);
 

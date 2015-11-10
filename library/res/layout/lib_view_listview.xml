@@ -4,4 +4,4 @@
     android:layout_height="match_parent"
     android:divider="@color/black_trans12"
     android:dividerHeight="1dp"
-    android:theme="@style/ex_theme" />
+    android:theme="@style/lib_theme_lv" />
