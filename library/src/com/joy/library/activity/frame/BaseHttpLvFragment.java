@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by KEVIN.DAI on 15/7/16.
  */
-public abstract class BaseHttpLvActivity<T extends List<?>> extends BaseHttpUiActivity<T> {
+public abstract class BaseHttpLvFragment<T extends List<?>> extends BaseHttpUiFragment<T> {
 
     private SwipeRefreshLayout mSwipeRefreshWidget;
     private ListView mListView;
@@ -26,15 +26,15 @@ public abstract class BaseHttpLvActivity<T extends List<?>> extends BaseHttpUiAc
     private int mCurrentPageIndex = PAGE_START_INDEX;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
 
-        super.onCreate(savedInstanceState);
+        super.onActivityCreated(savedInstanceState);
         mListView = getDefaultListView();
         setContentView(wrapSwipeRefresh(mListView));
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
 
         super.onPause();
         if (isFinishing()) {
@@ -56,7 +56,7 @@ public abstract class BaseHttpLvActivity<T extends List<?>> extends BaseHttpUiAc
     private View wrapSwipeRefresh(View contentView) {
 
         // swipe refresh widget
-        mSwipeRefreshWidget = new SwipeRefreshLayout(this);
+        mSwipeRefreshWidget = new SwipeRefreshLayout(getActivity());
         mSwipeRefreshWidget.setColorSchemeResources(R.color.holo_blue_bright, R.color.holo_green_light, R.color.holo_orange_light, R.color.holo_red_light);
         mSwipeRefreshWidget.setOnRefreshListener(getDefaultRefreshLisn());
         mSwipeRefreshWidget.addView(contentView);

@@ -24,7 +24,7 @@ import com.joy.library.httptask.frame.ObjectResponseListener;
 /**
  * Created by KEVIN.DAI on 15/7/10.
  */
-public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
+public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
 
     private ImageView mIvTip;
     private ProgressBar mProgressbar;
@@ -45,8 +45,8 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
 
     private void addTipView(ViewGroup frame) {
 
-        mIvTip = new ImageView(this);
-        mIvTip.setTranslationY(STATUS_BAR_HEIGHT);// 纵向正偏移，使其纵向居中
+        mIvTip = new ImageView(getActivity());
+//        mIvTip.setTranslationY(STATUS_BAR_HEIGHT);// 纵向正偏移，使其纵向居中
         mIvTip.setScaleType(ScaleType.CENTER_INSIDE);
         mIvTip.setOnClickListener(new OnClickListener() {
 
@@ -62,8 +62,8 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
 
     private void addLoadingView(ViewGroup frame) {
 
-        mProgressbar = new ProgressBar(this);
-        mProgressbar.setTranslationY(STATUS_BAR_HEIGHT);// 纵向正偏移，使其纵向居中
+        mProgressbar = new ProgressBar(getActivity());
+//        mProgressbar.setTranslationY(STATUS_BAR_HEIGHT);// 纵向正偏移，使其纵向居中
         mProgressbar.setIndeterminate(true);
         hideView(mProgressbar);// 默认隐藏
         frame.addView(mProgressbar, new LayoutParams(DP_1_PX * 80, DP_1_PX * 80, Gravity.CENTER));
@@ -161,7 +161,7 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
 
     protected RequestQueue getRequestQueue() {
 
-        return ((BaseApplication) getApplication()).getRequestQueue();
+        return ((BaseApplication) getActivity().getApplication()).getRequestQueue();
     }
 
     protected abstract ObjectRequest<T> getObjectRequest();
