@@ -2,7 +2,7 @@ package com.joy.library.adapter.frame;
 
 import android.view.View;
 
-public interface OnItemViewLongClickListener {
+public interface OnItemViewLongClickListener<T> {
 
-    void onItemViewLongClick(int position, View clickView);
+    void onItemViewLongClick(int position, View clickView, T t);
 }

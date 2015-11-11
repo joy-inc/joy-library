@@ -10,6 +10,7 @@ dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'com.facebook.fresco:fresco:0.8.1'
     compile 'com.alibaba:fastjson:1.2.7'
+    compile 'com.jakewharton:butterknife:7.0.1'
 }
 
 android {

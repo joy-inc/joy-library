@@ -169,12 +169,12 @@ public abstract class ExAdapter<T> extends BaseAdapter {
     protected void callbackOnItemViewClickListener(int position, View view) {
 
         if (mOnItemViewClickLisn != null)
-            mOnItemViewClickLisn.onItemViewClick(position, view);
+            mOnItemViewClickLisn.onItemViewClick(position, view, getItem(position));
     }
 
     protected void callbackOnItemViewLongClickListener(int position, View view) {
 
         if (mOnItemViewLongClickLisn != null)
-            mOnItemViewLongClickLisn.onItemViewLongClick(position, view);
+            mOnItemViewLongClickLisn.onItemViewLongClick(position, view, getItem(position));
     }
 }
