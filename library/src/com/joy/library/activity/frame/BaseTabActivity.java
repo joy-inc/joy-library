@@ -1,26 +1,30 @@
 package com.joy.library.activity.frame;
 
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 
 import com.joy.library.R;
+import com.joy.library.adapter.frame.ExFragmentPagerAdapter;
 import com.joy.library.utils.DeviceUtil;
 import com.joy.library.utils.DimenCons;
 import com.joy.library.utils.ToastUtil;
 import com.joy.library.utils.ViewUtil;
+import com.joy.library.view.ExViewPager;
+
+import java.util.List;
 
 /**
  * 基本的UI框架
@@ -29,6 +33,15 @@ import com.joy.library.utils.ViewUtil;
 public abstract class BaseTabActivity extends AppCompatActivity implements DimenCons {
 
     private Toolbar mToolbar;
+    private TabLayout mTabLayout;
+    private FloatingActionButton mFloatActionBtn;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.lib_act_tab);
+    }
 
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
@@ -39,38 +52,45 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
     @Override
     public void setContentView(View contentView) {
 
-        FrameLayout flRoot = new FrameLayout(this);
-        wrapContentView(flRoot, contentView);
-        super.setContentView(flRoot);
+        super.setContentView(contentView);
 
         initData();
         initTitleView();
         initContentView();
     }
 
-    protected void wrapContentView(FrameLayout rootView, View contentView) {
-
-        // toolbar
-        mToolbar = (Toolbar) inflateLayout(R.layout.lib_view_toolbar);
-        setSupportActionBar(mToolbar);
-        LayoutParams toolbarLp = new LayoutParams(LayoutParams.MATCH_PARENT, TITLE_BAR_HEIGHT);
-        toolbarLp.gravity = Gravity.TOP;
-        rootView.addView(mToolbar, toolbarLp);
-
-        // content view
-        LayoutParams contentLp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        contentLp.topMargin = TITLE_BAR_HEIGHT;
-        rootView.addView(contentView, contentLp);
-    }
-
     protected void initData() {
     }
 
     protected void initTitleView() {
+
+        // toolbar
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
     }
 
     protected void initContentView() {
+
+        // view pager
+        ExViewPager viewPager = (ExViewPager) findViewById(R.id.viewpager);
+        ExFragmentPagerAdapter pagerAdapter = new ExFragmentPagerAdapter(getSupportFragmentManager());
+        pagerAdapter.setFragmentItemDestoryEnable(isPagerItemDestoryEnable());
+        pagerAdapter.setFragments(getFragments());
+        viewPager.setAdapter(pagerAdapter);
+        // tab layout
+        mTabLayout = (TabLayout) findViewById(R.id.tab);
+        mTabLayout.setupWithViewPager(viewPager);
+        // float action bar
+        mFloatActionBtn = (FloatingActionButton) findViewById(R.id.fab);
+        hideView(mFloatActionBtn);
     }
+
+    protected boolean isPagerItemDestoryEnable() {
+
+        return false;
+    }
+
+    protected abstract List<? extends BaseUiFragment> getFragments();
 
     protected Toolbar getToolbar() {
 

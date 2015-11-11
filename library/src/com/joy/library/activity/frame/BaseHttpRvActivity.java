@@ -137,8 +137,8 @@ public abstract class BaseHttpRvActivity<T extends List<?>> extends BaseHttpUiAc
 
     protected void setAdapter(ExRvAdapter adapter) {
 
-        getRecyclerView().setLayoutManager(new LinearLayoutManager(this));
-        getRecyclerView().setAdapter(adapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -168,7 +168,7 @@ public abstract class BaseHttpRvActivity<T extends List<?>> extends BaseHttpUiAc
 
     protected ExRvAdapter getAdapter() {
 
-        return (ExRvAdapter) getRecyclerView().getAdapter();
+        return (ExRvAdapter) mRecyclerView.getAdapter();
     }
 
     protected void setColorSchemeResources(int... colorResIds) {
