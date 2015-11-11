@@ -4,13 +4,13 @@ import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.joy.library.R;
+import com.joy.library.utils.LogMgr;
 
 import java.util.List;
 
@@ -36,7 +36,9 @@ public abstract class ExRvAdapter<K extends ExRvViewHolder, T> extends RecyclerV
         TypedValue typedValue = new TypedValue();
         context.getTheme().resolveAttribute(R.attr.selectableItemBackground, typedValue, true);
         mBackgroundResId = typedValue.resourceId;
-        Log.e("daisw", "~~" + mBackgroundResId);
+
+        if (LogMgr.isDebug())
+            LogMgr.e("daisw", "~~" + mBackgroundResId);
     }
 
     @Override

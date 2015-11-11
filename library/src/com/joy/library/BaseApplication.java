@@ -2,7 +2,6 @@ package com.joy.library;
 
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -10,6 +9,7 @@ import com.android.volley.RequestQueue.RequestFilter;
 import com.android.volley.RequestQueue.RequestFinishedListener;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.Volley;
+import com.joy.library.utils.LogMgr;
 
 /**
  * Created by KEVIN.DAI on 15/7/8.
@@ -60,7 +60,8 @@ public class BaseApplication extends Application {
         @Override
         public void onRequestFinished(Request request) {
 
-            Log.d("BaseApplication", "~~request finished tag: " + request.getTag() + ", sequence number: " + request.getSequence());
+            if (LogMgr.isDebug())
+                LogMgr.d("BaseApplication", "~~request finished tag: " + request.getTag() + ", sequence number: " + request.getSequence());
         }
     };
 
