@@ -4,86 +4,86 @@ import android.util.Log;
 
 public class LogMgr {
 
-	private static String mMainTag = "JoyLogMgr";
-	private static boolean mIsDebug = true;
+    private static String mMainTag = "JoyLogMgr";
+    private static boolean mIsDebug = true;
 
-	public static boolean isDebug() {
-		
-		return mIsDebug;
-	}
-	
-	public static void turnOn(){
-		
-		mIsDebug = true;
-	}
-	
-	public static void turnOff(){
-		
-		mIsDebug = false;
-	}
-	
-	public static void setMainTag(String tagName) {
-		
-		mMainTag = tagName;
-	}
+    public static boolean isDebug() {
 
-	public static String getMainTag() {
-		
-		return mMainTag;
-	}
-	
-	public static void v(String log){
-		
-		v(mMainTag, log);
-	}
+        return mIsDebug;
+    }
 
-	public static void v(String tag, String log) {
-		
-		if (mIsDebug)
-			Log.v(tag, log);
-	}
+    public static void turnOn() {
 
-	public static void d(String log){
-		
-		d(mMainTag, log);
-	}
-	
-	public static void d(String tag, String log) {
-		
-		if (mIsDebug)
-			Log.d(tag, log);
-	}
+        mIsDebug = true;
+    }
 
-	public static void i(String log) {
-		
-		 i(mMainTag, log);
-	}
-	
-	public static void i(String tag, String log) {
-		
-		if (mIsDebug)
-			Log.i(tag, log);
-	}
+    public static void turnOff() {
 
-	public static void w(String log) {
-		
-		 w(mMainTag, log);
-	}
-	
-	public static void w(String tag, String log) {
-		
-		if (mIsDebug)
-			Log.w(tag, log);
-	}
+        mIsDebug = false;
+    }
 
-	public static void e(String log) {
-		
-		e(mMainTag, log);
-	}
-	
-	public static void e(String tag, String log) {
-		
-		if (mIsDebug)
-			Log.e(tag, log);
-	}
+    public static void setMainTag(String tagName) {
+
+        mMainTag = tagName;
+    }
+
+    public static String getMainTag() {
+
+        return mMainTag;
+    }
+
+    public static void v(String log) {
+
+        v(mMainTag, log);
+    }
+
+    public static void v(String tag, String log) {
+
+        if (mIsDebug)
+            Log.v(tag, log);
+    }
+
+    public static void d(String log) {
+
+        d(mMainTag, log);
+    }
+
+    public static void d(String tag, String log) {
+
+        if (mIsDebug)
+            Log.d(tag, log);
+    }
+
+    public static void i(String log) {
+
+        i(mMainTag, log);
+    }
+
+    public static void i(String tag, String log) {
+
+        if (mIsDebug)
+            Log.i(tag, log);
+    }
+
+    public static void w(String log) {
+
+        w(mMainTag, log);
+    }
+
+    public static void w(String tag, String log) {
+
+        if (mIsDebug)
+            Log.w(tag, log);
+    }
+
+    public static void e(String log) {
+
+        e(mMainTag, log);
+    }
+
+    public static void e(String tag, String log) {
+
+        if (mIsDebug)
+            Log.e(tag, log);
+    }
 }
