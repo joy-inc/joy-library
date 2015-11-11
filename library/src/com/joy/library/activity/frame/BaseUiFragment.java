@@ -33,9 +33,9 @@ public abstract class BaseUiFragment extends Fragment implements DimenCons {
         return mFrameView;
     }
 
-    protected void setContentView(int layoutResId) {
+    protected void setContentView(@LayoutRes int layoutResID) {
 
-        setContentView(inflateLayout(layoutResId));
+        setContentView(inflateLayout(layoutResID));
     }
 
     protected void setContentView(View contentView) {
@@ -143,13 +143,13 @@ public abstract class BaseUiFragment extends Fragment implements DimenCons {
         ViewUtil.goneImageView(v);
     }
 
-    protected View inflateLayout(@LayoutRes int resource) {
+    protected View inflateLayout(@LayoutRes int layoutResID) {
 
-        return inflateLayout(resource, null);
+        return inflateLayout(layoutResID, null);
     }
 
-    protected View inflateLayout(@LayoutRes int resource, @Nullable ViewGroup root) {
+    protected View inflateLayout(@LayoutRes int layoutResID, @Nullable ViewGroup root) {
 
-        return getActivity().getLayoutInflater().inflate(resource, root);
+        return getActivity().getLayoutInflater().inflate(layoutResID, root);
     }
 }

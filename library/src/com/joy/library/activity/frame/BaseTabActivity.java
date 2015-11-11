@@ -26,7 +26,7 @@ import com.joy.library.utils.ViewUtil;
  * 基本的UI框架
  * Created by KEVIN.DAI on 15/7/16.
  */
-public abstract class BaseUiActivity extends AppCompatActivity implements DimenCons {
+public abstract class BaseTabActivity extends AppCompatActivity implements DimenCons {
 
     private Toolbar mToolbar;
 
