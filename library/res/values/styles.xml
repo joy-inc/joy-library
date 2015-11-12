@@ -29,6 +29,11 @@
         <item name="android:colorEdgeEffect" tools:targetApi="21">@color/color_primary</item>
     </style>
 
+    <style name="lib_theme_rv">
+        <item name="android:colorControlHighlight" tools:targetApi="21">@color/color_primary_light</item>
+        <item name="android:colorEdgeEffect" tools:targetApi="21">@color/color_primary</item>
+    </style>
+
     <style name="theme_translucent" parent="ex_base_theme">
         <item name="android:windowTranslucentStatus" tools:targetApi="19">true</item>
         <item name="android:windowTranslucentNavigation" tools:targetApi="19">true</item>
