@@ -55,11 +55,11 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
         setSupportActionBar(mToolbar);
         LayoutParams toolbarLp = new LayoutParams(LayoutParams.MATCH_PARENT, TITLE_BAR_HEIGHT);
         toolbarLp.gravity = Gravity.TOP;
-        rootView.addView(mToolbar, toolbarLp);
+//        rootView.addView(mToolbar, toolbarLp);
 
         // content view
         LayoutParams contentLp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        contentLp.topMargin = TITLE_BAR_HEIGHT;
+//        contentLp.topMargin = TITLE_BAR_HEIGHT;
         rootView.addView(contentView, contentLp);
     }
 

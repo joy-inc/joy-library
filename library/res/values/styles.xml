@@ -15,27 +15,29 @@
         <item name="android:textColorSecondary">@color/color_secondary_text</item>
 
         <item name="android:windowBackground">@color/white</item>
-        <item name="android:navigationBarColor" tools:targetApi="21">@color/color_primary</item>
+        <!--<item name="android:navigationBarColor" tools:targetApi="21">?colorPrimary</item>-->
 
         <!-- enable window content transitions -->
+        <!--
         <item name="android:windowContentTransitions" tools:targetApi="21">true</item>
 
         <item name="android:windowAllowEnterTransitionOverlap" tools:targetApi="21">true</item>
         <item name="android:windowAllowReturnTransitionOverlap" tools:targetApi="21">true</item>
+        -->
     </style>
 
     <style name="lib_theme_lv">
         <item name="android:colorControlHighlight" tools:targetApi="21">@color/ripple_material_light</item>
-        <item name="android:colorEdgeEffect" tools:targetApi="21">@color/color_primary</item>
+        <item name="android:colorEdgeEffect" tools:targetApi="21">?colorPrimary</item>
     </style>
 
     <style name="lib_theme_rv">
         <item name="android:colorControlHighlight" tools:targetApi="21">@color/color_primary_light</item>
-        <item name="android:colorEdgeEffect" tools:targetApi="21">@color/color_primary</item>
+        <item name="android:colorEdgeEffect" tools:targetApi="21">?colorPrimary</item>
     </style>
 
     <style name="theme_translucent" parent="ex_base_theme">
         <item name="android:windowTranslucentStatus" tools:targetApi="19">true</item>
-        <item name="android:windowTranslucentNavigation" tools:targetApi="19">true</item>
+        <!--<item name="android:windowTranslucentNavigation" tools:targetApi="19">true</item>-->
     </style>
 </resources>

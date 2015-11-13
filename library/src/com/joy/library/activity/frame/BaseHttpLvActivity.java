@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by KEVIN.DAI on 15/7/16.
  */
-public abstract class BaseHttpLvActivity<T extends List<?>> extends BaseHttpUiActivity<T> {
+public abstract class BaseHttpLvActivity<T> extends BaseHttpUiActivity<T> {
 
     private SwipeRefreshLayout mSwipeRefreshWidget;
     private ListView mListView;
@@ -163,9 +163,15 @@ public abstract class BaseHttpLvActivity<T extends List<?>> extends BaseHttpUiAc
         ExAdapter adapter = getAdapter();
         if (adapter != null) {
 
-            adapter.setData(datas);
+            List<?> listData = getListInvalidateContent(datas);
+            adapter.setData(listData);
             adapter.notifyDataSetChanged();
         }
+    }
+
+    protected List<?> getListInvalidateContent(T datas) {
+
+        return (List<?>) datas;
     }
 
     @Override

@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by KEVIN.DAI on 15/7/16.
  */
-public abstract class BaseHttpRvActivity<T extends List<?>> extends BaseHttpUiActivity<T> {
+public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
 
     private SwipeRefreshLayout mSwipeRefreshWidget;
     private RecyclerView mRecyclerView;
@@ -24,7 +24,7 @@ public abstract class BaseHttpRvActivity<T extends List<?>> extends BaseHttpUiAc
     private int mCurrentPageIndex = PAGE_START_INDEX;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         mRecyclerView = getDefaultRecyclerView();
@@ -32,7 +32,7 @@ public abstract class BaseHttpRvActivity<T extends List<?>> extends BaseHttpUiAc
     }
 
     @Override
-    public void onPause() {
+    protected void onPause() {
 
         super.onPause();
         if (isFinishing()) {
@@ -147,9 +147,15 @@ public abstract class BaseHttpRvActivity<T extends List<?>> extends BaseHttpUiAc
         ExRvAdapter adapter = getAdapter();
         if (adapter != null) {
 
-            adapter.setData(datas);
+            List<?> listData = getListInvalidateContent(datas);
+            adapter.setData(listData);
             adapter.notifyDataSetChanged();
         }
+    }
+
+    protected List<?> getListInvalidateContent(T datas) {
+
+        return (List<?>) datas;
     }
 
     @Override
