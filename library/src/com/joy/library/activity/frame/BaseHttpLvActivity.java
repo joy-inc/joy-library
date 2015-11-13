@@ -139,22 +139,22 @@ public abstract class BaseHttpLvActivity<T extends List<?>> extends BaseHttpUiAc
 
     protected void addHeaderView(View v) {
 
-        getListView().addHeaderView(v);
+        mListView.addHeaderView(v);
     }
 
     protected void addFooterView(View v) {
 
-        getListView().addFooterView(v);
+        mListView.addFooterView(v);
     }
 
     protected void setAdapter(ExAdapter<?> adapter) {
 
-        getListView().setAdapter(adapter);
+        mListView.setAdapter(adapter);
     }
 
     protected void setOnItemClickListener(OnItemClickListener listener) {
 
-        getListView().setOnItemClickListener(listener);
+        mListView.setOnItemClickListener(listener);
     }
 
     @Override
@@ -184,7 +184,7 @@ public abstract class BaseHttpLvActivity<T extends List<?>> extends BaseHttpUiAc
 
     protected ExAdapter<?> getAdapter() {
 
-        ListAdapter la = getListView().getAdapter();
+        ListAdapter la = mListView.getAdapter();
 
         if (la == null)
             return null;

@@ -22,7 +22,6 @@ public class DeviceUtil {
         String imei = "";
 
         try {
-
             Context ctx = BaseApplication.getContext();
             TelephonyManager telephonyManager = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
             if (telephonyManager != null) {
@@ -34,12 +33,10 @@ public class DeviceUtil {
                 if (imei == null)
                     imei = "";
             }
-
         } catch (Exception e) {
 
             e.printStackTrace();
         }
-
         return imei;
     }
 
@@ -85,9 +82,7 @@ public class DeviceUtil {
 
     public static boolean isNetworkDisable() {
 
-        ConnectivityManager conManager = (ConnectivityManager) BaseApplication.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = conManager.getActiveNetworkInfo();
-        return networkInfo == null || !networkInfo.isAvailable();
+        return !isNetworkEnable();
     }
 
     public static boolean isLollipopOrUpper() {

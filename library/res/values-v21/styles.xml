@@ -5,6 +5,6 @@
         <item name="android:transitionName">toolbar</item>
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
         <item name="android:background">?attr/colorPrimary</item>
-        <item name="android:elevation">8dp</item>
+        <item name="android:elevation">@dimen/design_appbar_elevation</item>
     </style>
 </resources>

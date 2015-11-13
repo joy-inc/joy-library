@@ -1,6 +1,5 @@
 package com.joy.library.activity.frame;
 
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,6 +19,7 @@ import com.joy.library.R;
 import com.joy.library.httptask.frame.CacheEntry;
 import com.joy.library.httptask.frame.ObjectRequest;
 import com.joy.library.httptask.frame.ObjectResponseListener;
+import com.joy.library.utils.LogMgr;
 
 /**
  * Created by KEVIN.DAI on 15/7/10.
@@ -120,7 +120,9 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
         Cache.Entry entry = new CacheEntry();
         req.setCacheEntry(entry);
 
-        Log.e("daisw", "~~" + entry.refreshNeeded() + " " + entry.isExpired());
+        if (LogMgr.isDebug())
+            LogMgr.e("daisw", "~~" + entry.refreshNeeded() + " " + entry.isExpired());
+
         addRequest2QueueHasCache(req, req.getIdentifier());
     }
 
@@ -207,7 +209,8 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
                 if (isFinishing())
                     return;
 
-                Log.e("BaseHttpUiActivity", "~~onError tag: " + tag + " msg: " + error);
+                if (LogMgr.isDebug())
+                    LogMgr.e("BaseHttpUiActivity", "~~onError tag: " + tag + " msg: " + error);
 
                 hideLoading();
                 showFailedTip();

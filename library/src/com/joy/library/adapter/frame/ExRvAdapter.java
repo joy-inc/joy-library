@@ -1,16 +1,11 @@
 package com.joy.library.adapter.frame;
 
-import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.joy.library.R;
 
 import java.util.List;
 
@@ -22,21 +17,15 @@ public abstract class ExRvAdapter<K extends ExRvViewHolder, T> extends RecyclerV
     private List<T> mData;
     private OnItemViewClickListener mOnItemViewClickLisn;
     private OnItemViewLongClickListener mOnItemViewLongClickLisn;
-    private int mBackgroundResId;
 
-    protected ExRvAdapter(Context context) {
+    protected ExRvAdapter() {
 
-        this(context, null);
+        this(null);
     }
 
-    protected ExRvAdapter(Context context, List<T> data) {
+    protected ExRvAdapter(List<T> data) {
 
         mData = data;
-
-        TypedValue typedValue = new TypedValue();
-        context.getTheme().resolveAttribute(R.attr.selectableItemBackground, typedValue, true);
-        mBackgroundResId = typedValue.resourceId;
-        Log.e("daisw", "~~" + mBackgroundResId);
     }
 
     @Override
@@ -63,9 +52,7 @@ public abstract class ExRvAdapter<K extends ExRvViewHolder, T> extends RecyclerV
 
     public View inflate(@NonNull ViewGroup parent, @LayoutRes int layoutResID) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(layoutResID, parent, false);
-        view.setBackgroundResource(mBackgroundResId);
-        return view;
+        return LayoutInflater.from(parent.getContext()).inflate(layoutResID, parent, false);
     }
 
     public boolean isEmpty() {
