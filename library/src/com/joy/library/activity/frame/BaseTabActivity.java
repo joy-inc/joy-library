@@ -185,16 +185,6 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
         return DeviceUtil.isNetworkDisable();
     }
 
-    protected static boolean isLollipopOrUpper() {
-
-        return DeviceUtil.isLollipopOrUpper();
-    }
-
-    protected static boolean isLollipopLower() {
-
-        return DeviceUtil.isLollipopLower();
-    }
-
     protected void showToast(String text) {
 
         ToastUtil.showToast(text);
