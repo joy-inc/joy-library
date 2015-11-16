@@ -55,7 +55,7 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
         setSupportActionBar(mToolbar);
         LayoutParams toolbarLp = new LayoutParams(LayoutParams.MATCH_PARENT, TITLE_BAR_HEIGHT);
         toolbarLp.gravity = Gravity.TOP;
-//        rootView.addView(mToolbar, toolbarLp);
+        rootView.addView(mToolbar, toolbarLp);
 
         // content view
         LayoutParams contentLp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
@@ -75,6 +75,11 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
     protected Toolbar getToolbar() {
 
         return mToolbar;
+    }
+
+    protected LayoutParams getToolbarLp() {
+
+        return (LayoutParams) mToolbar.getLayoutParams();
     }
 
     protected void setTitleBgColor(@ColorInt int color) {

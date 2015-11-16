@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ListView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:divider="@color/black_trans12"
-    android:dividerHeight="1dp"
-    android:theme="@style/lib_theme_lv" />
+    android:layout_height="match_parent" />

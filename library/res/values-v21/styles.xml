@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="ToolbarStyle" parent="Widget.AppCompat.Toolbar">
-        <item name="android:transitionName">toolbar</item>
-        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
-        <item name="android:background">?attr/colorPrimary</item>
-        <item name="android:elevation">@dimen/design_appbar_elevation</item>
-    </style>
 </resources>

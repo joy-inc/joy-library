@@ -160,6 +160,21 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
         mToolbar.setNavigationOnClickListener(listener);
     }
 
+    protected TabLayout getTabLayout() {
+
+        return mTabLayout;
+    }
+
+    /**
+     * Sets the tab indicator's height for the currently selected tab.
+     *
+     * @param height height to use for the indicator in pixels
+     */
+    protected void setTabIndicatorHeight(int height) {
+
+        mTabLayout.setSelectedTabIndicatorHeight(height);
+    }
+
     protected boolean isNetworkEnable() {
 
         return DeviceUtil.isNetworkEnable();
