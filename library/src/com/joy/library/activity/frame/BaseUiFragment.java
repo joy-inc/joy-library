@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,6 +64,12 @@ public abstract class BaseUiFragment extends Fragment implements DimenCons {
         return this;
     }
 
+    public BaseUiFragment setLableText(int  resId) {
+
+        mLableText = getString(resId);
+        return this;
+    }
+
     public CharSequence getLableText() {
 
         return mLableText;
@@ -98,7 +105,7 @@ public abstract class BaseUiFragment extends Fragment implements DimenCons {
         ToastUtil.showToast(text);
     }
 
-    protected void showToast(int resId) {
+    protected void showToast(@StringRes int resId) {
 
         showToast(getString(resId));
     }
