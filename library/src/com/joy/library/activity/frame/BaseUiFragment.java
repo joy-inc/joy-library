@@ -90,16 +90,6 @@ public abstract class BaseUiFragment extends Fragment implements DimenCons {
         return DeviceUtil.isNetworkDisable();
     }
 
-    protected static boolean isLollipopOrUpper() {
-
-        return DeviceUtil.isLollipopOrUpper();
-    }
-
-    protected static boolean isLollipopLower() {
-
-        return DeviceUtil.isLollipopLower();
-    }
-
     protected void showToast(String text) {
 
         ToastUtil.showToast(text);

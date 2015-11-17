@@ -3,7 +3,6 @@ package com.joy.library.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -83,15 +82,5 @@ public class DeviceUtil {
     public static boolean isNetworkDisable() {
 
         return !isNetworkEnable();
-    }
-
-    public static boolean isLollipopOrUpper() {
-
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
-    }
-
-    public static boolean isLollipopLower() {
-
-        return Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP;
     }
 }
