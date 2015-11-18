@@ -1,5 +1,6 @@
 package com.joy.library.httptask.frame;
 
+import android.os.Handler;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
@@ -73,8 +74,21 @@ public class ObjectRequest<T> extends Request<T> {
     public void deliverError(VolleyError error) {
 
 //        super.deliverError(error);
-        if (mObjRespLis != null)
-            mObjRespLis.onError(getTag(), error);
+        if (t != null) {
+
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+
+                    deliverResponse(t);
+                }
+            }, 1000);
+        } else {
+
+            if (mObjRespLis != null)
+                mObjRespLis.onError(getTag(), error);
+        }
     }
 
     @Override
@@ -142,5 +156,13 @@ public class ObjectRequest<T> extends Request<T> {
 
 //        super.onFinish();
         mObjRespLis = null;
+    }
+
+    // --- for test data ---
+    private T t;
+
+    public void setData(T t) {
+
+        this.t = t;
     }
 }

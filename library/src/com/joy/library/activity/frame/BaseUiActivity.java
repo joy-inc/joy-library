@@ -1,6 +1,8 @@
 package com.joy.library.activity.frame;
 
+import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
@@ -12,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
@@ -28,6 +31,7 @@ import com.joy.library.utils.ViewUtil;
  */
 public abstract class BaseUiActivity extends AppCompatActivity implements DimenCons {
 
+    private FrameLayout mFlRoot;
     private Toolbar mToolbar;
 
     @Override
@@ -39,9 +43,9 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
     @Override
     public void setContentView(View contentView) {
 
-        FrameLayout flRoot = new FrameLayout(this);
-        wrapContentView(flRoot, contentView);
-        super.setContentView(flRoot);
+        mFlRoot = new FrameLayout(this);
+        wrapContentView(mFlRoot, contentView);
+        super.setContentView(mFlRoot);
 
         initData();
         initTitleView();
@@ -50,17 +54,22 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
 
     protected void wrapContentView(FrameLayout rootView, View contentView) {
 
-        // toolbar
-        mToolbar = (Toolbar) inflateLayout(R.layout.lib_view_toolbar);
-        setSupportActionBar(mToolbar);
-        LayoutParams toolbarLp = new LayoutParams(LayoutParams.MATCH_PARENT, TITLE_BAR_HEIGHT);
-        toolbarLp.gravity = Gravity.TOP;
-        rootView.addView(mToolbar, toolbarLp);
+        TypedArray a = obtainStyledAttributes(R.styleable.Toolbar);
+        boolean overlay = a.getBoolean(R.styleable.Toolbar_overlay, false);
+        int height = a.getDimensionPixelSize(R.styleable.Toolbar_android_minHeight, TITLE_BAR_HEIGHT);
+        a.recycle();
 
         // content view
         LayoutParams contentLp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        contentLp.topMargin = TITLE_BAR_HEIGHT;
+        contentLp.topMargin = overlay ? -STATUS_BAR_HEIGHT : height;
         rootView.addView(contentView, contentLp);
+
+        // toolbar
+        mToolbar = (Toolbar) inflateLayout(R.layout.lib_view_toolbar);
+        setSupportActionBar(mToolbar);
+        LayoutParams toolbarLp = new LayoutParams(LayoutParams.MATCH_PARENT, height);
+        toolbarLp.gravity = Gravity.TOP;
+        rootView.addView(mToolbar, toolbarLp);
     }
 
     protected void initData() {
@@ -72,6 +81,11 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
     protected void initContentView() {
     }
 
+    protected FrameLayout getRootView() {
+
+        return mFlRoot;
+    }
+
     protected Toolbar getToolbar() {
 
         return mToolbar;
@@ -80,6 +94,34 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
     protected LayoutParams getToolbarLp() {
 
         return (LayoutParams) mToolbar.getLayoutParams();
+    }
+
+    protected void setStatusBarTranslucent(boolean translucent) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+
+            if (translucent) {
+
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//                getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            } else {
+
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            }
+        }
+    }
+
+    protected void setStatusBarColor(@ColorInt int color) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            getWindow().setStatusBarColor(color);
+    }
+
+    protected void setStatusBarColorResource(@ColorRes int colorResId) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            setStatusBarColor(getResources().getColor(colorResId));
     }
 
     protected void setTitleBgColor(@ColorInt int color) {
@@ -160,12 +202,12 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
         ToastUtil.showToast(text);
     }
 
-    protected void showToast(int resId) {
+    protected void showToast(@StringRes int resId) {
 
         showToast(getString(resId));
     }
 
-    protected void showToast(int resId, Object... formatArgs) {
+    protected void showToast(@StringRes int resId, Object... formatArgs) {
 
         showToast(getString(resId, formatArgs));
     }
