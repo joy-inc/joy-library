@@ -59,7 +59,7 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
 
         // content view
         LayoutParams contentLp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-//        contentLp.topMargin = TITLE_BAR_HEIGHT;
+        contentLp.topMargin = TITLE_BAR_HEIGHT;
         rootView.addView(contentView, contentLp);
     }
 
