@@ -205,6 +205,11 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
         }
     }
 
+    protected void setSwipeRefreshEnable(boolean enable) {
+
+        mSwipeRefreshWidget.setEnabled(enable);
+    }
+
     protected void setColorSchemeResources(int... colorResIds) {
 
         mSwipeRefreshWidget.setColorSchemeResources(colorResIds);

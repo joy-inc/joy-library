@@ -190,12 +190,12 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
         ToastUtil.showToast(text);
     }
 
-    protected void showToast(int resId) {
+    protected void showToast(@StringRes int resId) {
 
         showToast(getString(resId));
     }
 
-    protected void showToast(int resId, Object... formatArgs) {
+    protected void showToast(@StringRes int resId, Object... formatArgs) {
 
         showToast(getString(resId, formatArgs));
     }

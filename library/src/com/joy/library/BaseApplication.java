@@ -2,6 +2,9 @@ package com.joy.library;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.res.Resources;
+import android.support.annotation.ArrayRes;
+import android.support.annotation.StringRes;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -31,6 +34,26 @@ public class BaseApplication extends Application {
         return mContext;
     }
 
+    public static Resources getAppResources() {
+
+        return mContext.getResources();
+    }
+
+    public static String getAppString(@StringRes int resId) {
+
+        return getAppResources().getString(resId);
+    }
+
+    public static String getAppString(@StringRes int resId, Object... formatArgs) {
+
+        return getAppResources().getString(resId, formatArgs);
+    }
+
+    public static String[] getAppStringArray(@ArrayRes int resId) {
+
+        return getAppResources().getStringArray(resId);
+    }
+
 //    private static void releaseContext() {
 //
 //        mContext = null;
@@ -49,7 +72,7 @@ public class BaseApplication extends Application {
         // lazy initialize the request queue, the queue instance will be created when it is accessed for the first time
         if (mReqQueue == null) {
 
-            mReqQueue = Volley.newRequestQueue(getContext());
+            mReqQueue = Volley.newRequestQueue(mContext);
             mReqQueue.addRequestFinishedListener(mReqFinishLis);
         }
         return mReqQueue;

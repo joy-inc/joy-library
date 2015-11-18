@@ -13,6 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 
+import com.joy.library.BaseApplication;
 import com.joy.library.utils.DeviceUtil;
 import com.joy.library.utils.DimenCons;
 import com.joy.library.utils.ToastUtil;
@@ -64,9 +65,9 @@ public abstract class BaseUiFragment extends Fragment implements DimenCons {
         return this;
     }
 
-    public BaseUiFragment setLableText(int  resId) {
+    public BaseUiFragment setLableText(@StringRes int resId) {
 
-        mLableText = getString(resId);
+        mLableText = getActivity() == null ? BaseApplication.getAppString(resId) : getString(resId);
         return this;
     }
 
@@ -100,7 +101,7 @@ public abstract class BaseUiFragment extends Fragment implements DimenCons {
         showToast(getString(resId));
     }
 
-    protected void showToast(int resId, Object... formatArgs) {
+    protected void showToast(@StringRes int resId, Object... formatArgs) {
 
         showToast(getString(resId, formatArgs));
     }

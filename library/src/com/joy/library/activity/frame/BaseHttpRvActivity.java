@@ -177,6 +177,11 @@ public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
         return (ExRvAdapter) mRecyclerView.getAdapter();
     }
 
+    protected void setSwipeRefreshEnable(boolean enable) {
+
+        mSwipeRefreshWidget.setEnabled(enable);
+    }
+
     protected void setColorSchemeResources(int... colorResIds) {
 
         mSwipeRefreshWidget.setColorSchemeResources(colorResIds);
