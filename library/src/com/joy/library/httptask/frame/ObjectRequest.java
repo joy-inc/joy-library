@@ -68,13 +68,14 @@ public class ObjectRequest<T> extends Request<T> {
 
         if (mObjRespLis != null)
             mObjRespLis.onSuccess(getTag(), t);
+        mObjRespLis = null;
     }
 
     @Override
     public void deliverError(VolleyError error) {
 
 //        super.deliverError(error);
-        if (t != null) {
+        if (isTestMode()) {
 
             new Handler().postDelayed(new Runnable() {
 
@@ -88,6 +89,7 @@ public class ObjectRequest<T> extends Request<T> {
 
             if (mObjRespLis != null)
                 mObjRespLis.onError(getTag(), error);
+            mObjRespLis = null;
         }
     }
 
@@ -155,7 +157,7 @@ public class ObjectRequest<T> extends Request<T> {
     protected void onFinish() {
 
 //        super.onFinish();
-        mObjRespLis = null;
+//        mObjRespLis = null;
     }
 
     // --- for test data ---
@@ -164,5 +166,10 @@ public class ObjectRequest<T> extends Request<T> {
     public void setData(T t) {
 
         this.t = t;
+    }
+
+    private boolean isTestMode() {
+
+        return t != null;
     }
 }
