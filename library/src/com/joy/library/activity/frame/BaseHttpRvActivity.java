@@ -176,15 +176,17 @@ public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
     @Override
     protected void showLoading() {
 
-        super.showLoading();
-        showSwipeRefresh();
+        if (!isSwipeRefreshing())
+            super.showLoading();
     }
 
     @Override
     protected void hideLoading() {
 
-        super.hideLoading();
-        hideSwipeRefresh();
+        if (isSwipeRefreshing())
+            hideSwipeRefresh();
+        else
+            super.hideLoading();
     }
 
     protected void setSwipeRefreshEnable(boolean enable) {

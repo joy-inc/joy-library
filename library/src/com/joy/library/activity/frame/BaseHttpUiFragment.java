@@ -62,7 +62,7 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
     private void addLoadingView(ViewGroup frame) {
 
         mLoadingView = JLoadingView.get(getActivity());
-        hideView(mLoadingView);// 默认隐藏
+        mLoadingView.hide();// 默认隐藏
         frame.addView(mLoadingView, JLoadingView.getLp());
     }
 
@@ -142,12 +142,12 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
 
     protected void showLoading() {
 
-        showView(mLoadingView);
+        mLoadingView.show();
     }
 
     protected void hideLoading() {
 
-        goneView(mLoadingView);
+        mLoadingView.hide();
     }
 
     protected abstract boolean invalidateContent(T t);
