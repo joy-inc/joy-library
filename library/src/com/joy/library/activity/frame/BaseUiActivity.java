@@ -31,8 +31,8 @@ import com.joy.library.utils.ViewUtil;
  */
 public abstract class BaseUiActivity extends AppCompatActivity implements DimenCons {
 
-    private FrameLayout mFlRoot;
     private Toolbar mToolbar;
+    private FrameLayout mFlRoot;
 
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
@@ -227,9 +227,9 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
         ViewUtil.goneView(v);
     }
 
-    protected void showImageView(ImageView v, int imageResId) {
+    protected void showImageView(ImageView v, @DrawableRes int resId) {
 
-        ViewUtil.showImageView(v, imageResId);
+        ViewUtil.showImageView(v, resId);
     }
 
     protected void showImageView(ImageView v, Drawable drawable) {

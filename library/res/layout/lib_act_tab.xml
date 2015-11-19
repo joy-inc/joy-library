@@ -35,6 +35,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:layout_margin="16dp"
-        android:src="@drawable/abc_ic_search_api_mtrl_alpha" />
+        android:layout_margin="16dp" />
 </android.support.design.widget.CoordinatorLayout>

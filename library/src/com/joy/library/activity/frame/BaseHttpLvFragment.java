@@ -11,6 +11,7 @@ import android.widget.ListView;
 
 import com.joy.library.R;
 import com.joy.library.adapter.frame.ExAdapter;
+import com.joy.library.utils.CollectionUtil;
 
 import java.util.List;
 
@@ -147,31 +148,49 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
         mListView.addFooterView(v);
     }
 
-    protected void setAdapter(ExAdapter<?> adapter) {
-
-        mListView.setAdapter(adapter);
-    }
-
     protected void setOnItemClickListener(OnItemClickListener listener) {
 
         mListView.setOnItemClickListener(listener);
     }
 
-    @Override
-    protected void invalidateContent(T datas) {
+    protected void setAdapter(ExAdapter adapter) {
 
-        ExAdapter adapter = getAdapter();
-        if (adapter != null) {
+        mListView.setAdapter(adapter);
+    }
 
-            List<?> listData = getListInvalidateContent(datas);
-            adapter.setData(listData);
-            adapter.notifyDataSetChanged();
+    protected ExAdapter getAdapter() {
+
+        try {
+            ListAdapter adapter = mListView.getAdapter();
+            if (adapter instanceof HeaderViewListAdapter)
+                return (ExAdapter) ((HeaderViewListAdapter) adapter).getWrappedAdapter();
+            else
+                return (ExAdapter) adapter;
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            return null;
         }
     }
 
-    protected List<?> getListInvalidateContent(T datas) {
+    @Override
+    protected boolean invalidateContent(T t) {
 
-        return (List<?>) datas;
+        List<?> datas = getListInvalidateContent(t);
+        if (CollectionUtil.isEmpty(datas))
+            return false;
+        ExAdapter adapter = getAdapter();
+        if (adapter != null) {
+
+            adapter.setData(datas);
+            adapter.notifyDataSetChanged();
+        }
+        return true;
+    }
+
+    protected List<?> getListInvalidateContent(T t) {
+
+        return (List<?>) t;
     }
 
     @Override
@@ -186,23 +205,6 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
 
         super.hideLoading();
         hideSwipeRefresh();
-    }
-
-    protected ExAdapter<?> getAdapter() {
-
-        ListAdapter la = mListView.getAdapter();
-
-        if (la == null)
-            return null;
-
-        if (la instanceof HeaderViewListAdapter) {
-
-            HeaderViewListAdapter hvla = (HeaderViewListAdapter) la;
-            return (ExAdapter<?>) hvla.getWrappedAdapter();
-        } else {
-
-            return (ExAdapter<?>) la;
-        }
     }
 
     protected void setSwipeRefreshEnable(boolean enable) {

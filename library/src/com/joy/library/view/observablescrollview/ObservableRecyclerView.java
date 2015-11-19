@@ -27,6 +27,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.joy.library.utils.LogMgr;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,6 +99,8 @@ public class ObservableRecyclerView extends RecyclerView implements Scrollable {
         return ss;
     }
 
+    private int mPreBottomMargin;
+
     @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
@@ -117,7 +121,9 @@ public class ObservableRecyclerView extends RecyclerView implements Scrollable {
 
                 View firstVisibleChild = getChildAt(0);
                 if (firstVisibleChild != null) {
-                    if (mPrevFirstVisiblePosition < firstVisiblePosition) {
+                    if (firstVisiblePosition > mPrevFirstVisiblePosition) {
+                        if (LogMgr.isDebug())
+                            LogMgr.e("daisw","~~> to down");
                         // scroll down
                         int skippedChildrenHeight = 0;
                         if (firstVisiblePosition - mPrevFirstVisiblePosition != 1) {
@@ -132,9 +138,16 @@ public class ObservableRecyclerView extends RecyclerView implements Scrollable {
                                 }
                             }
                         }
-                        mPrevScrolledChildrenHeight += mPrevFirstVisibleChildHeight + skippedChildrenHeight;
+                        LayoutParams lp = (LayoutParams) firstVisibleChild.getLayoutParams();
+                        int topMargin = lp.topMargin;
+                        int bottomMargin = lp.bottomMargin;
+                        mPrevScrolledChildrenHeight += mPrevFirstVisibleChildHeight + skippedChildrenHeight + topMargin + mPreBottomMargin;
                         mPrevFirstVisibleChildHeight = firstVisibleChild.getHeight();
+                        mPreBottomMargin = bottomMargin;
                     } else if (firstVisiblePosition < mPrevFirstVisiblePosition) {
+                        mPreBottomMargin = 0;
+                        if (LogMgr.isDebug())
+                            LogMgr.e("daisw","~~< to up");
                         // scroll up
                         int skippedChildrenHeight = 0;
                         if (mPrevFirstVisiblePosition - firstVisiblePosition != 1) {
@@ -149,11 +162,22 @@ public class ObservableRecyclerView extends RecyclerView implements Scrollable {
                                 }
                             }
                         }
-                        mPrevScrolledChildrenHeight -= firstVisibleChild.getHeight() + skippedChildrenHeight;
+                        int topMargin,bottomMargin;
+                        if (firstVisiblePosition == 0) {
+                            topMargin = ((LayoutParams) getChildAt(1).getLayoutParams()).topMargin;
+                        } else {
+                            topMargin = ((LayoutParams) getChildAt(0).getLayoutParams()).topMargin;
+                        }
+                        bottomMargin = ((LayoutParams) getChildAt(0).getLayoutParams()).bottomMargin;
                         mPrevFirstVisibleChildHeight = firstVisibleChild.getHeight();
+                        mPrevScrolledChildrenHeight -= mPrevFirstVisibleChildHeight + skippedChildrenHeight + topMargin + bottomMargin;
                     } else if (firstVisiblePosition == 0) {
+                        int bottomMargin = ((LayoutParams) getChildAt(1).getLayoutParams()).bottomMargin;
                         mPrevFirstVisibleChildHeight = firstVisibleChild.getHeight();
-                        mPrevScrolledChildrenHeight = 0;
+                        if (mPrevScrolledChildrenHeight != bottomMargin)
+                            mPrevScrolledChildrenHeight = 0;
+                        else
+                            mPreBottomMargin = 0;
                     }
                     if (mPrevFirstVisibleChildHeight < 0) {
                         mPrevFirstVisibleChildHeight = 0;

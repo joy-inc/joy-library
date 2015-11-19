@@ -153,7 +153,7 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
         goneView(mProgressbar);
     }
 
-    protected abstract void invalidateContent(T datas);
+    protected abstract boolean invalidateContent(T t);
 
     /**
      * 子类可以继承此方法得到失败时的错误信息，用于Toast提示
@@ -200,7 +200,9 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
                     return;
 
                 hideLoading();
-                invalidateContent(t);
+                boolean contentUsable = invalidateContent(t);
+                if (!contentUsable)
+                    showNoContentTip();
             }
 
             @Override

@@ -82,7 +82,7 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
         mTabLayout.setupWithViewPager(viewPager);
         // float action bar
         mFloatActionBtn = (FloatingActionButton) findViewById(R.id.fab);
-        hideView(mFloatActionBtn);
+        setFloatActionBtnDisable();
     }
 
     protected boolean isPagerItemDestoryEnable() {
@@ -175,6 +175,29 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
         mTabLayout.setSelectedTabIndicatorHeight(height);
     }
 
+    protected FloatingActionButton getFloatActionBtn() {
+
+        return mFloatActionBtn;
+    }
+
+    protected void setFloatActionBtnEnable(@DrawableRes int resId, View.OnClickListener lisn) {
+
+        setFloatActionBtnEnable(getResources().getDrawable(resId), lisn);
+    }
+
+    protected void setFloatActionBtnEnable(Drawable drawable, View.OnClickListener lisn) {
+
+        mFloatActionBtn.setEnabled(true);
+        showImageView(mFloatActionBtn, drawable);
+        mFloatActionBtn.setOnClickListener(lisn);
+    }
+
+    protected void setFloatActionBtnDisable() {
+
+        mFloatActionBtn.setEnabled(false);
+        hideImageView(mFloatActionBtn);
+    }
+
     protected boolean isNetworkEnable() {
 
         return DeviceUtil.isNetworkEnable();
@@ -215,9 +238,9 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
         ViewUtil.goneView(v);
     }
 
-    protected void showImageView(ImageView v, int imageResId) {
+    protected void showImageView(ImageView v, @DrawableRes int resId) {
 
-        ViewUtil.showImageView(v, imageResId);
+        ViewUtil.showImageView(v, resId);
     }
 
     protected void showImageView(ImageView v, Drawable drawable) {

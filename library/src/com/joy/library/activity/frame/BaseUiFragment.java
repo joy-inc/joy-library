@@ -2,6 +2,7 @@ package com.joy.library.activity.frame;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -121,9 +122,9 @@ public abstract class BaseUiFragment extends Fragment implements DimenCons {
         ViewUtil.goneView(v);
     }
 
-    protected void showImageView(ImageView v, int imageResId) {
+    protected void showImageView(ImageView v, @DrawableRes int resId) {
 
-        ViewUtil.showImageView(v, imageResId);
+        ViewUtil.showImageView(v, resId);
     }
 
     protected void showImageView(ImageView v, Drawable drawable) {

@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.joy.library.R;
 import com.joy.library.adapter.frame.ExRvAdapter;
+import com.joy.library.utils.CollectionUtil;
 
 import java.util.List;
 
@@ -141,21 +142,35 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
         mRecyclerView.setAdapter(adapter);
     }
 
-    @Override
-    protected void invalidateContent(T datas) {
+    protected ExRvAdapter getAdapter() {
 
-        ExRvAdapter adapter = getAdapter();
-        if (adapter != null) {
+        try {
+            return (ExRvAdapter) mRecyclerView.getAdapter();
+        } catch (Exception e) {
 
-            List<?> listData = getListInvalidateContent(datas);
-            adapter.setData(listData);
-            adapter.notifyDataSetChanged();
+            e.printStackTrace();
+            return null;
         }
     }
 
-    protected List<?> getListInvalidateContent(T datas) {
+    @Override
+    protected boolean invalidateContent(T t) {
 
-        return (List<?>) datas;
+        List<?> datas = getListInvalidateContent(t);
+        if (CollectionUtil.isEmpty(datas))
+            return false;
+        ExRvAdapter adapter = getAdapter();
+        if (adapter != null) {
+
+            adapter.setData(datas);
+            adapter.notifyDataSetChanged();
+        }
+        return true;
+    }
+
+    protected List<?> getListInvalidateContent(T t) {
+
+        return (List<?>) t;
     }
 
     @Override
@@ -170,11 +185,6 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
 
         super.hideLoading();
         hideSwipeRefresh();
-    }
-
-    protected ExRvAdapter getAdapter() {
-
-        return (ExRvAdapter) mRecyclerView.getAdapter();
     }
 
     protected void setSwipeRefreshEnable(boolean enable) {
