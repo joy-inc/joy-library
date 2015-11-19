@@ -1,6 +1,5 @@
 package com.joy.library.activity.frame;
 
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -8,7 +7,6 @@ import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
-import android.widget.ProgressBar;
 
 import com.android.volley.Cache;
 import com.android.volley.Request;
@@ -20,6 +18,7 @@ import com.joy.library.httptask.frame.CacheEntry;
 import com.joy.library.httptask.frame.ObjectRequest;
 import com.joy.library.httptask.frame.ObjectResponseListener;
 import com.joy.library.utils.LogMgr;
+import com.joy.library.widget.JLoadingView;
 
 /**
  * Created by KEVIN.DAI on 15/7/10.
@@ -27,7 +26,7 @@ import com.joy.library.utils.LogMgr;
 public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
 
     private ImageView mIvTip;
-    private ProgressBar mProgressbar;
+    private JLoadingView mLoadingView;
     private int mTipResId;
     private final int FAILED_RES_ID = R.mipmap.ic_net_error;
     private final int DISABLED_RES_ID = R.mipmap.ic_tip_null;
@@ -62,11 +61,10 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
 
     private void addLoadingView(ViewGroup frame) {
 
-        mProgressbar = new ProgressBar(this);
-        mProgressbar.setTranslationY(STATUS_BAR_HEIGHT);// 纵向正偏移，使其纵向居中
-        mProgressbar.setIndeterminate(true);
-        hideView(mProgressbar);// 默认隐藏
-        frame.addView(mProgressbar, new LayoutParams(DP_1_PX * 80, DP_1_PX * 80, Gravity.CENTER));
+        mLoadingView = new JLoadingView(this);
+        mLoadingView.setTranslationY(STATUS_BAR_HEIGHT);// 纵向正偏移，使其纵向居中
+        mLoadingView.hide();// 默认隐藏
+        frame.addView(mLoadingView, JLoadingView.getLp());
     }
 
     protected void onTipViewClick() {
@@ -145,12 +143,12 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
 
     protected void showLoading() {
 
-        showView(mProgressbar);
+        mLoadingView.show();
     }
 
     protected void hideLoading() {
 
-        goneView(mProgressbar);
+        mLoadingView.hide();
     }
 
     protected abstract boolean invalidateContent(T t);
