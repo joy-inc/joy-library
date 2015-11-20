@@ -212,8 +212,8 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
                 if (LogMgr.isDebug())
                     LogMgr.e("BaseHttpUiActivity", "~~onError tag: " + tag + " msg: " + error);
 
-                hideLoading();
                 showFailedTip();
+                hideLoading();
                 onHttpFailed(tag, error == null ? "" : error.getMessage());
             }
         };

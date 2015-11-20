@@ -1,5 +1,6 @@
 package com.joy.library.activity.frame;
 
+import android.support.annotation.DrawableRes;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -45,7 +46,6 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
     private void addTipView(ViewGroup frame) {
 
         mIvTip = new ImageView(getActivity());
-//        mIvTip.setTranslationY(STATUS_BAR_HEIGHT);// 纵向正偏移，使其纵向居中
         mIvTip.setScaleType(ScaleType.CENTER_INSIDE);
         mIvTip.setOnClickListener(new OnClickListener() {
 
@@ -140,6 +140,12 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
         showImageView(mIvTip, mTipResId);
     }
 
+    protected void showCustomTip(@DrawableRes int resId) {
+
+        mTipResId = resId;
+        showImageView(mIvTip, mTipResId);
+    }
+
     protected void showLoading() {
 
         mLoadingView.show();
@@ -211,8 +217,8 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
                 if (LogMgr.isDebug())
                     LogMgr.e("BaseHttpUiActivity", "~~onError tag: " + tag + " msg: " + error);
 
-                hideLoading();
                 showFailedTip();
+                hideLoading();
                 onHttpFailed(tag, error == null ? "" : error.getMessage());
             }
         };

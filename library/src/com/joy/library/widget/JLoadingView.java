@@ -9,6 +9,7 @@ import android.widget.ProgressBar;
 import com.joy.library.utils.DimenCons;
 
 /**
+ * 全局统一的LoadingView
  * Created by KEVIN.DAI on 15/11/19.
  */
 public class JLoadingView extends ProgressBar implements DimenCons {

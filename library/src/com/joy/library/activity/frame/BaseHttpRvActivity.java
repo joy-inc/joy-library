@@ -81,7 +81,7 @@ public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
             startManualRefresh();
         } else {
 
-//            abortSwipeRefresh();
+            hideSwipeRefresh();
             showToast(R.string.toast_common_no_network);
         }
     }
@@ -187,6 +187,13 @@ public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
             hideSwipeRefresh();
         else
             super.hideLoading();
+    }
+
+    @Override
+    protected void showFailedTip() {
+
+        if (!isSwipeRefreshing())
+            super.showFailedTip();
     }
 
     protected void setSwipeRefreshEnable(boolean enable) {

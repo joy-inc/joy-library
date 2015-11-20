@@ -5,6 +5,7 @@ import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 
 /**
+ * 全局统一的ImageView
  * Created by KEVIN.DAI on 15/11/19.
  */
 public class JImageView extends AppCompatImageView {
