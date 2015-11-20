@@ -5,6 +5,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.view.View;
 
 import com.joy.library.R;
@@ -29,6 +30,7 @@ public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
 
         super.onCreate(savedInstanceState);
         mRecyclerView = getDefaultRecyclerView();
+        mRecyclerView.setLayoutManager(getDefaultLayoutManager());
         setContentView(wrapSwipeRefresh(mRecyclerView));
     }
 
@@ -50,6 +52,19 @@ public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
     protected RecyclerView getDefaultRecyclerView() {
 
         return (RecyclerView) inflateLayout(R.layout.lib_view_recycler);
+    }
+
+    /**
+     * 子类可以复写此方法，为自己定制LayoutManager，默认为LayoutManager
+     * LinearLayoutManager (线性显示，类似于ListView)
+     * GridLayoutManager (线性宫格显示，类似于GridView)
+     * StaggeredGridLayoutManager(线性宫格显示，类似于瀑布流)
+     *
+     * @return
+     */
+    protected LayoutManager getDefaultLayoutManager() {
+
+        return new LinearLayoutManager(this);
     }
 
     private View wrapSwipeRefresh(View contentView) {
@@ -138,7 +153,6 @@ public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
 
     protected void setAdapter(ExRvAdapter adapter) {
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(adapter);
     }
 

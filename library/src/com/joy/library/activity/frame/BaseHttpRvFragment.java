@@ -29,6 +29,7 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
 
         super.onActivityCreated(savedInstanceState);
         mRecyclerView = getDefaultRecyclerView();
+        mRecyclerView.setLayoutManager(getDefaultLayoutManager());
         setContentView(wrapSwipeRefresh(mRecyclerView));
     }
 
@@ -50,6 +51,19 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
     protected RecyclerView getDefaultRecyclerView() {
 
         return (RecyclerView) inflateLayout(R.layout.lib_view_recycler);
+    }
+
+    /**
+     * 子类可以复写此方法，为自己定制LayoutManager，默认为LinearLayoutManager
+     * LinearLayoutManager (线性显示，类似于ListView)
+     * GridLayoutManager (线性宫格显示，类似于GridView)
+     * StaggeredGridLayoutManager(线性宫格显示，类似于瀑布流)
+     *
+     * @return
+     */
+    protected RecyclerView.LayoutManager getDefaultLayoutManager() {
+
+        return new LinearLayoutManager(getActivity());
     }
 
     private View wrapSwipeRefresh(View contentView) {
@@ -138,7 +152,6 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
 
     protected void setAdapter(ExRvAdapter adapter) {
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(adapter);
     }
 
