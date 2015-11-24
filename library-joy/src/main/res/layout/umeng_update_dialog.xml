@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#99232323" >
+	
+    <LinearLayout
+        android:id="@+id/umeng_update_frame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/umeng_bg_update_dialog"
+        android:orientation="vertical" >
+
+        <!-- Title -->
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/umeng_update_wifi_indicator"
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:visibility="gone"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/UMGprsCondition"
+                android:src="@null" />
+            
+            
+            <com.android.library.widget.JTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:padding="24dp"
+                android:singleLine="true"
+                android:text="发现新版本"
+                android:textColor="#FF40C895"
+                android:textSize="18dp" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/umeng_update_id_close"
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:background="@null"
+                android:focusable="true"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+       
+        <!-- Content -->
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:paddingBottom="24dp" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <com.android.library.widget.JTextView
+                    android:id="@+id/umeng_update_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="24dp"
+                    android:paddingRight="24dp"
+                    android:paddingTop="16dp"
+                    android:background="@android:color/white"
+                    android:textColor="#89000000"
+                    android:textSize="14dp" />
+            </LinearLayout>
+        </ScrollView>
+        
+        
+        <CheckBox
+		    android:id="@+id/umeng_update_id_check"
+	        android:layout_width="match_parent"
+	        android:layout_height="1dp"
+	        android:visibility="gone"
+	        android:text="@string/UMIgnore"
+	        android:button="@drawable/umeng_update_button_check_selector"
+	        android:textColor="#AAABAF" />
+
+       
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right|center_vertical"
+            android:paddingRight="20dp"
+            android:paddingBottom="20dp"
+            android:orientation="horizontal" >
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/umeng_update_id_ignore"
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:visibility="gone" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/umeng_update_id_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="4dp"
+                android:background="@null"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="取消"
+                android:textColor="#89000000"
+                android:textSize="14dp" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/umeng_update_id_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:paddingLeft="10dp"
+                android:text="立即更新"
+                android:textColor="#FF40C895"
+                android:textSize="14dp" />
+            
+            
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>
+
