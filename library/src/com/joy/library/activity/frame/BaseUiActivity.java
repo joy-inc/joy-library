@@ -181,10 +181,19 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
         });
     }
 
-    protected void addTitleLeftView(@DrawableRes int resId, View.OnClickListener listener) {
+    protected void addTitleLeftView(@DrawableRes int resId, View.OnClickListener lisn) {
 
         mToolbar.setNavigationIcon(resId);
-        mToolbar.setNavigationOnClickListener(listener);
+        mToolbar.setNavigationOnClickListener(lisn);
+    }
+
+    protected void addTitleRightView(View v, View.OnClickListener lisn) {
+
+        v.setOnClickListener(lisn);
+        Toolbar.LayoutParams lp = new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
+        lp.gravity = Gravity.RIGHT;
+        lp.rightMargin = getToolbar().getContentInsetLeft();
+        mToolbar.addView(v, lp);
     }
 
     protected boolean isNetworkEnable() {

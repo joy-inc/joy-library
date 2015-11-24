@@ -79,4 +79,28 @@ public class ViewUtil {
             v.setVisibility(View.GONE);
         v.setImageDrawable(null);
     }
+
+    public static void showViews(View... views) {
+
+        if (views == null || views.length == 0)
+            return;
+        for (View v : views)
+            showView(v);
+    }
+
+    public static void hideViews(View... views) {
+
+        if (views == null || views.length == 0)
+            return;
+        for (View v : views)
+            hideView(v);
+    }
+
+    public static void goneViews(View... views) {
+
+        if (views == null || views.length == 0)
+            return;
+        for (View v : views)
+            goneView(v);
+    }
 }

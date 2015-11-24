@@ -14,6 +14,7 @@ public abstract class ExAdapter<T> extends BaseAdapter {
     private OnItemViewLongClickListener mOnItemViewLongClickLisn;
 
     protected ExAdapter() {
+
     }
 
     protected ExAdapter(List<T> data) {
@@ -36,9 +37,8 @@ public abstract class ExAdapter<T> extends BaseAdapter {
     @Override
     public T getItem(int position) {
 
-        if (mData == null) {
+        if (mData == null)
             return null;
-        }
 
         T t = null;
         try {
@@ -55,7 +55,7 @@ public abstract class ExAdapter<T> extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        ExViewHolder viewHolder = null;
+        ExViewHolder viewHolder;
         if (convertView == null) {
 
             viewHolder = getViewHolder(position);
@@ -84,35 +84,35 @@ public abstract class ExAdapter<T> extends BaseAdapter {
     }
 
     public void add(int position, T item) {
-        if (mData != null && item != null) {
+
+        if (mData != null && item != null)
             mData.add(position, item);
-        }
     }
 
     public void add(T item) {
 
-        if (mData != null && item != null) {
+        if (mData != null && item != null)
             mData.add(item);
-        }
     }
 
     public void addAll(List<T> data) {
-        if (data == null) {
+
+        if (data == null)
             return;
-        }
 
         if (mData == null) {
+
             mData = data;
         } else {
+
             mData.addAll(data);
         }
     }
 
     public void addAll(int position, List<T> item) {
 
-        if (mData != null && item != null) {
+        if (mData != null && item != null)
             mData.addAll(position, item);
-        }
     }
 
     public List<T> getData() {
@@ -122,23 +122,20 @@ public abstract class ExAdapter<T> extends BaseAdapter {
 
     public void remove(T item) {
 
-        if (mData != null) {
+        if (mData != null)
             mData.remove(item);
-        }
     }
 
     public void remove(int position) {
 
-        if (mData != null) {
+        if (mData != null)
             mData.remove(position);
-        }
     }
 
     public void removeAll() {
 
-        if (mData != null) {
+        if (mData != null)
             mData.clear();
-        }
     }
 
     public void clear() {
