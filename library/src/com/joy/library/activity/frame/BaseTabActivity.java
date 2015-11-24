@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -160,9 +161,28 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
         mToolbar.setNavigationOnClickListener(listener);
     }
 
+    protected void addTitleRightView(View v, View.OnClickListener lisn) {
+
+        v.setOnClickListener(lisn);
+        Toolbar.LayoutParams lp = new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
+        lp.gravity = Gravity.RIGHT;
+        lp.rightMargin = getToolbar().getContentInsetLeft();
+        mToolbar.addView(v, lp);
+    }
+
     protected TabLayout getTabLayout() {
 
         return mTabLayout;
+    }
+
+    /**
+     * Sets the tab indicator's color for the currently selected tab.
+     *
+     * @param color color to use for the indicator
+     */
+    protected void setTabIndicatorColor(@ColorInt int color) {
+
+        mTabLayout.setSelectedTabIndicatorColor(color);
     }
 
     /**
@@ -173,6 +193,14 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
     protected void setTabIndicatorHeight(int height) {
 
         mTabLayout.setSelectedTabIndicatorHeight(height);
+    }
+
+    /**
+     * Sets the text colors for the different states (normal, selected) used for the tabs.
+     */
+    protected void setTabTextColors(@ColorInt int normalColor, @ColorInt int selectedColor) {
+
+        mTabLayout.setTabTextColors(normalColor, selectedColor);
     }
 
     protected FloatingActionButton getFloatActionBtn() {

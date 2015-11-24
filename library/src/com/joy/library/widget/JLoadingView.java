@@ -3,6 +3,7 @@ package com.joy.library.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ProgressBar;
 
@@ -52,9 +53,14 @@ public class JLoadingView extends ProgressBar implements DimenCons {
      */
     public static JLoadingView get(Context context) {
 
-        JLoadingView loadingView = new JLoadingView(context);
-        loadingView.setIndeterminate(true);
-        return loadingView;
+        JLoadingView v = new JLoadingView(context);
+        v.setIndeterminate(true);
+        return v;
+    }
+
+    public static LayoutParams getLoadMoreLp() {
+
+        return new LayoutParams(DP_1_PX * 30, DP_1_PX * 30);
     }
 
     /**
@@ -65,8 +71,8 @@ public class JLoadingView extends ProgressBar implements DimenCons {
      */
     public static JLoadingView getLoadMore(Context context) {
 
-        JLoadingView loadingView = new JLoadingView(context);
-        loadingView.setIndeterminate(true);
-        return loadingView;
+        JLoadingView v = new JLoadingView(context);
+        v.setIndeterminate(true);
+        return v;
     }
 }

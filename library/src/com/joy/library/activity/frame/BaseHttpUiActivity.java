@@ -119,7 +119,7 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
         req.setCacheEntry(entry);
 
         if (LogMgr.isDebug())
-            LogMgr.e("daisw", "~~" + entry.refreshNeeded() + " " + entry.isExpired());
+            LogMgr.e("daisw", "~~refreshNeeded: " + entry.refreshNeeded() + " isExpired: " + entry.isExpired());
 
         addRequest2QueueHasCache(req, req.getIdentifier());
     }
