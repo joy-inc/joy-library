@@ -15,53 +15,57 @@ import com.android.library.utils.ViewUtil;
  */
 public class JFooter extends LinearLayout {
 
-    private View mRootView, mRetryView, mLoadingDiv, mProgressView;
+    private View mRootView, mRetryView, mLoadingDiv;
     private RetryLoadClickListener mRetryClickLisn;
 
     public JFooter(Context context) {
 
         super(context);
-        initView(context);
+        init(context);
     }
 
     public JFooter(Context context, AttributeSet attrs) {
 
         super(context, attrs);
-        initView(context);
+        init(context);
     }
 
-    private void initView(Context context) {
+    private void init(Context context) {
 
         setOrientation(VERTICAL);
 
         mRootView = LayoutInflater.from(context).inflate(R.layout.lib_view_footer, null);
         addView(mRootView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 
-        mLoadingDiv = findViewById(R.id.llLoadingDiv);
         mRetryView = findViewById(R.id.jtvReload);
-        mRetryView.setOnClickListener(new OnClickListener() {
+        mLoadingDiv = findViewById(R.id.llLoadingDiv);
+
+        setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-                if (mRetryClickLisn != null)
+                if (isFailed() && mRetryClickLisn != null)
                     mRetryClickLisn.onRetry();
             }
         });
     }
 
-    public void setLoadingState() {
+    public void loading() {
 
         ViewUtil.hideView(mRetryView);
-        ViewUtil.showView(mProgressView);
         ViewUtil.showView(mLoadingDiv);
     }
 
-    public void setFailedState() {
+    public void failed() {
 
-        ViewUtil.hideView(mProgressView);
         ViewUtil.hideView(mLoadingDiv);
         ViewUtil.showView(mRetryView);
+    }
+
+    public boolean isFailed() {
+
+        return mRetryView.getVisibility() == VISIBLE;
     }
 
     public void setLoadingView(View v, FrameLayout.LayoutParams flLp) {
@@ -71,14 +75,13 @@ public class JFooter extends LinearLayout {
             flDiv.removeAllViews();
 
         flDiv.addView(v, flLp);
-        mProgressView = v;
     }
 
     public void done() {
 
-        ViewUtil.hideView(mProgressView);
         LayoutParams lp = (LayoutParams) mRootView.getLayoutParams();
         lp.height = 0;
+        mRootView.setLayoutParams(lp);
     }
 
     public void ready() {
@@ -88,13 +91,13 @@ public class JFooter extends LinearLayout {
         mRootView.setLayoutParams(lp);
     }
 
-    public void setRetryLoadClickListener(RetryLoadClickListener lisn) {
-
-        mRetryClickLisn = lisn;
-    }
-
     public interface RetryLoadClickListener {
 
         void onRetry();
+    }
+
+    public void setRetryLoadClickListener(RetryLoadClickListener lisn) {
+
+        mRetryClickLisn = lisn;
     }
 }

@@ -27,7 +27,7 @@ public abstract class BaseHttpLvActivity<T> extends BaseHttpUiActivity<T> {
     private JListView mJListView;
     private int mPageLimit = 20;
     private static final int PAGE_START_INDEX = 1;// 默认从第一页开始
-    private int mCurrentPageIndex = PAGE_START_INDEX;
+    private int mPageIndex = PAGE_START_INDEX;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +63,6 @@ public abstract class BaseHttpLvActivity<T> extends BaseHttpUiActivity<T> {
 
     private View wrapSwipeRefresh(View contentView) {
 
-        // swipe refresh widget
         mSwipeRefreshWidget = new SwipeRefreshLayout(this);
         mSwipeRefreshWidget.setColorSchemeResources(R.color.holo_blue_bright, R.color.holo_green_light, R.color.holo_orange_light, R.color.holo_red_light);
         mSwipeRefreshWidget.setOnRefreshListener(getDefaultRefreshLisn());
@@ -84,7 +83,10 @@ public abstract class BaseHttpLvActivity<T> extends BaseHttpUiActivity<T> {
                     showToast(R.string.toast_common_no_network);
                 } else {
 
-                    startSwipeRefresh();
+                    // TODO abort load more http task.
+
+                    mPageIndex = PAGE_START_INDEX;
+                    startRefresh();
                 }
             }
         };
@@ -95,46 +97,24 @@ public abstract class BaseHttpLvActivity<T> extends BaseHttpUiActivity<T> {
         return new OnLoadMoreListener() {
 
             @Override
-            public void onAuto() {
+            public void onRefresh(boolean isAuto) {
 
-//                if (isNetworkDisable())
-//                    return false;
-                startLoadMoreRefresh();
-//                return true;
-            }
+                if (isNetworkDisable()) {
 
-            @Override
-            public void onManual() {
+                    onLoadMoreFailed();
+                    if (!isAuto)
+                        showToast(R.string.toast_common_no_network);
+                } else {
 
-//                if (isNetworkDisable()) {
-//
-//                    showToast(R.string.toast_common_no_network);
-//                    return false;
-//                }
-                startLoadMoreRefresh();
-//                return true;
+                    // TODO abort swipe refresh http task.
+
+                    startRefresh();
+                }
             }
         };
     }
 
-    private void startSwipeRefresh() {
-
-        // TODO abort load more http task.
-
-        mCurrentPageIndex = PAGE_START_INDEX;// 重置起始页码
-
-        if (isNeedCache()) {
-
-            executeRefreshAndCache();
-        } else {
-
-            executeRefresh();
-        }
-    }
-
-    private void startLoadMoreRefresh() {
-
-        // TODO abort swipe refresh http task.
+    private void startRefresh() {
 
         if (isNeedCache()) {
 
@@ -148,7 +128,7 @@ public abstract class BaseHttpLvActivity<T> extends BaseHttpUiActivity<T> {
     @Override
     protected ObjectRequest<T> getObjectRequest() {
 
-        return getObjectRequest(mCurrentPageIndex, mPageLimit);
+        return getObjectRequest(mPageIndex, mPageLimit);
     }
 
     protected abstract ObjectRequest<T> getObjectRequest(int pageIndex, int pageLimit);
@@ -170,7 +150,7 @@ public abstract class BaseHttpLvActivity<T> extends BaseHttpUiActivity<T> {
 
     protected int getPageIndex() {
 
-        return mCurrentPageIndex;
+        return mPageIndex;
     }
 
     protected JListView getListView() {
@@ -220,15 +200,19 @@ public abstract class BaseHttpLvActivity<T> extends BaseHttpUiActivity<T> {
         if (CollectionUtil.isEmpty(datas))
             return false;
 
-        mJListView.setLoadMoreEnable(datas.size() >= mPageLimit);
-        mJListView.stopLoadMore();
+        setLoadMoreEnable(datas.size() >= mPageLimit);
+        if (isLoadMoreEnable())
+            hideLoadMore();
 
         ExAdapter adapter = getAdapter();
         if (adapter != null) {
 
-            adapter.addAll(datas);
+            if (mPageIndex == PAGE_START_INDEX)
+                adapter.setData(datas);
+            else
+                adapter.addAll(datas);
             adapter.notifyDataSetChanged();
-            mCurrentPageIndex++;
+            mPageIndex++;
         }
         return true;
     }
@@ -241,7 +225,7 @@ public abstract class BaseHttpLvActivity<T> extends BaseHttpUiActivity<T> {
     @Override
     protected void onHttpFailed(Object tag, String msg) {
 
-        mJListView.stopLoadMoreFailed();
+        onLoadMoreFailed();
     }
 
     @Override
@@ -256,9 +240,7 @@ public abstract class BaseHttpLvActivity<T> extends BaseHttpUiActivity<T> {
 
         if (isSwipeRefreshing())
             hideSwipeRefresh();
-        else if (isLoadingMore()) {
-
-        } else
+        else if (!isLoadingMore())
             super.hideLoading();
     }
 
@@ -308,5 +290,25 @@ public abstract class BaseHttpLvActivity<T> extends BaseHttpUiActivity<T> {
     protected boolean isLoadingMore() {
 
         return mJListView.isLoadingMore();
+    }
+
+    protected boolean isLoadMoreEnable() {
+
+        return mJListView.isLoadMoreEnable();
+    }
+
+    protected void setLoadMoreEnable(boolean enable) {
+
+        mJListView.setLoadMoreEnable(enable);
+    }
+
+    protected void hideLoadMore() {
+
+        mJListView.stopLoadMore();
+    }
+
+    protected void onLoadMoreFailed() {
+
+        mJListView.stopLoadMoreFailed();
     }
 }
