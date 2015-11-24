@@ -13,6 +13,7 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="transparent">#00000000</color>
+    <color name="grey">#f5f5f5</color>
 
     <!-- ICE_CREAM_SANDWICH API:14 -->
     <!-- A light Holo shade of blue -->
