@@ -200,9 +200,9 @@ public abstract class BaseHttpLvActivity<T> extends BaseHttpUiActivity<T> {
         if (CollectionUtil.isEmpty(datas))
             return false;
 
-        setLoadMoreEnable(isLoadMoreEnable(datas.size()));
-        if (isLoadMoreEnable())
-            hideLoadMore();
+        mJListView.setLoadMoreEnable(mLoadMoreEnable && datas.size() >= mPageLimit);
+        if (mJListView.isLoadMoreEnable())
+            mJListView.stopLoadMore();
 
         ExAdapter adapter = getAdapter();
         if (adapter != null) {
@@ -292,28 +292,15 @@ public abstract class BaseHttpLvActivity<T> extends BaseHttpUiActivity<T> {
         return mJListView.isLoadingMore();
     }
 
-    protected final boolean isLoadMoreEnable() {
-
-        return mJListView.isLoadMoreEnable();
-    }
-
-    protected final void setLoadMoreEnable(boolean enable) {
-
-        mJListView.setLoadMoreEnable(enable);
-    }
-
-    protected final void hideLoadMore() {
-
-        mJListView.stopLoadMore();
-    }
-
     protected final void onLoadMoreFailed() {
 
         mJListView.stopLoadMoreFailed();
     }
 
-    protected boolean isLoadMoreEnable(int dataSize) {
+    private boolean mLoadMoreEnable = true;
 
-        return dataSize >= mPageLimit;
+    protected void setLoadMoreEnable(boolean enable) {
+
+        mLoadMoreEnable = enable;
     }
 }
