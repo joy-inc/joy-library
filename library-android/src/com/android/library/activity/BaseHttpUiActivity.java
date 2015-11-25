@@ -8,10 +8,6 @@ import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
-import com.android.volley.Cache;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.VolleyError;
 import com.android.library.BaseApplication;
 import com.android.library.R;
 import com.android.library.httptask.CacheEntry;
@@ -19,6 +15,10 @@ import com.android.library.httptask.ObjectRequest;
 import com.android.library.httptask.ObjectResponseListener;
 import com.android.library.utils.LogMgr;
 import com.android.library.widget.JLoadingView;
+import com.android.volley.Cache;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
 
 /**
  * Created by KEVIN.DAI on 15/7/10.
@@ -61,7 +61,7 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
 
     private void addLoadingView(ViewGroup frame) {
 
-        mLoadingView = new JLoadingView(this);
+        mLoadingView = JLoadingView.get(this);
         mLoadingView.setTranslationY(STATUS_BAR_HEIGHT);// 纵向正偏移，使其纵向居中
         mLoadingView.hide();// 默认隐藏
         frame.addView(mLoadingView, JLoadingView.getLp());
@@ -95,12 +95,14 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
     protected void executeRefresh() {
 
         ObjectRequest<T> req = getObjectRequest();
+        req.setResponseListener(getObjRespLis());
         addRequest2QueueNoCache(req, req.getIdentifier());
     }
 
     protected void executeCache() {
 
         ObjectRequest<T> req = getObjectRequest();
+        req.setResponseListener(getObjRespLis());
         addRequest2QueueHasCache(req, req.getIdentifier());
     }
 
@@ -109,12 +111,14 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
         mIsNeedCache = true;
 
         ObjectRequest<T> req = getObjectRequest();
+        req.setResponseListener(getObjRespLis());
         addRequest2QueueHasCache(req, req.getIdentifier());
     }
 
     protected void executeCacheAndRefresh() {
 
         ObjectRequest<T> req = getObjectRequest();
+        req.setResponseListener(getObjRespLis());
         Cache.Entry entry = new CacheEntry();
         req.setCacheEntry(entry);
 
@@ -122,6 +126,42 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
             LogMgr.e("daisw", "~~refreshNeeded: " + entry.refreshNeeded() + " isExpired: " + entry.isExpired());
 
         addRequest2QueueHasCache(req, req.getIdentifier());
+    }
+
+    private ObjectResponseListener<T> getObjRespLis() {
+
+        return new ObjectResponseListener<T>() {
+
+            @Override
+            public void onPre() {
+
+                showLoading();
+                hideTipView();
+            }
+
+            @Override
+            public void onSuccess(Object tag, T t) {
+
+                if (isFinishing())
+                    return;
+
+                hideLoading();
+                boolean contentUsable = invalidateContent(t);
+                if (!contentUsable)
+                    showNoContentTip();
+            }
+
+            @Override
+            public void onError(Object tag, VolleyError error) {
+
+                if (isFinishing())
+                    return;
+
+                showFailedTip();
+                hideLoading();
+                onHttpFailed(tag, error == null ? "" : error.getMessage());
+            }
+        };
     }
 
     protected void showFailedTip() {
@@ -166,57 +206,21 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
 
     protected abstract ObjectRequest<T> getObjectRequest();
 
-    protected void addRequest2QueueNoCache(ObjectRequest<T> req, Object tag) {
+    protected void addRequest2QueueNoCache(ObjectRequest<?> req, Object tag) {
 
         addRequest2Queue(req, tag, false);
     }
 
-    protected void addRequest2QueueHasCache(ObjectRequest<T> req, Object tag) {
+    protected void addRequest2QueueHasCache(ObjectRequest<?> req, Object tag) {
 
         addRequest2Queue(req, tag, true);
     }
 
-    protected void addRequest2Queue(ObjectRequest<T> req, Object tag, boolean shouldCache) {
+    protected void addRequest2Queue(ObjectRequest<?> req, Object tag, boolean shouldCache) {
 
-        showLoading();
-        hideTipView();
-
-        req.setResponseListener(getObjRespLis());
-        req.setShouldCache(shouldCache);
         req.setTag(tag);
+        req.setShouldCache(shouldCache);
         getRequestQueue().add(req);
-    }
-
-    private ObjectResponseListener<T> getObjRespLis() {
-
-        return new ObjectResponseListener<T>() {
-
-            @Override
-            public void onSuccess(Object tag, T t) {
-
-                if (isFinishing())
-                    return;
-
-                hideLoading();
-                boolean contentUsable = invalidateContent(t);
-                if (!contentUsable)
-                    showNoContentTip();
-            }
-
-            @Override
-            public void onError(Object tag, VolleyError error) {
-
-                if (isFinishing())
-                    return;
-
-                if (LogMgr.isDebug())
-                    LogMgr.e("BaseHttpUiActivity", "~~onError tag: " + tag + " msg: " + error);
-
-                showFailedTip();
-                hideLoading();
-                onHttpFailed(tag, error == null ? "" : error.getMessage());
-            }
-        };
     }
 
     protected void removeRequestFromQueue(Object tag) {

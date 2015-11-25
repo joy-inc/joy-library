@@ -22,7 +22,7 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
     private RecyclerView mRecyclerView;
     private int mPageLimit = 20;
     private static final int PAGE_START_INDEX = 1;// 默认从第一页开始
-    private int mCurrentPageIndex = PAGE_START_INDEX;
+    private int mPageIndex = PAGE_START_INDEX;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -68,7 +68,6 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
 
     private View wrapSwipeRefresh(View contentView) {
 
-        // swipe refresh widget
         mSwipeRefreshWidget = new SwipeRefreshLayout(getActivity());
         mSwipeRefreshWidget.setColorSchemeResources(R.color.holo_blue_bright, R.color.holo_green_light, R.color.holo_orange_light, R.color.holo_red_light);
         mSwipeRefreshWidget.setOnRefreshListener(getDefaultRefreshLisn());
@@ -104,7 +103,7 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
 
         // TODO abort load more http task.
 
-        mCurrentPageIndex = PAGE_START_INDEX;// 重置起始页码
+        mPageIndex = PAGE_START_INDEX;
 
         if (isNeedCache()) {
 
@@ -119,7 +118,7 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
 
 //        mSwipeRefreshWidget.stopSwipeRefresh();// 中断下拉刷新
 //
-//        HttpFrameParams hfp = getXListViewHttpParams(mCurrentPageIndex + 1, mPageLimit);
+//        HttpFrameParams hfp = getXListViewHttpParams(mPageIndex + 1, mPageLimit);
 //        mLoadMoreHttpTask = new HttpTask(hfp.params);
 //        mLoadMoreHttpTask.setListener(getLodMoreListener(hfp));
 //        mLoadMoreHttpTask.execute();
@@ -145,9 +144,9 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
         return mPageLimit;
     }
 
-    protected int getCurrentPageIndex() {
+    protected int getPageIndex() {
 
-        return mCurrentPageIndex;
+        return mPageIndex;
     }
 
     protected void setAdapter(ExRvAdapter adapter) {

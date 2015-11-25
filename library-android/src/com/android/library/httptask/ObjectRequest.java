@@ -52,6 +52,8 @@ public class ObjectRequest<T> extends Request<T> {
     public void setResponseListener(ObjectResponseListener<T> lisn) {
 
         mObjRespLis = lisn;
+        if (mObjRespLis != null)// TODO 暂时先放在这儿
+            mObjRespLis.onPre();
     }
 
     public void setCacheAndRefresh() {

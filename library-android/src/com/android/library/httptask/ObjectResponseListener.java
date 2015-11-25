@@ -7,6 +7,8 @@ import com.android.volley.VolleyError;
  */
 public interface ObjectResponseListener<T> {
 
+    void onPre();
+
     void onSuccess(Object tag, T t);
 
     void onError(Object tag, VolleyError error);
