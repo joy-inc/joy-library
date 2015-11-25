@@ -126,7 +126,7 @@ public abstract class BaseHttpLvActivity<T> extends BaseHttpUiActivity<T> {
     }
 
     @Override
-    protected ObjectRequest<T> getObjectRequest() {
+    protected final ObjectRequest<T> getObjectRequest() {
 
         return getObjectRequest(mPageIndex, mPageLimit);
     }
@@ -200,7 +200,7 @@ public abstract class BaseHttpLvActivity<T> extends BaseHttpUiActivity<T> {
         if (CollectionUtil.isEmpty(datas))
             return false;
 
-        setLoadMoreEnable(datas.size() >= mPageLimit);
+        setLoadMoreEnable(isLoadMoreEnable(datas.size()));
         if (isLoadMoreEnable())
             hideLoadMore();
 
@@ -287,28 +287,33 @@ public abstract class BaseHttpLvActivity<T> extends BaseHttpUiActivity<T> {
         mSwipeRefreshWidget.setRefreshing(false);
     }
 
-    protected boolean isLoadingMore() {
+    protected final boolean isLoadingMore() {
 
         return mJListView.isLoadingMore();
     }
 
-    protected boolean isLoadMoreEnable() {
+    protected final boolean isLoadMoreEnable() {
 
         return mJListView.isLoadMoreEnable();
     }
 
-    protected void setLoadMoreEnable(boolean enable) {
+    protected final void setLoadMoreEnable(boolean enable) {
 
         mJListView.setLoadMoreEnable(enable);
     }
 
-    protected void hideLoadMore() {
+    protected final void hideLoadMore() {
 
         mJListView.stopLoadMore();
     }
 
-    protected void onLoadMoreFailed() {
+    protected final void onLoadMoreFailed() {
 
         mJListView.stopLoadMoreFailed();
+    }
+
+    protected boolean isLoadMoreEnable(int dataSize) {
+
+        return dataSize >= mPageLimit;
     }
 }
