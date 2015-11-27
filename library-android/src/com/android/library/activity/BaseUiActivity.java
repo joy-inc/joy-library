@@ -187,11 +187,20 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
         mToolbar.setNavigationIcon(resId);
         mToolbar.setNavigationOnClickListener(lisn);
     }
-    protected void addTitleMiddleView(int resId) {
+
+    protected void addTitleMiddleView(@StringRes int resId) {
 
         TextView title = new TextView(this);
-        title.setText(getString(resId));
-        addTitleMiddleView(title,null);
+        title.setText(resId);
+        addTitleMiddleView(title, null);
+    }
+
+    protected void addTitleMiddleView(View v, View.OnClickListener lisn) {
+
+        v.setOnClickListener(lisn);
+        Toolbar.LayoutParams lp = new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
+        lp.gravity = Gravity.CENTER;
+        mToolbar.addView(v, lp);
     }
 
     protected void addTitleRightView(View v, View.OnClickListener lisn) {
@@ -200,13 +209,6 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
         Toolbar.LayoutParams lp = new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
         lp.gravity = Gravity.RIGHT;
         lp.rightMargin = getToolbar().getContentInsetLeft();
-        mToolbar.addView(v, lp);
-    }
-    protected void addTitleMiddleView(View v, View.OnClickListener lisn) {
-
-        v.setOnClickListener(lisn);
-        Toolbar.LayoutParams lp = new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
-        lp.gravity = Gravity.CENTER_HORIZONTAL;
         mToolbar.addView(v, lp);
     }
 
