@@ -15,7 +15,7 @@ public class AppUtil {
      *
      * @return
      */
-    public static long getInstallAppTime() {
+    public static long getInstallTime() {
 
         long firstInstallTime = 0;
 

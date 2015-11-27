@@ -3,6 +3,8 @@ package com.android.library.httptask;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
+import com.android.library.utils.CollectionUtil;
+import com.android.volley.AuthFailureError;
 import com.android.volley.Cache.Entry;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -13,6 +15,7 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 /**
  * Created by KEVIN.DAI on 15/7/10.
@@ -21,6 +24,7 @@ public class ObjectRequest<T> extends Request<T> {
 
     private Class mClazz;
     private ObjectResponseListener<T> mObjRespLis;
+    private Map<String, String> mHeaders, mParams;
 
     /**
      * Creates a new request with the given method.
@@ -29,7 +33,7 @@ public class ObjectRequest<T> extends Request<T> {
      * @param url    URL to fetch the Object
      * @param clazz  the Object class to return
      */
-    public ObjectRequest(int method, String url, Class clazz) {
+    private ObjectRequest(int method, String url, Class clazz) {
 
         super(method, url, null);
         mClazz = clazz;
@@ -41,9 +45,46 @@ public class ObjectRequest<T> extends Request<T> {
      * @param url   URL to fetch the Object
      * @param clazz the Object class to return
      */
-    public ObjectRequest(String url, Class clazz) {
+    public static ObjectRequest get(String url, Class clazz) {
 
-        this(Method.GET, url, clazz);
+        return new ObjectRequest(Method.GET, url, clazz);
+    }
+
+    /**
+     * Creates a new POST request.
+     *
+     * @param url   URL to fetch the Object
+     * @param clazz the Object class to return
+     */
+    public static ObjectRequest post(String url, Class clazz) {
+
+        return new ObjectRequest(Method.POST, url, clazz);
+    }
+
+    public void setHeaders(Map<String, String> headers) {
+
+        mHeaders = headers;
+    }
+
+    public void setParams(Map<String, String> params) {
+
+        mParams = params;
+    }
+
+    @Override
+    public Map<String, String> getHeaders() throws AuthFailureError {
+
+        if (CollectionUtil.isNotEmpty(mHeaders))
+            return mHeaders;
+        return super.getHeaders();
+    }
+
+    @Override
+    protected Map<String, String> getParams() throws AuthFailureError {
+
+        if (CollectionUtil.isNotEmpty(mParams))
+            return mParams;
+        return super.getParams();
     }
 
     /**
@@ -118,7 +159,6 @@ public class ObjectRequest<T> extends Request<T> {
 
             JSONObject jsonObj = new JSONObject(jsonText);
             resp.setStatus(jsonObj.getInt("status"));
-            resp.setInfo(jsonObj.getString("info"));
 
             if (resp.isSuccess()) {
 
@@ -151,6 +191,14 @@ public class ObjectRequest<T> extends Request<T> {
 //        super.onFinish();
         mClazz = null;
         mObjRespLis = null;
+
+        if (CollectionUtil.isNotEmpty(mHeaders))
+            mHeaders.clear();
+        mHeaders = null;
+        if (CollectionUtil.isNotEmpty(mParams))
+            mParams.clear();
+        mParams = null;
+
         t = null;
     }
 
