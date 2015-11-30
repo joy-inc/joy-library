@@ -6,27 +6,32 @@ import android.content.res.Resources;
 import android.support.annotation.ArrayRes;
 import android.support.annotation.StringRes;
 
+import com.android.library.httptask.TestVolley;
+import com.android.library.utils.LogMgr;
+import com.android.volley.Cache;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.RequestQueue.RequestFilter;
 import com.android.volley.RequestQueue.RequestFinishedListener;
 import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.Volley;
-import com.android.library.utils.LogMgr;
 
 /**
  * Created by KEVIN.DAI on 15/7/8.
  */
 public class BaseApplication extends Application {
 
-    private static Context mContext = null;
+    private static Context mContext;
+    /**
+     * Global request queue for Volley.
+     */
+    private static RequestQueue mReqQueue;
 
     @Override
     public void onCreate() {
 
         super.onCreate();
         mContext = getApplicationContext();
-        VolleyLog.DEBUG = true;
+        initVolley();
     }
 
     public static Context getContext() {
@@ -60,22 +65,29 @@ public class BaseApplication extends Application {
 //    }
 
     /**
-     * Global request queue for Volley
+     * the queue will be created if it is null.
      */
-    private static RequestQueue mReqQueue;
+    private void initVolley() {
+
+        if (mReqQueue == null) {
+
+            mReqQueue = TestVolley.newRequestQueue(mContext);
+            mReqQueue.addRequestFinishedListener(mReqFinishLis);
+        }
+        VolleyLog.DEBUG = true;
+    }
 
     /**
-     * @return The Volley Request queue, the queue will be created if it is null
+     * @return The Volley Request queue.
      */
     public static RequestQueue getRequestQueue() {
 
-        // lazy initialize the request queue, the queue instance will be created when it is accessed for the first time
-        if (mReqQueue == null) {
-
-            mReqQueue = Volley.newRequestQueue(mContext);
-            mReqQueue.addRequestFinishedListener(mReqFinishLis);
-        }
         return mReqQueue;
+    }
+
+    public static Cache getVolleyCache() {
+
+        return mReqQueue == null ? null : mReqQueue.getCache();
     }
 
     private static RequestFinishedListener mReqFinishLis = new RequestFinishedListener() {
@@ -84,7 +96,7 @@ public class BaseApplication extends Application {
         public void onRequestFinished(Request request) {
 
             if (LogMgr.isDebug())
-                LogMgr.d("BaseApplication", "~~request finished tag: " + request.getTag() + ", sequence number: " + request.getSequence());
+                LogMgr.d("BaseApplication", "~~request finished. tag: " + request.getTag() + ", sequence number: " + request.getSequence());
         }
     };
 
@@ -101,7 +113,7 @@ public class BaseApplication extends Application {
                     return true;
                 }
             });
-            mReqQueue = null;
+//            mReqQueue = null;
         }
     }
 

@@ -3,6 +3,8 @@ package com.android.library.httptask;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
+import com.android.library.BaseApplication;
+import com.android.library.httptask.TestCache.OnEntryListener;
 import com.android.library.utils.CollectionUtil;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Cache.Entry;
@@ -10,7 +12,6 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HttpHeaderParser;
 
 import org.json.JSONObject;
 
@@ -25,6 +26,8 @@ public class ObjectRequest<T> extends Request<T> {
     private Class mClazz;
     private ObjectResponseListener<T> mObjRespLis;
     private Map<String, String> mHeaders, mParams;
+    private CacheMode mCacheMode;
+    private boolean mHasCache;
 
     /**
      * Creates a new request with the given method.
@@ -37,7 +40,32 @@ public class ObjectRequest<T> extends Request<T> {
 
         super(method, url, null);
         mClazz = clazz;
+        mHasCache = BaseApplication.getVolleyCache().get(getCacheKey()) != null;
+        addEntryListener();
     }
+
+    private void addEntryListener() {
+
+        TestCache cache = (TestCache) BaseApplication.getVolleyCache();
+        if (cache != null)
+            cache.addEntryListener(mOnEntryListener);
+    }
+
+    private void removeEntryListener() {
+
+        TestCache cache = (TestCache) BaseApplication.getVolleyCache();
+        if (cache != null)
+            cache.removeEntryListener(mOnEntryListener);
+    }
+
+    private OnEntryListener mOnEntryListener = new OnEntryListener() {
+
+        @Override
+        public void onEntry(TestEntry entry) {
+
+            entry.setCacheMode(mCacheMode);
+        }
+    };
 
     /**
      * Creates a new GET request.
@@ -87,6 +115,21 @@ public class ObjectRequest<T> extends Request<T> {
         return super.getParams();
     }
 
+    public void setCacheMode(CacheMode mode) {
+
+        mCacheMode = mode;
+    }
+
+    public CacheMode getCacheMode() {
+
+        return mCacheMode;
+    }
+
+    public boolean hasCache() {
+
+        return mHasCache;
+    }
+
     /**
      * @param lisn Listener to receive the Object response
      */
@@ -95,14 +138,6 @@ public class ObjectRequest<T> extends Request<T> {
         mObjRespLis = lisn;
         if (mObjRespLis != null)// TODO 暂时先放在这儿
             mObjRespLis.onPre();
-    }
-
-    public void setCacheAndRefresh() {
-
-    }
-
-    public void setLoadFromCache() {
-
     }
 
     @Override
@@ -122,7 +157,7 @@ public class ObjectRequest<T> extends Request<T> {
         } else {
 
             if (mObjRespLis != null)
-                mObjRespLis.onError(getTag(), error);
+                mObjRespLis.onError(getTag(), ErrorHelper.getErrorType(error));
         }
     }
 
@@ -132,7 +167,7 @@ public class ObjectRequest<T> extends Request<T> {
         String parsed;
         try {
 
-            String charsetName = HttpHeaderParser.parseCharset(response.headers);
+            String charsetName = HeaderParser.parseCharset(response.headers);
             parsed = new String(response.data, charsetName);
         } catch (UnsupportedEncodingException e) {
 
@@ -140,16 +175,22 @@ public class ObjectRequest<T> extends Request<T> {
             e.printStackTrace();
         }
 
-        T t = onResponse(parsed).getData();
-        Entry entry = HttpHeaderParser.parseCacheHeaders(response);
-        return Response.success(t, entry);
+        QyerResponse<T> resp = onResponse(parsed);
+        if (resp.isSuccess()) {
+
+            Entry entry = HeaderParser.parseCacheHeaders(response);
+            return Response.success(resp.getData(), entry);
+        } else {
+
+            return Response.error(new VolleyError(resp.getMsg()));
+        }
     }
 
-    private QyerResponse<T> onResponse(String jsonText) {
+    private QyerResponse<T> onResponse(String json) {
 
         QyerResponse<T> resp = new QyerResponse();
 
-        if (TextUtils.isEmpty(jsonText)) {
+        if (TextUtils.isEmpty(json)) {
 
             resp.setParseBrokenStatus();
             return resp;
@@ -157,23 +198,26 @@ public class ObjectRequest<T> extends Request<T> {
 
         try {
 
-            JSONObject jsonObj = new JSONObject(jsonText);
-            resp.setStatus(jsonObj.getInt("status"));
+            JSONObject jsonObj = new JSONObject(json);
+            if (jsonObj.has("status"))
+                resp.setStatus(jsonObj.getInt("status"));
+            if (jsonObj.has("msg"))
+                resp.setMsg(jsonObj.getString("msg"));
 
             if (resp.isSuccess()) {
 
-                jsonText = jsonObj.getString("data");
-                if (TextUtils.isEmpty(jsonText)) {
+                json = jsonObj.getString("data");
+                if (TextUtils.isEmpty(json)) {
 
                     resp.setData((T) mClazz.newInstance());
                 } else {
 
-                    if (jsonText.startsWith("[")) {// JsonArray
+                    if (json.startsWith("[")) {// JsonArray
 
-                        resp.setData(((T) JSON.parseArray(jsonText, mClazz)));
+                        resp.setData(((T) JSON.parseArray(json, mClazz)));
                     } else {// JsonObj
 
-                        resp.setData((T) JSON.parseObject(jsonText, mClazz));
+                        resp.setData((T) JSON.parseObject(json, mClazz));
                     }
                 }
             }
@@ -191,15 +235,17 @@ public class ObjectRequest<T> extends Request<T> {
 //        super.onFinish();
         mClazz = null;
         mObjRespLis = null;
-
-        if (CollectionUtil.isNotEmpty(mHeaders))
-            mHeaders.clear();
-        mHeaders = null;
-        if (CollectionUtil.isNotEmpty(mParams))
-            mParams.clear();
-        mParams = null;
-
         t = null;
+
+        if (mHeaders != null) {
+            mHeaders.clear();
+            mHeaders = null;
+        }
+        if (mParams != null) {
+            mParams.clear();
+            mParams = null;
+        }
+        removeEntryListener();
     }
 
     // --- for test data ---

@@ -39,7 +39,7 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
         super.onPause();
         if (isFinishing()) {
 
-            // TODO abort all http task.
+            // TODO abort swipeRefresh and loadMore http task.
         }
     }
 
@@ -101,17 +101,17 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
 
     private void startManualRefresh() {
 
-        // TODO abort load more http task.
+        // TODO abort loadMore http task.
 
         mPageIndex = PAGE_START_INDEX;
 
-        if (isNeedCache()) {
+//        if (isNeedCache()) {
+//
+//            executeRefreshAndCache();
+//        } else {
 
-            executeRefreshAndCache();
-        } else {
-
-            executeRefresh();
-        }
+        executeRefreshOnly();
+//        }
     }
 
     private void startLoadMoreRefresh() {
@@ -156,13 +156,7 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
 
     protected ExRvAdapter getAdapter() {
 
-        try {
-            return (ExRvAdapter) mRecyclerView.getAdapter();
-        } catch (Exception e) {
-
-            e.printStackTrace();
-            return null;
-        }
+        return (ExRvAdapter) mRecyclerView.getAdapter();
     }
 
     @Override
@@ -188,7 +182,9 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
     @Override
     protected void showLoading() {
 
-        if (!isSwipeRefreshing())
+        if (isCacheAndRefresh() && hasCache())
+            showSwipeRefresh();
+        else if (!isSwipeRefreshing())
             super.showLoading();
     }
 
@@ -233,7 +229,14 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
         if (isSwipeRefreshing())
             return;
 
-        mSwipeRefreshWidget.setRefreshing(true);
+        mSwipeRefreshWidget.post(new Runnable() {
+
+            @Override
+            public void run() {
+
+                mSwipeRefreshWidget.setRefreshing(true);
+            }
+        });
     }
 
     protected void hideSwipeRefresh() {

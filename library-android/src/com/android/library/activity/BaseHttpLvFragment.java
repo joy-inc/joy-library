@@ -43,7 +43,7 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
         super.onPause();
         if (isFinishing()) {
 
-            // TODO abort all http task.
+            // TODO abort swipeRefresh and loadMore http task.
         }
     }
 
@@ -83,7 +83,7 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
                     showToast(R.string.toast_common_no_network);
                 } else {
 
-                    // TODO abort load more http task.
+                    // TODO abort loadMore http task.
 
                     mPageIndex = PAGE_START_INDEX;
                     startRefresh();
@@ -106,7 +106,7 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
                         showToast(R.string.toast_common_no_network);
                 } else {
 
-                    // TODO abort swipe refresh http task.
+                    // TODO abort swipeRefresh http task.
 
                     startRefresh();
                 }
@@ -116,13 +116,13 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
 
     private void startRefresh() {
 
-        if (isNeedCache()) {
+//        if (isNeedCache()) {
+//
+//            executeRefreshAndCache();
+//        } else {
 
-            executeRefreshAndCache();
-        } else {
-
-            executeRefresh();
-        }
+        executeRefreshOnly();
+//        }
     }
 
     @Override
@@ -180,17 +180,11 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
 
     protected ExAdapter getAdapter() {
 
-        try {
-            ListAdapter adapter = mJListView.getAdapter();
-            if (adapter instanceof HeaderViewListAdapter)
-                return (ExAdapter) ((HeaderViewListAdapter) adapter).getWrappedAdapter();
-            else
-                return (ExAdapter) adapter;
-        } catch (Exception e) {
-
-            e.printStackTrace();
-            return null;
-        }
+        ListAdapter adapter = mJListView.getAdapter();
+        if (adapter instanceof HeaderViewListAdapter)
+            return (ExAdapter) ((HeaderViewListAdapter) adapter).getWrappedAdapter();
+        else
+            return (ExAdapter) adapter;
     }
 
     @Override
@@ -231,7 +225,9 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
     @Override
     protected void showLoading() {
 
-        if (!isSwipeRefreshing() && !isLoadingMore())
+        if (isCacheAndRefresh() && hasCache())
+            showSwipeRefresh();
+        else if (!isSwipeRefreshing() && !isLoadingMore())
             super.showLoading();
     }
 
@@ -276,7 +272,14 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
         if (isSwipeRefreshing())
             return;
 
-        mSwipeRefreshWidget.setRefreshing(true);
+        mSwipeRefreshWidget.post(new Runnable() {
+
+            @Override
+            public void run() {
+
+                mSwipeRefreshWidget.setRefreshing(true);
+            }
+        });
     }
 
     protected void hideSwipeRefresh() {

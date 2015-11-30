@@ -11,15 +11,12 @@ import android.widget.ImageView.ScaleType;
 
 import com.android.library.BaseApplication;
 import com.android.library.R;
-import com.android.library.httptask.CacheEntry;
+import com.android.library.httptask.CacheMode;
 import com.android.library.httptask.ObjectRequest;
 import com.android.library.httptask.ObjectResponseListener;
-import com.android.library.utils.LogMgr;
 import com.android.library.widget.JLoadingView;
-import com.android.volley.Cache;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.VolleyError;
 
 /**
  * Created by KEVIN.DAI on 15/7/10.
@@ -31,7 +28,8 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
     private int mTipResId;
     private final int FAILED_RES_ID = R.drawable.ic_net_error;
     private final int DISABLED_RES_ID = R.drawable.ic_tip_null;
-    private boolean mIsNeedCache;
+    private ObjectRequest<T> mObjReq;
+    private boolean isSuccCalled;
 
     @Override
     protected void wrapContentView(FrameLayout rootView, View contentView) {
@@ -41,6 +39,20 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
         addTipView(rootView);
         // loading view
         addLoadingView(rootView);
+    }
+
+    @Override
+    public void onPause() {
+
+        super.onPause();
+        if (isFinishing()) {
+
+            if (mObjReq != null) {
+
+                mObjReq.cancel();
+                mObjReq = null;
+            }
+        }
     }
 
     private void addTipView(ViewGroup frame) {
@@ -77,54 +89,87 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
             return;
         }
 
-        if (isNeedCache()) {
+        if (mObjReq != null) {
 
-            executeRefreshAndCache();
-        } else {
+            switch (mObjReq.getCacheMode()) {
 
-            executeRefresh();
+                case CACHE_ONLY:
+
+                    executeCacheOnly();
+                    break;
+                case REFRESH_AND_CACHE:
+
+                    executeRefreshAndCache();
+                    break;
+                case CACHE_AND_REFRESH:
+
+                    executeCacheAndRefresh();
+                    break;
+                default:
+
+                    executeRefreshOnly();
+                    break;
+            }
         }
     }
 
-    protected boolean isNeedCache() {
+    protected boolean isCacheAndRefresh() {
 
-        return mIsNeedCache;
+        if (mObjReq == null)
+            return false;
+
+        return mObjReq.getCacheMode() == CacheMode.CACHE_AND_REFRESH;
     }
 
-    protected void executeRefresh() {
+    protected boolean hasCache() {
 
-        ObjectRequest<T> req = getObjectRequest();
-        req.setResponseListener(getObjRespLis());
-        addRequest2QueueNoCache(req, req.getIdentifier());
+        if (mObjReq == null)
+            return false;
+
+        return mObjReq.hasCache();
     }
 
-    protected void executeCache() {
+    /**
+     * fetch net-->response.
+     */
+    protected void executeRefreshOnly() {
 
-        ObjectRequest<T> req = getObjectRequest();
-        req.setResponseListener(getObjRespLis());
-        addRequest2QueueHasCache(req, req.getIdentifier());
+        mObjReq = getObjectRequest();
+        mObjReq.setResponseListener(getObjRespLis());
+        addRequestNoCache(mObjReq);
     }
 
+    /**
+     * fetch cache-->response.
+     */
+    protected void executeCacheOnly() {
+
+        mObjReq = getObjectRequest();
+        mObjReq.setCacheMode(CacheMode.CACHE_ONLY);
+        mObjReq.setResponseListener(getObjRespLis());
+        addRequestHasCache(mObjReq);
+    }
+
+    /**
+     * cache expired: fetch net, update cache-->response.
+     */
     protected void executeRefreshAndCache() {
 
-        mIsNeedCache = true;
-
-        ObjectRequest<T> req = getObjectRequest();
-        req.setResponseListener(getObjRespLis());
-        addRequest2QueueHasCache(req, req.getIdentifier());
+        mObjReq = getObjectRequest();
+        mObjReq.setCacheMode(CacheMode.REFRESH_AND_CACHE);
+        mObjReq.setResponseListener(getObjRespLis());
+        addRequestHasCache(mObjReq);
     }
 
+    /**
+     * cache update needed: fetch cache-->response, fetch net, update cache-->response.
+     */
     protected void executeCacheAndRefresh() {
 
-        ObjectRequest<T> req = getObjectRequest();
-        req.setResponseListener(getObjRespLis());
-        Cache.Entry entry = new CacheEntry();
-        req.setCacheEntry(entry);
-
-        if (LogMgr.isDebug())
-            LogMgr.e("daisw", "~~refreshNeeded: " + entry.refreshNeeded() + " isExpired: " + entry.isExpired());
-
-        addRequest2QueueHasCache(req, req.getIdentifier());
+        mObjReq = getObjectRequest();
+        mObjReq.setCacheMode(CacheMode.CACHE_AND_REFRESH);
+        mObjReq.setResponseListener(getObjRespLis());
+        addRequestHasCache(mObjReq);
     }
 
     private ObjectResponseListener<T> getObjRespLis() {
@@ -144,21 +189,32 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
                 if (isFinishing())
                     return;
 
-                hideLoading();
+                if (isCacheAndRefresh()) {
+
+                    if (isSuccCalled || !hasCache())
+                        hideLoading();
+                    isSuccCalled = true;
+                } else {
+
+                    hideLoading();
+                }
                 boolean contentUsable = invalidateContent(t);
                 if (!contentUsable)
                     showNoContentTip();
             }
 
             @Override
-            public void onError(Object tag, VolleyError error) {
+            public void onError(Object tag, String msg) {
 
                 if (isFinishing())
                     return;
 
-                showFailedTip();
+                if (!isCacheAndRefresh() || !isSuccCalled) {
+
+                    showFailedTip();
+                }
                 hideLoading();
-                onHttpFailed(tag, error == null ? "" : error.getMessage());
+                onHttpFailed(tag, msg);
             }
         };
     }
@@ -206,34 +262,49 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
 
     protected RequestQueue getRequestQueue() {
 
-        return ((BaseApplication) getActivity().getApplication()).getRequestQueue();
+        return BaseApplication.getRequestQueue();
     }
 
     protected abstract ObjectRequest<T> getObjectRequest();
 
-    protected void addRequest2QueueNoCache(ObjectRequest<?> req, Object tag) {
+    protected void addRequestNoCache(ObjectRequest<?> req, Object tag) {
 
-        addRequest2Queue(req, tag, false);
+        addRequest(req, tag, false);
     }
 
-    protected void addRequest2QueueHasCache(ObjectRequest<?> req, Object tag) {
+    protected void addRequestHasCache(ObjectRequest<?> req, Object tag) {
 
-        addRequest2Queue(req, tag, true);
+        addRequest(req, tag, true);
     }
 
-    protected void addRequest2Queue(ObjectRequest<?> req, Object tag, boolean shouldCache) {
+    protected void addRequest(ObjectRequest<?> req, Object tag, boolean shouldCache) {
 
         req.setTag(tag);
         req.setShouldCache(shouldCache);
         getRequestQueue().add(req);
     }
 
-    protected void removeRequestFromQueue(Object tag) {
+    protected void addRequestNoCache(ObjectRequest<?> req) {
+
+        addRequest(req, false);
+    }
+
+    protected void addRequestHasCache(ObjectRequest<?> req) {
+
+        addRequest(req, true);
+    }
+
+    protected void addRequest(ObjectRequest<?> req, boolean shouldCache) {
+
+        addRequest(req, req.getIdentifier(), shouldCache);
+    }
+
+    protected void removeRequest(Object tag) {
 
         getRequestQueue().cancelAll(tag);
     }
 
-    protected void removeAllRequestFromQueue() {
+    protected void removeAllRequest() {
 
         getRequestQueue().cancelAll(new RequestQueue.RequestFilter() {
 

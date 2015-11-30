@@ -2,39 +2,45 @@ package com.android.library.httptask;
 
 public class QyerResponse<T> {
 
-    public static final int STATUS_PARSE_BROKEN = -1;// 如果status为-1，表明服务器返回JSON格式有误
-    public static final int STATUS_NONE = 0;
-    public static final int STATUS_SUCCESS = 1;
+    private static final int STATUS_PARSE_BROKEN = -10000;// 如果status为-10000，表明服务器返回JSON格式有误
+    private static final int STATUS_SUCCESS = 1;// 1为正确
 
-    private int status;
-    private String info = "";
-    private T data;
+    /**
+     * 1    正确
+     * -9	track_client_id参数错误
+     * -10	api_auth参数错误
+     * -11	TOKEN过期
+     * -12	用户未登录
+     */
+    private int status;// 错误状态
+    private String msg = "";// 提示信息
+    private T data;// 数据
 
     public QyerResponse() {
 
     }
 
-    public QyerResponse(int status, String info) {
+    public QyerResponse(int status, String msg) {
 
         setStatus(status);
-        setInfo(info);
+        setMsg(msg);
     }
 
-    public void setInfo(String info) {
+    public void setMsg(String msg) {
 
-        if (info == null) {
+        if (msg == null) {
 
-            info = "";
+            msg = "";
         } else {
 
-            info = info.trim();
+            msg = msg.trim();
         }
-        this.info = info;
+        this.msg = msg;
     }
 
-    public String getInfo() {
+    public String getMsg() {
 
-        return info;
+        return msg;
     }
 
     public void setStatus(int status) {
