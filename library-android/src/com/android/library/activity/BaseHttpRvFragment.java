@@ -82,7 +82,7 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
 
         if (isNetworkEnable()) {
 
-            startManualRefresh();
+            startRefresh();
         } else {
 
             hideSwipeRefresh();
@@ -90,7 +90,7 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
         }
     }
 
-    private void startManualRefresh() {
+    private void startRefresh() {
 
         mPageIndex = PAGE_START_INDEX;
         executeRefreshOnly();

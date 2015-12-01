@@ -179,6 +179,7 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
     }
 
     private boolean isSuccCalled;
+
     private ObjectResponseListener<T> getObjRespLis() {
 
         return new ObjectResponseListener<T>() {
@@ -198,7 +199,7 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
 
                 if (getReqCacheMode() == CacheMode.CACHE_AND_REFRESH) {
 
-                    if (isSuccCalled || !isReqHasCache())
+                    if (!isReqHasCache() || isSuccCalled)
                         hideLoading();
                     isSuccCalled = true;
                 } else {

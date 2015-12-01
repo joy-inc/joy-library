@@ -24,7 +24,7 @@ public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
     private RecyclerView mRecyclerView;
     private int mPageLimit = 20;
     private static final int PAGE_START_INDEX = 1;// 默认从第一页开始
-    private int mCurrentPageIndex = PAGE_START_INDEX;
+    private int mPageIndex = PAGE_START_INDEX;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +83,7 @@ public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
 
         if (isNetworkEnable()) {
 
-            startManualRefresh();
+            startRefresh();
         } else {
 
             hideSwipeRefresh();
@@ -91,9 +91,9 @@ public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
         }
     }
 
-    private void startManualRefresh() {
+    private void startRefresh() {
 
-        mCurrentPageIndex = PAGE_START_INDEX;
+        mPageIndex = PAGE_START_INDEX;
         executeRefreshOnly();
     }
 
@@ -121,9 +121,9 @@ public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
         return mPageLimit;
     }
 
-    protected int getCurrentPageIndex() {
+    protected int getPageIndex() {
 
-        return mCurrentPageIndex;
+        return mPageIndex;
     }
 
     protected void setAdapter(ExRvAdapter adapter) {

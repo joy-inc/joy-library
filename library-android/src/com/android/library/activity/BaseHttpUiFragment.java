@@ -178,6 +178,7 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
     }
 
     private boolean isSuccCalled;
+
     private ObjectResponseListener<T> getObjRespLis() {
 
         return new ObjectResponseListener<T>() {
@@ -197,7 +198,7 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
 
                 if (getReqCacheMode() == CacheMode.CACHE_AND_REFRESH) {
 
-                    if (isSuccCalled || !isReqHasCache())
+                    if (!isReqHasCache() || isSuccCalled)
                         hideLoading();
                     isSuccCalled = true;
                 } else {
