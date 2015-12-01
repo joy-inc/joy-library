@@ -28,7 +28,6 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
     private final int FAILED_RES_ID = R.drawable.ic_net_error;
     private final int DISABLED_RES_ID = R.drawable.ic_tip_null;
     private ObjectRequest<T> mObjReq;
-    private boolean isSuccCalled;
 
     @Override
     protected void wrapContentView(FrameLayout rootView, View contentView) {
@@ -46,11 +45,7 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
         super.onPause();
         if (isFinishing()) {
 
-            if (mObjReq != null) {
-
-                mObjReq.cancel();
-                mObjReq = null;
-            }
+            cancelRequest();
         }
     }
 
@@ -90,39 +85,36 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
             return;
         }
 
-        if (mObjReq != null) {
+        switch (getReqCacheMode()) {
 
-            switch (mObjReq.getCacheMode()) {
+            case CACHE_ONLY:
 
-                case CACHE_ONLY:
+                executeCacheOnly();
+                break;
+            case REFRESH_AND_CACHE:
 
-                    executeCacheOnly();
-                    break;
-                case REFRESH_AND_CACHE:
+                executeRefreshAndCache();
+                break;
+            case CACHE_AND_REFRESH:
 
-                    executeRefreshAndCache();
-                    break;
-                case CACHE_AND_REFRESH:
+                executeCacheAndRefresh();
+                break;
+            default:
 
-                    executeCacheAndRefresh();
-                    break;
-                default:
-
-                    executeRefreshOnly();
-                    break;
-            }
+                executeRefreshOnly();
+                break;
         }
     }
 
-    protected boolean isCacheAndRefresh() {
+    protected CacheMode getReqCacheMode() {
 
         if (mObjReq == null)
-            return false;
+            return CacheMode.NONE;
 
-        return mObjReq.getCacheMode() == CacheMode.CACHE_AND_REFRESH;
+        return mObjReq.getCacheMode();
     }
 
-    protected boolean hasCache() {
+    protected boolean isReqHasCache() {
 
         if (mObjReq == null)
             return false;
@@ -130,11 +122,21 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
         return mObjReq.hasCache();
     }
 
+    protected void cancelRequest() {
+
+        if (mObjReq != null) {
+
+            mObjReq.cancel();
+            mObjReq = null;
+        }
+    }
+
     /**
      * fetch net-->response.
      */
     protected void executeRefreshOnly() {
 
+        cancelRequest();
         mObjReq = getObjectRequest();
         mObjReq.setResponseListener(getObjRespLis());
         addRequestNoCache(mObjReq);
@@ -145,6 +147,7 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
      */
     protected void executeCacheOnly() {
 
+        cancelRequest();
         mObjReq = getObjectRequest();
         mObjReq.setCacheMode(CacheMode.CACHE_ONLY);
         mObjReq.setResponseListener(getObjRespLis());
@@ -156,6 +159,7 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
      */
     protected void executeRefreshAndCache() {
 
+        cancelRequest();
         mObjReq = getObjectRequest();
         mObjReq.setCacheMode(CacheMode.REFRESH_AND_CACHE);
         mObjReq.setResponseListener(getObjRespLis());
@@ -167,12 +171,14 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
      */
     protected void executeCacheAndRefresh() {
 
+        cancelRequest();
         mObjReq = getObjectRequest();
         mObjReq.setCacheMode(CacheMode.CACHE_AND_REFRESH);
         mObjReq.setResponseListener(getObjRespLis());
         addRequestHasCache(mObjReq);
     }
 
+    private boolean isSuccCalled;
     private ObjectResponseListener<T> getObjRespLis() {
 
         return new ObjectResponseListener<T>() {
@@ -190,9 +196,9 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
                 if (isFinishing())
                     return;
 
-                if (isCacheAndRefresh()) {
+                if (getReqCacheMode() == CacheMode.CACHE_AND_REFRESH) {
 
-                    if (isSuccCalled || !hasCache())
+                    if (isSuccCalled || !isReqHasCache())
                         hideLoading();
                     isSuccCalled = true;
                 } else {
@@ -210,7 +216,7 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
                 if (isFinishing())
                     return;
 
-                if (!isCacheAndRefresh() || !isSuccCalled) {
+                if (getReqCacheMode() != CacheMode.CACHE_AND_REFRESH || !isSuccCalled) {
 
                     showFailedTip();
                 }

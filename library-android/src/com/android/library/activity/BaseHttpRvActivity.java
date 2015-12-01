@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.android.library.R;
 import com.android.library.adapter.ExRvAdapter;
+import com.android.library.httptask.CacheMode;
 import com.android.library.utils.CollectionUtil;
 
 import java.util.List;
@@ -32,16 +33,6 @@ public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
         mRecyclerView = getDefaultRecyclerView();
         mRecyclerView.setLayoutManager(getDefaultLayoutManager());
         setContentView(wrapSwipeRefresh(mRecyclerView));
-    }
-
-    @Override
-    protected void onPause() {
-
-        super.onPause();
-        if (isFinishing()) {
-
-            // TODO abort swipeRefresh and loadMore http task.
-        }
     }
 
     /**
@@ -69,7 +60,6 @@ public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
 
     private View wrapSwipeRefresh(View contentView) {
 
-        // swipe refresh widget
         mSwipeRefreshWidget = new SwipeRefreshLayout(this);
         mSwipeRefreshWidget.setColorSchemeResources(R.color.holo_blue_bright, R.color.holo_green_light, R.color.holo_orange_light, R.color.holo_red_light);
         mSwipeRefreshWidget.setOnRefreshListener(getDefaultRefreshLisn());
@@ -103,27 +93,12 @@ public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
 
     private void startManualRefresh() {
 
-        // TODO abort loadMore http task.
-
-        mCurrentPageIndex = PAGE_START_INDEX;// 重置起始页码
-
-//        if (isNeedCache()) {
-//
-//            executeRefreshAndCache();
-//        } else {
-
+        mCurrentPageIndex = PAGE_START_INDEX;
         executeRefreshOnly();
-//        }
     }
 
     private void startLoadMoreRefresh() {
 
-//        mSwipeRefreshWidget.stopSwipeRefresh();// 中断下拉刷新
-//
-//        HttpFrameParams hfp = getXListViewHttpParams(mCurrentPageIndex + 1, mPageLimit);
-//        mLoadMoreHttpTask = new HttpTask(hfp.params);
-//        mLoadMoreHttpTask.setListener(getLodMoreListener(hfp));
-//        mLoadMoreHttpTask.execute();
     }
 
     protected RecyclerView getRecyclerView() {
@@ -184,7 +159,7 @@ public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
     @Override
     protected void showLoading() {
 
-        if (isCacheAndRefresh() && hasCache())
+        if (getReqCacheMode() == CacheMode.CACHE_AND_REFRESH && isReqHasCache())
             showSwipeRefresh();
         else if (!isSwipeRefreshing())
             super.showLoading();

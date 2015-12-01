@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.android.library.R;
 import com.android.library.adapter.ExRvAdapter;
+import com.android.library.httptask.CacheMode;
 import com.android.library.utils.CollectionUtil;
 
 import java.util.List;
@@ -31,16 +32,6 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
         mRecyclerView = getDefaultRecyclerView();
         mRecyclerView.setLayoutManager(getDefaultLayoutManager());
         setContentView(wrapSwipeRefresh(mRecyclerView));
-    }
-
-    @Override
-    public void onPause() {
-
-        super.onPause();
-        if (isFinishing()) {
-
-            // TODO abort swipeRefresh and loadMore http task.
-        }
     }
 
     /**
@@ -101,27 +92,12 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
 
     private void startManualRefresh() {
 
-        // TODO abort loadMore http task.
-
         mPageIndex = PAGE_START_INDEX;
-
-//        if (isNeedCache()) {
-//
-//            executeRefreshAndCache();
-//        } else {
-
         executeRefreshOnly();
-//        }
     }
 
     private void startLoadMoreRefresh() {
 
-//        mSwipeRefreshWidget.stopSwipeRefresh();// 中断下拉刷新
-//
-//        HttpFrameParams hfp = getXListViewHttpParams(mPageIndex + 1, mPageLimit);
-//        mLoadMoreHttpTask = new HttpTask(hfp.params);
-//        mLoadMoreHttpTask.setListener(getLodMoreListener(hfp));
-//        mLoadMoreHttpTask.execute();
     }
 
     protected RecyclerView getRecyclerView() {
@@ -182,7 +158,7 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
     @Override
     protected void showLoading() {
 
-        if (isCacheAndRefresh() && hasCache())
+        if (getReqCacheMode() == CacheMode.CACHE_AND_REFRESH && isReqHasCache())
             showSwipeRefresh();
         else if (!isSwipeRefreshing())
             super.showLoading();

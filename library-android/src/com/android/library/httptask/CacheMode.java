@@ -5,6 +5,7 @@ package com.android.library.httptask;
  */
 public enum CacheMode {
 
+    NONE,
     CACHE_ONLY,
     REFRESH_AND_CACHE,
     CACHE_AND_REFRESH

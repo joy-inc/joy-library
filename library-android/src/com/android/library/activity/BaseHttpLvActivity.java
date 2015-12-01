@@ -10,6 +10,7 @@ import android.widget.ListAdapter;
 
 import com.android.library.R;
 import com.android.library.adapter.ExAdapter;
+import com.android.library.httptask.CacheMode;
 import com.android.library.httptask.ObjectRequest;
 import com.android.library.utils.CollectionUtil;
 import com.android.library.widget.JListView;
@@ -35,16 +36,6 @@ public abstract class BaseHttpLvActivity<T> extends BaseHttpUiActivity<T> {
         super.onCreate(savedInstanceState);
         mJListView = getDefaultListView();
         setContentView(wrapSwipeRefresh(mJListView));
-    }
-
-    @Override
-    protected void onPause() {
-
-        super.onPause();
-        if (isFinishing()) {
-
-            // TODO abort swipeRefresh and loadMore http task.
-        }
     }
 
     /**
@@ -83,8 +74,6 @@ public abstract class BaseHttpLvActivity<T> extends BaseHttpUiActivity<T> {
                     showToast(R.string.toast_common_no_network);
                 } else {
 
-                    // TODO abort loadMore http task.
-
                     mPageIndex = PAGE_START_INDEX;
                     startRefresh();
                 }
@@ -106,8 +95,6 @@ public abstract class BaseHttpLvActivity<T> extends BaseHttpUiActivity<T> {
                         showToast(R.string.toast_common_no_network);
                 } else {
 
-                    // TODO abort swipeRefresh http task.
-
                     startRefresh();
                 }
             }
@@ -116,13 +103,7 @@ public abstract class BaseHttpLvActivity<T> extends BaseHttpUiActivity<T> {
 
     private void startRefresh() {
 
-//        if (isNeedCache()) {
-//
-//            executeRefreshAndCache();
-//        } else {
-
         executeRefreshOnly();
-//        }
     }
 
     @Override
@@ -225,7 +206,7 @@ public abstract class BaseHttpLvActivity<T> extends BaseHttpUiActivity<T> {
     @Override
     protected void showLoading() {
 
-        if (isCacheAndRefresh() && hasCache())
+        if (getReqCacheMode() == CacheMode.CACHE_AND_REFRESH && isReqHasCache())
             showSwipeRefresh();
         else if (!isSwipeRefreshing() && !isLoadingMore())
             super.showLoading();
