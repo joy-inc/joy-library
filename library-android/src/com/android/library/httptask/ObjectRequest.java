@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSON;
 import com.android.library.BaseApplication;
 import com.android.library.httptask.TestCache.OnEntryListener;
 import com.android.library.utils.CollectionUtil;
+import com.android.library.utils.LogMgr;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Cache.Entry;
 import com.android.volley.NetworkResponse;
@@ -187,6 +188,8 @@ public class ObjectRequest<T> extends Request<T> {
     }
 
     private QyerResponse<T> onResponse(String json) {
+
+        LogMgr.d("ObjectRequest","~~json: "+json);
 
         QyerResponse<T> resp = new QyerResponse();
 

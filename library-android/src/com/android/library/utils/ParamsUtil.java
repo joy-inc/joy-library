@@ -22,6 +22,9 @@ public class ParamsUtil {
         }
         sb.deleteCharAt(sb.length() - 1);
 
+        if (LogMgr.isDebug())
+            LogMgr.d("BaseHtpUtil", "~~params: " + sb.toString());
+
         return sb.toString();
     }
 }
