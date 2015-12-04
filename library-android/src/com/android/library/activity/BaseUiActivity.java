@@ -190,8 +190,13 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
 
     protected void addTitleMiddleView(@StringRes int resId) {
 
+        addTitleMiddleView(getResources().getString(resId));
+    }
+
+    protected void addTitleMiddleView(String str) {
+
         TextView title = new TextView(this);
-        title.setText(resId);
+        title.setText(str);
         addTitleMiddleView(title, null);
     }
 
@@ -201,6 +206,13 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
         Toolbar.LayoutParams lp = new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
         lp.gravity = Gravity.CENTER;
         mToolbar.addView(v, lp);
+    }
+
+    protected void addTitleRightView(@DrawableRes int resId, View.OnClickListener lisn) {
+
+        ImageView imageView = new ImageView(this);
+        imageView.setImageResource(resId);
+        addTitleRightView(imageView, lisn);
     }
 
     protected void addTitleRightView(View v, View.OnClickListener lisn) {
