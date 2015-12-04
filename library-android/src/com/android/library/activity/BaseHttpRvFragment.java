@@ -5,12 +5,21 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.Adapter;
+import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.view.View;
 
 import com.android.library.R;
 import com.android.library.adapter.ExRvAdapter;
 import com.android.library.httptask.CacheMode;
+import com.android.library.httptask.ObjectRequest;
+import com.android.library.listener.OnLoadMoreListener;
 import com.android.library.utils.CollectionUtil;
+import com.android.library.view.recyclerview.RecyclerAdapter;
+import com.android.library.view.recyclerview.RecyclerAdapter.OnItemClickListener;
+import com.android.library.view.recyclerview.RecyclerAdapter.OnItemLongClickListener;
+import com.android.library.widget.JLoadingView;
+import com.android.library.widget.JRecyclerView;
 
 import java.util.List;
 
@@ -41,7 +50,11 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
      */
     protected RecyclerView getDefaultRecyclerView() {
 
-        return (RecyclerView) inflateLayout(R.layout.lib_view_recycler);
+        JRecyclerView jrv = (JRecyclerView) inflateLayout(R.layout.lib_view_recycler);
+//        jrv.setLoadMoreEnable(false);
+        jrv.setLoadMoreView(JLoadingView.getLoadMore(getActivity()), JLoadingView.getLoadMoreLp());
+        jrv.setLoadMoreListener(getDefaultLoadMoreLisn());
+        return jrv;
     }
 
     /**
@@ -52,7 +65,7 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
      *
      * @return
      */
-    protected RecyclerView.LayoutManager getDefaultLayoutManager() {
+    protected LayoutManager getDefaultLayoutManager() {
 
         return new LinearLayoutManager(getActivity());
     }
@@ -73,37 +86,51 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
             @Override
             public void onRefresh() {
 
-                onManualRefresh();
+                if (isNetworkDisable()) {
+
+                    hideSwipeRefresh();
+                    showToast(R.string.toast_common_no_network);
+                } else {
+
+                    mPageIndex = PAGE_START_INDEX;
+                    startRefresh();
+                }
             }
         };
     }
 
-    private void onManualRefresh() {
+    private OnLoadMoreListener getDefaultLoadMoreLisn() {
 
-        if (isNetworkEnable()) {
+        return new OnLoadMoreListener() {
 
-            startRefresh();
-        } else {
+            @Override
+            public void onRefresh(boolean isAuto) {
 
-            hideSwipeRefresh();
-            showToast(R.string.toast_common_no_network);
-        }
+                if (isNetworkDisable()) {
+
+                    onLoadMoreFailed();
+                    if (!isAuto)
+                        showToast(R.string.toast_common_no_network);
+                } else {
+
+                    startRefresh();
+                }
+            }
+        };
     }
 
     private void startRefresh() {
 
-        mPageIndex = PAGE_START_INDEX;
         executeRefreshOnly();
     }
 
-    private void startLoadMoreRefresh() {
+    @Override
+    protected final ObjectRequest<T> getObjectRequest() {
 
+        return getObjectRequest(mPageIndex, mPageLimit);
     }
 
-    protected RecyclerView getRecyclerView() {
-
-        return mRecyclerView;
-    }
+    protected abstract ObjectRequest<T> getObjectRequest(int pageIndex, int pageLimit);
 
     /**
      * 设置分页大小
@@ -115,24 +142,45 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
         mPageLimit = pageLimit;
     }
 
-    protected int getPageLimit() {
+    protected RecyclerView getRecyclerView() {
 
-        return mPageLimit;
+        return mRecyclerView;
     }
 
-    protected int getPageIndex() {
+    protected void addHeaderView(View v) {
 
-        return mPageIndex;
+        ((RecyclerAdapter) mRecyclerView.getAdapter()).addHeaderView(v);
+    }
+
+    protected void addFooterView(View v) {
+
+        ((RecyclerAdapter) mRecyclerView.getAdapter()).addFooterView(v);
+    }
+
+    protected void setOnItemClickListener(OnItemClickListener listener) {
+
+        ((RecyclerAdapter) mRecyclerView.getAdapter()).setOnItemClickListener(listener);
+    }
+
+    protected void setOnItemLongClickListener(OnItemLongClickListener listener) {
+
+        ((RecyclerAdapter) mRecyclerView.getAdapter()).setOnItemLongClickListener(listener);
     }
 
     protected void setAdapter(ExRvAdapter adapter) {
 
-        mRecyclerView.setAdapter(adapter);
+//        mRecyclerView.setAdapter(adapter);
+        RecyclerAdapter ra = new RecyclerAdapter(adapter, getDefaultLayoutManager());
+        getRecyclerView().setAdapter(ra);
     }
 
     protected ExRvAdapter getAdapter() {
 
-        return (ExRvAdapter) mRecyclerView.getAdapter();
+        Adapter adapter = mRecyclerView.getAdapter();
+        if (adapter instanceof RecyclerAdapter)
+            return (ExRvAdapter) ((RecyclerAdapter) adapter).getWrappedAdapter();
+        else
+            return (ExRvAdapter) adapter;
     }
 
     @Override
@@ -141,11 +189,27 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
         List<?> datas = getListInvalidateContent(t);
         if (CollectionUtil.isEmpty(datas))
             return false;
+
+        if (mLoadMoreEnable && mRecyclerView instanceof JRecyclerView) {
+
+            JRecyclerView jrv = (JRecyclerView) mRecyclerView;
+            jrv.setLoadMoreEnable(datas.size() >= mPageLimit);
+            if (jrv.isLoadMoreEnable())
+                jrv.stopLoadMore();
+        }
+
         ExRvAdapter adapter = getAdapter();
         if (adapter != null) {
 
-            adapter.setData(datas);
+            if (mPageIndex == PAGE_START_INDEX)
+                adapter.setData(datas);
+            else
+                adapter.addAll(datas);
+
             adapter.notifyDataSetChanged();
+
+            if (!isRespIntermediate())
+                mPageIndex++;
         }
         return true;
     }
@@ -156,11 +220,20 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
     }
 
     @Override
+    protected void onHttpFailed(Object tag, String msg) {
+
+        if (isRespIntermediate())
+            mPageIndex++;
+
+        onLoadMoreFailed();
+    }
+
+    @Override
     protected void showLoading() {
 
         if (getReqCacheMode() == CacheMode.CACHE_AND_REFRESH && isReqHasCache())
             showSwipeRefresh();
-        else if (!isSwipeRefreshing())
+        else if (!isSwipeRefreshing() && !isLoadingMore())
             super.showLoading();
     }
 
@@ -169,14 +242,14 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
 
         if (isSwipeRefreshing())
             hideSwipeRefresh();
-        else
+        else if (!isLoadingMore())
             super.hideLoading();
     }
 
     @Override
     protected void showFailedTip() {
 
-        if (!isSwipeRefreshing())
+        if (!isSwipeRefreshing() && !isLoadingMore() && getAdapter().isEmpty())
             super.showFailedTip();
     }
 
@@ -221,5 +294,25 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
             return;
 
         mSwipeRefreshWidget.setRefreshing(false);
+    }
+
+    protected final boolean isLoadingMore() {
+
+        if (mLoadMoreEnable && mRecyclerView instanceof JRecyclerView)
+            return ((JRecyclerView) mRecyclerView).isLoadingMore();
+        return false;
+    }
+
+    protected final void onLoadMoreFailed() {
+
+        if (mLoadMoreEnable && mRecyclerView instanceof JRecyclerView)
+            ((JRecyclerView) mRecyclerView).stopLoadMoreFailed();
+    }
+
+    private boolean mLoadMoreEnable = true;
+
+    protected void setLoadMoreEnable(boolean enable) {
+
+        mLoadMoreEnable = enable;
     }
 }

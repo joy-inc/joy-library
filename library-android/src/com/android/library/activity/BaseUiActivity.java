@@ -272,13 +272,13 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
         ViewUtil.goneImageView(v);
     }
 
-    protected View inflateLayout(@LayoutRes int layoutResID) {
+    protected View inflateLayout(@LayoutRes int layoutResId) {
 
-        return inflateLayout(layoutResID, null);
+        return inflateLayout(layoutResId, null);
     }
 
-    protected View inflateLayout(@LayoutRes int layoutResID, @Nullable ViewGroup root) {
+    protected View inflateLayout(@LayoutRes int layoutResId, @Nullable ViewGroup root) {
 
-        return getLayoutInflater().inflate(layoutResID, root);
+        return getLayoutInflater().inflate(layoutResId, root);
     }
 }

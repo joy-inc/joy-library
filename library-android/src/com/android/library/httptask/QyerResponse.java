@@ -1,5 +1,10 @@
 package com.android.library.httptask;
 
+/**
+ * Created by KEVIN.DAI on 15/7/16.
+ *
+ * @param <T>
+ */
 public class QyerResponse<T> {
 
     private static final int STATUS_PARSE_BROKEN = -10000;// 如果status为-10000，表明服务器返回JSON格式有误

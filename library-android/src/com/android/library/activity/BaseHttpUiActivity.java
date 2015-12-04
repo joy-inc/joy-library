@@ -1,5 +1,6 @@
 package com.android.library.activity;
 
+import android.support.annotation.DrawableRes;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -122,6 +123,14 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
         return mObjReq.hasCache();
     }
 
+    protected boolean isRespIntermediate() {
+
+        if (mObjReq == null)
+            return false;
+
+        return mObjReq.isRespIntermediate();
+    }
+
     protected void cancelRequest() {
 
         if (mObjReq != null) {
@@ -178,8 +187,6 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
         addRequestHasCache(mObjReq);
     }
 
-    private boolean isSuccCalled;
-
     private ObjectResponseListener<T> getObjRespLis() {
 
         return new ObjectResponseListener<T>() {
@@ -197,17 +204,9 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
                 if (isFinishing())
                     return;
 
-                if (getReqCacheMode() == CacheMode.CACHE_AND_REFRESH) {
-
-                    if (!isReqHasCache() || isSuccCalled)
-                        hideLoading();
-                    isSuccCalled = true;
-                } else {
-
+                if (!isRespIntermediate())
                     hideLoading();
-                }
-                boolean contentUsable = invalidateContent(t);
-                if (!contentUsable)
+                if (!invalidateContent(t))
                     showNoContentTip();
             }
 
@@ -217,10 +216,7 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
                 if (isFinishing())
                     return;
 
-                if (getReqCacheMode() != CacheMode.CACHE_AND_REFRESH || !isSuccCalled) {
-
-                    showFailedTip();
-                }
+                showFailedTip();
                 hideLoading();
                 onHttpFailed(tag, msg);
             }
@@ -241,6 +237,12 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
     protected void showNoContentTip() {
 
         mTipResId = DISABLED_RES_ID;
+        showImageView(mIvTip, mTipResId);
+    }
+
+    protected void showCustomTip(@DrawableRes int resId) {
+
+        mTipResId = resId;
         showImageView(mIvTip, mTipResId);
     }
 
