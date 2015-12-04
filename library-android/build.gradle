@@ -13,6 +13,7 @@ dependencies {
     compile 'com.alibaba:fastjson:1.2.7'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'de.greenrobot:eventbus:2.4.0'
+
 }
 
 android {
