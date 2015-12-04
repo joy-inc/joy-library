@@ -29,6 +29,7 @@ public class ObjectRequest<T> extends Request<T> {
     private Map<String, String> mHeaders, mParams;
     private CacheMode mCacheMode;
     private boolean mHasCache;
+    private Response<T> mObjResp;
 
     /**
      * Creates a new request with the given method.
@@ -132,6 +133,14 @@ public class ObjectRequest<T> extends Request<T> {
     }
 
     /**
+     * @return True if this response was a soft-expired one and a second one MAY be coming.
+     */
+    public boolean isRespIntermediate() {
+
+        return mObjResp == null ? false : mObjResp.intermediate;
+    }
+
+    /**
      * @param lisn Listener to receive the Object response
      */
     public void setResponseListener(ObjectResponseListener<T> lisn) {
@@ -180,7 +189,8 @@ public class ObjectRequest<T> extends Request<T> {
         if (resp.isSuccess()) {
 
             Entry entry = HeaderParser.parseCacheHeaders(response);
-            return Response.success(resp.getData(), entry);
+            mObjResp = Response.success(resp.getData(), entry);
+            return mObjResp;
         } else {
 
             return Response.error(new VolleyError(resp.getMsg()));

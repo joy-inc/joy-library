@@ -8,6 +8,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.android.library.R;
+import com.android.library.utils.DimenCons;
 import com.android.library.utils.ViewUtil;
 
 /**
@@ -16,7 +17,7 @@ import com.android.library.utils.ViewUtil;
 public class JFooter extends LinearLayout {
 
     private View mRootView, mRetryView, mLoadingDiv;
-    private RetryLoadClickListener mRetryClickLisn;
+    private OnRetryListener mOnRetryLisn;
 
     public JFooter(Context context) {
 
@@ -33,6 +34,7 @@ public class JFooter extends LinearLayout {
     private void init(Context context) {
 
         setOrientation(VERTICAL);
+        setMinimumWidth(DimenCons.SCREEN_WIDTH);
 
         mRootView = LayoutInflater.from(context).inflate(R.layout.lib_view_footer, null);
         addView(mRootView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
@@ -45,8 +47,8 @@ public class JFooter extends LinearLayout {
             @Override
             public void onClick(View v) {
 
-                if (isFailed() && mRetryClickLisn != null)
-                    mRetryClickLisn.onRetry();
+                if (isFailed() && mOnRetryLisn != null)
+                    mOnRetryLisn.onRetry();
             }
         });
     }
@@ -91,13 +93,13 @@ public class JFooter extends LinearLayout {
         mRootView.setLayoutParams(lp);
     }
 
-    public interface RetryLoadClickListener {
+    public interface OnRetryListener {
 
         void onRetry();
     }
 
-    public void setRetryLoadClickListener(RetryLoadClickListener lisn) {
+    public void setOnRetryListener(OnRetryListener lisn) {
 
-        mRetryClickLisn = lisn;
+        mOnRetryLisn = lisn;
     }
 }

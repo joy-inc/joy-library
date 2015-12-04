@@ -192,6 +192,7 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
 
         addTitleMiddleView(getResources().getString(resId));
     }
+
     protected void addTitleMiddleView(String str) {
 
         TextView title = new TextView(this);
@@ -207,13 +208,13 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
         mToolbar.addView(v, lp);
     }
 
-
     protected void addTitleRightView(@DrawableRes int resId, View.OnClickListener lisn) {
 
         ImageView imageView = new ImageView(this);
         imageView.setImageResource(resId);
-        addTitleRightView(imageView,lisn);
+        addTitleRightView(imageView, lisn);
     }
+
     protected void addTitleRightView(View v, View.OnClickListener lisn) {
 
         v.setOnClickListener(lisn);
@@ -283,13 +284,13 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
         ViewUtil.goneImageView(v);
     }
 
-    protected View inflateLayout(@LayoutRes int layoutResID) {
+    protected View inflateLayout(@LayoutRes int layoutResId) {
 
-        return inflateLayout(layoutResID, null);
+        return inflateLayout(layoutResId, null);
     }
 
-    protected View inflateLayout(@LayoutRes int layoutResID, @Nullable ViewGroup root) {
+    protected View inflateLayout(@LayoutRes int layoutResId, @Nullable ViewGroup root) {
 
-        return getLayoutInflater().inflate(layoutResID, root);
+        return getLayoutInflater().inflate(layoutResId, root);
     }
 }

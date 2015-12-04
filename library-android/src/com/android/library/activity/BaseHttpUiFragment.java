@@ -121,6 +121,14 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
         return mObjReq.hasCache();
     }
 
+    protected boolean isRespIntermediate() {
+
+        if (mObjReq == null)
+            return false;
+
+        return mObjReq.isRespIntermediate();
+    }
+
     protected void cancelRequest() {
 
         if (mObjReq != null) {
@@ -177,8 +185,6 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
         addRequestHasCache(mObjReq);
     }
 
-    private boolean isSuccCalled;
-
     private ObjectResponseListener<T> getObjRespLis() {
 
         return new ObjectResponseListener<T>() {
@@ -196,17 +202,9 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
                 if (isFinishing())
                     return;
 
-                if (getReqCacheMode() == CacheMode.CACHE_AND_REFRESH) {
-
-                    if (!isReqHasCache() || isSuccCalled)
-                        hideLoading();
-                    isSuccCalled = true;
-                } else {
-
+                if (!isRespIntermediate())
                     hideLoading();
-                }
-                boolean contentUsable = invalidateContent(t);
-                if (!contentUsable)
+                if (!invalidateContent(t))
                     showNoContentTip();
             }
 
@@ -216,10 +214,7 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
                 if (isFinishing())
                     return;
 
-                if (getReqCacheMode() != CacheMode.CACHE_AND_REFRESH || !isSuccCalled) {
-
-                    showFailedTip();
-                }
+                showFailedTip();
                 hideLoading();
                 onHttpFailed(tag, msg);
             }

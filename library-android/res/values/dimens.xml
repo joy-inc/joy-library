@@ -4,4 +4,5 @@
     <dimen name="elevation_appbar">4dp</dimen>
     <dimen name="elevation_card">2dp</dimen>
 
+    <dimen name="default_center_margin">16dp</dimen>
 </resources>

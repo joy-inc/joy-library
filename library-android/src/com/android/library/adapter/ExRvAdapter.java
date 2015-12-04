@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by KEVIN.DAI on 15/11/10.
  */
-public abstract class ExRvAdapter<K extends ExRvViewHolder, T> extends RecyclerView.Adapter<K> {
+public abstract class ExRvAdapter<K extends ExRvViewHolder<T>, T> extends RecyclerView.Adapter<K> {
 
     private List<T> mData;
     private OnItemViewClickListener mOnItemViewClickLisn;
@@ -34,6 +34,12 @@ public abstract class ExRvAdapter<K extends ExRvViewHolder, T> extends RecyclerV
         return mData == null ? 0 : mData.size();
     }
 
+    @Override
+    public void onBindViewHolder(K holder, int position) {
+
+        holder.invalidateItemView(position, getItem(position));
+    }
+
     public T getItem(int position) {
 
         if (mData == null)
@@ -50,9 +56,9 @@ public abstract class ExRvAdapter<K extends ExRvViewHolder, T> extends RecyclerV
         return t;
     }
 
-    public View inflate(@NonNull ViewGroup parent, @LayoutRes int layoutResID) {
+    public View inflate(@NonNull ViewGroup parent, @LayoutRes int layoutResId) {
 
-        return LayoutInflater.from(parent.getContext()).inflate(layoutResID, parent, false);
+        return LayoutInflater.from(parent.getContext()).inflate(layoutResId, parent, false);
     }
 
     public boolean isEmpty() {

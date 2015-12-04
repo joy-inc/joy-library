@@ -5,16 +5,18 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.View;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.HeaderViewListAdapter;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import com.android.library.R;
 import com.android.library.adapter.ExAdapter;
 import com.android.library.httptask.CacheMode;
 import com.android.library.httptask.ObjectRequest;
+import com.android.library.listener.OnLoadMoreListener;
 import com.android.library.utils.CollectionUtil;
 import com.android.library.widget.JListView;
-import com.android.library.widget.JListView.OnLoadMoreListener;
 import com.android.library.widget.JLoadingView;
 
 import java.util.List;
@@ -25,7 +27,7 @@ import java.util.List;
 public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
 
     private SwipeRefreshLayout mSwipeRefreshWidget;
-    private JListView mJListView;
+    private ListView mListView;
     private int mPageLimit = 20;
     private static final int PAGE_START_INDEX = 1;// 默认从第一页开始
     private int mPageIndex = PAGE_START_INDEX;
@@ -34,8 +36,8 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
     public void onActivityCreated(Bundle savedInstanceState) {
 
         super.onActivityCreated(savedInstanceState);
-        mJListView = getDefaultListView();
-        setContentView(wrapSwipeRefresh(mJListView));
+        mListView = getDefaultListView();
+        setContentView(wrapSwipeRefresh(mListView));
     }
 
     /**
@@ -46,7 +48,7 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
     protected JListView getDefaultListView() {
 
         JListView jlv = (JListView) inflateLayout(R.layout.lib_view_listview);
-        jlv.setLoadMoreEnable(false);
+//        jlv.setLoadMoreEnable(false);
         jlv.setLoadMoreView(JLoadingView.getLoadMore(getActivity()), JLoadingView.getLoadMoreLp());
         jlv.setLoadMoreListener(getDefaultLoadMoreLisn());
         return jlv;
@@ -124,44 +126,39 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
         mPageLimit = pageLimit;
     }
 
-    protected int getPageLimit() {
+    protected ListView getListView() {
 
-        return mPageLimit;
-    }
-
-    protected int getPageIndex() {
-
-        return mPageIndex;
-    }
-
-    protected JListView getListView() {
-
-        return mJListView;
+        return mListView;
     }
 
     protected void addHeaderView(View v) {
 
-        mJListView.addHeaderView(v);
+        mListView.addHeaderView(v);
     }
 
     protected void addFooterView(View v) {
 
-        mJListView.addFooterView(v);
+        mListView.addFooterView(v);
     }
 
     protected void setOnItemClickListener(OnItemClickListener listener) {
 
-        mJListView.setOnItemClickListener(listener);
+        mListView.setOnItemClickListener(listener);
+    }
+
+    protected void setOnItemLongClickListener(OnItemLongClickListener listener) {
+
+        mListView.setOnItemLongClickListener(listener);
     }
 
     protected void setAdapter(ExAdapter adapter) {
 
-        mJListView.setAdapter(adapter);
+        mListView.setAdapter(adapter);
     }
 
     protected ExAdapter getAdapter() {
 
-        ListAdapter adapter = mJListView.getAdapter();
+        ListAdapter adapter = mListView.getAdapter();
         if (adapter instanceof HeaderViewListAdapter)
             return (ExAdapter) ((HeaderViewListAdapter) adapter).getWrappedAdapter();
         else
@@ -175,9 +172,13 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
         if (CollectionUtil.isEmpty(datas))
             return false;
 
-        mJListView.setLoadMoreEnable(mLoadMoreEnable && datas.size() >= mPageLimit);
-        if (mJListView.isLoadMoreEnable())
-            mJListView.stopLoadMore();
+        if (mLoadMoreEnable && mListView instanceof JListView) {
+
+            JListView jlv = (JListView) mListView;
+            jlv.setLoadMoreEnable(datas.size() >= mPageLimit);
+            if (jlv.isLoadMoreEnable())
+                jlv.stopLoadMore();
+        }
 
         ExAdapter adapter = getAdapter();
         if (adapter != null) {
@@ -186,8 +187,11 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
                 adapter.setData(datas);
             else
                 adapter.addAll(datas);
+
             adapter.notifyDataSetChanged();
-            mPageIndex++;
+
+            if (!isRespIntermediate())
+                mPageIndex++;
         }
         return true;
     }
@@ -199,6 +203,9 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
 
     @Override
     protected void onHttpFailed(Object tag, String msg) {
+
+        if (isRespIntermediate())
+            mPageIndex++;
 
         onLoadMoreFailed();
     }
@@ -224,7 +231,7 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
     @Override
     protected void showFailedTip() {
 
-        if (!isSwipeRefreshing() && !isLoadingMore())
+        if (!isSwipeRefreshing() && !isLoadingMore() && getAdapter().isEmpty())
             super.showFailedTip();
     }
 
@@ -273,12 +280,15 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
 
     protected final boolean isLoadingMore() {
 
-        return mJListView.isLoadingMore();
+        if (mLoadMoreEnable && mListView instanceof JListView)
+            return ((JListView) mListView).isLoadingMore();
+        return false;
     }
 
     protected final void onLoadMoreFailed() {
 
-        mJListView.stopLoadMoreFailed();
+        if (mLoadMoreEnable && mListView instanceof JListView)
+            ((JListView) mListView).stopLoadMoreFailed();
     }
 
     private boolean mLoadMoreEnable = true;

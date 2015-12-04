@@ -9,6 +9,8 @@ import android.widget.FrameLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.android.library.listener.OnLoadMoreListener;
+
 /**
  * Created by KEVIN.DAI on 15/11/20.
  */
@@ -18,7 +20,7 @@ public class JListView extends ListView implements OnScrollListener {
     private JFooter mFooterView;
     private boolean mIsLoadMoreEnable = true;
     private boolean mIsLoadingMore;
-    private boolean mIsFooterAdded = false;
+    private boolean mIsFooterAdded;
 
     public JListView(Context context) {
 
@@ -37,7 +39,7 @@ public class JListView extends ListView implements OnScrollListener {
         setOnScrollListener(this);
 
         mFooterView = new JFooter(context);
-        mFooterView.setRetryLoadClickListener(new JFooter.RetryLoadClickListener() {
+        mFooterView.setOnRetryListener(new JFooter.OnRetryListener() {
 
             @Override
             public void onRetry() {
@@ -45,6 +47,17 @@ public class JListView extends ListView implements OnScrollListener {
                 startLoadMore(false);
             }
         });
+    }
+
+    @Override
+    public void setAdapter(ListAdapter adapter) {
+
+        if (!mIsFooterAdded) {
+
+            addFooterView(mFooterView);
+            mIsFooterAdded = true;
+        }
+        super.setAdapter(adapter);
     }
 
     @Override
@@ -58,8 +71,10 @@ public class JListView extends ListView implements OnScrollListener {
         if (!mIsLoadMoreEnable || mIsLoadingMore || isLoadMoreFailed() || totalItemCount == 0)
             return;
 
-        if (visibleItemCount + firstVisibleItem == totalItemCount)
+        if (visibleItemCount + firstVisibleItem == totalItemCount) {
+
             startLoadMore(true);
+        }
     }
 
     private void startLoadMore(boolean isAuto) {
@@ -69,22 +84,29 @@ public class JListView extends ListView implements OnScrollListener {
 
         mIsLoadingMore = true;
 
-        mFooterView.ready();
+//        mFooterView.ready();
         mFooterView.loading();
 
         if (mOnLoadMoreListener != null)
             mOnLoadMoreListener.onRefresh(isAuto);
     }
 
-    @Override
-    public void setAdapter(ListAdapter adapter) {
+    public void stopLoadMore() {
 
-        if (!mIsFooterAdded) {
+        if (mIsLoadingMore) {
 
-            addFooterView(mFooterView);
-            mIsFooterAdded = true;
+            mIsLoadingMore = false;
+//            mFooterView.done();
         }
-        super.setAdapter(adapter);
+    }
+
+    public void stopLoadMoreFailed() {
+
+        if (mIsLoadingMore) {
+
+            mIsLoadingMore = false;
+            mFooterView.failed();
+        }
     }
 
     public boolean isLoadingMore() {
@@ -121,29 +143,6 @@ public class JListView extends ListView implements OnScrollListener {
     public void setLoadMoreView(View v, FrameLayout.LayoutParams flLp) {
 
         mFooterView.setLoadingView(v, flLp);
-    }
-
-    public void stopLoadMore() {
-
-        if (mIsLoadingMore) {
-
-            mIsLoadingMore = false;
-            mFooterView.done();
-        }
-    }
-
-    public void stopLoadMoreFailed() {
-
-        if (mIsLoadingMore) {
-
-            mIsLoadingMore = false;
-            mFooterView.failed();
-        }
-    }
-
-    public interface OnLoadMoreListener {
-
-        void onRefresh(boolean isAuto);
     }
 
     public void setLoadMoreListener(OnLoadMoreListener l) {

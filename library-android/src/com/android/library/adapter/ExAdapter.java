@@ -153,12 +153,12 @@ public abstract class ExAdapter<T> extends BaseAdapter {
      * click listener part
 	 */
 
-    public void setOnItemViewClickListener(OnItemViewClickListener lisn) {
+    public void setOnItemViewClickListener(OnItemViewClickListener<T> lisn) {
 
         mOnItemViewClickLisn = lisn;
     }
 
-    public void setOnItemViewLongClickListener(OnItemViewLongClickListener lisn) {
+    public void setOnItemViewLongClickListener(OnItemViewLongClickListener<T> lisn) {
 
         mOnItemViewLongClickLisn = lisn;
     }
