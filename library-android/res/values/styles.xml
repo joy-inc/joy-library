@@ -1,18 +1,27 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <style name="lib_theme_base" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- enable window content transitions -->
-        <!--
-        <item name="android:windowContentTransitions" tools:targetApi="21">true</item>
-        <item name="android:windowAllowEnterTransitionOverlap" tools:targetApi="21">true</item>
-        <item name="android:windowAllowReturnTransitionOverlap" tools:targetApi="21">true</item>
-        -->
+
     </style>
 
     <style name="lib_style_toolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
-        <item name="android:transitionName" tools:targetApi="21">toolbar</item>
+        <item name="titleTextAppearance">@style/lib_style_toolbar_title</item>
+        <item name="subtitleTextAppearance">@style/lib_style_toolbar_subtitle</item>
         <item name="android:background">?attr/colorPrimary</item>
-        <item name="android:elevation" tools:targetApi="21">@dimen/design_appbar_elevation</item>
+    </style>
+
+    <style name="lib_style_toolbar.collapse">
+
+    </style>
+
+    <style name="lib_style_toolbar_title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+
+    </style>
+
+    <style name="lib_style_toolbar_subtitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
+
     </style>
 </resources>
