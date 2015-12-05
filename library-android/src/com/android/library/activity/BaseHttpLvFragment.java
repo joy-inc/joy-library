@@ -48,7 +48,6 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
     protected JListView getDefaultListView() {
 
         JListView jlv = (JListView) inflateLayout(R.layout.lib_view_listview);
-//        jlv.setLoadMoreEnable(false);
         jlv.setLoadMoreView(JLoadingView.getLoadMore(getActivity()), JLoadingView.getLoadMoreLp());
         jlv.setLoadMoreListener(getDefaultLoadMoreLisn());
         return jlv;
@@ -172,7 +171,7 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
         if (CollectionUtil.isEmpty(datas))
             return false;
 
-        if (mLoadMoreEnable && mListView instanceof JListView) {
+        if (mListView instanceof JListView && isLoadMoreEnable()) {
 
             JListView jlv = (JListView) mListView;
             jlv.setLoadMoreEnable(datas.size() >= mPageLimit);
@@ -280,21 +279,25 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
 
     protected final boolean isLoadingMore() {
 
-        if (mLoadMoreEnable && mListView instanceof JListView)
-            return ((JListView) mListView).isLoadingMore();
+        if (mListView instanceof JListView)
+            return isLoadMoreEnable() && ((JListView) mListView).isLoadingMore();
         return false;
     }
 
     protected final void onLoadMoreFailed() {
 
-        if (mLoadMoreEnable && mListView instanceof JListView)
+        if (mListView instanceof JListView && isLoadMoreEnable())
             ((JListView) mListView).stopLoadMoreFailed();
     }
 
-    private boolean mLoadMoreEnable = true;
-
     protected void setLoadMoreEnable(boolean enable) {
 
-        mLoadMoreEnable = enable;
+        if (mListView instanceof JListView)
+            ((JListView) mListView).setLoadMoreEnable(enable);
+    }
+
+    private boolean isLoadMoreEnable() {
+
+        return ((JListView) mListView).isLoadMoreEnable();
     }
 }

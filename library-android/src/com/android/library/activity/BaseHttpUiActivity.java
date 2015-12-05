@@ -204,10 +204,10 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
                 if (isFinishing())
                     return;
 
-                if (!isRespIntermediate())
-                    hideLoading();
                 if (!invalidateContent(t))
                     showNoContentTip();
+                if (!isRespIntermediate())
+                    hideLoading();
             }
 
             @Override
@@ -216,9 +216,9 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
                 if (isFinishing())
                     return;
 
+                onHttpFailed(tag, msg);
                 showFailedTip();
                 hideLoading();
-                onHttpFailed(tag, msg);
             }
         };
     }

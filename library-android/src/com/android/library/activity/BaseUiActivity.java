@@ -70,6 +70,7 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
         mToolbar = (Toolbar) inflateLayout(R.layout.lib_view_toolbar);
         setSupportActionBar(mToolbar);
         LayoutParams toolbarLp = new LayoutParams(LayoutParams.MATCH_PARENT, height);
+        toolbarLp.topMargin = overlay ? STATUS_BAR_HEIGHT : 0;
         toolbarLp.gravity = Gravity.TOP;
         rootView.addView(mToolbar, toolbarLp);
 
