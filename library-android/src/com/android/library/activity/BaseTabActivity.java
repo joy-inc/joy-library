@@ -73,6 +73,8 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
         // toolbar
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+
+        setTitle(null);
     }
 
     protected void initContentView() {

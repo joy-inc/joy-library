@@ -72,6 +72,8 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
         LayoutParams toolbarLp = new LayoutParams(LayoutParams.MATCH_PARENT, height);
         toolbarLp.gravity = Gravity.TOP;
         rootView.addView(mToolbar, toolbarLp);
+
+        setTitle(null);
     }
 
     protected void initData() {
