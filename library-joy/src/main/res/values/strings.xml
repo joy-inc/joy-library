@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Joy Library</string>
+    <string name="umeng_socialize_text_waitting">请稍候...</string>
+    <string name="umeng_socialize_text_waitting_weixin">跳转微信中，请稍候...</string>
+    <string name="umeng_socialize_text_waitting_weixin_circle">跳转朋友圈中，请稍候...</string>
+
+    <string name="umeng_socialize_text_waitting_redirect">跳转</string>
+    <string name="umeng_socialize_text_waitting_message">,请稍候...</string>
+    <string name="umeng_socialize_text_loading_message">载入中,请稍候...</string>
+
+    <string name="umeng_socialize_text_waitting_share">分享中&#8230;</string>
+    <string name="umeng_socialize_text_sina_key">微博</string>
+
 </resources>
