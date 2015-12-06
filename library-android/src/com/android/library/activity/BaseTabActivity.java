@@ -184,7 +184,7 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
 
     protected void addTitleLeftBackView() {
 
-        addTitleLeftView(R.drawable.abc_ic_ab_back_mtrl_am_alpha, new View.OnClickListener() {
+        addTitleLeftView(R.drawable.ic_back, new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {

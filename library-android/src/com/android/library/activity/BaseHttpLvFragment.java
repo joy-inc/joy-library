@@ -56,7 +56,8 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
     private View wrapSwipeRefresh(View contentView) {
 
         mSwipeRefreshWidget = new SwipeRefreshLayout(getActivity());
-        mSwipeRefreshWidget.setColorSchemeResources(R.color.holo_blue_bright, R.color.holo_green_light, R.color.holo_orange_light, R.color.holo_red_light);
+//        mSwipeRefreshWidget.setColorSchemeResources(R.color.holo_blue_bright, R.color.holo_green_light, R.color.holo_orange_light, R.color.holo_red_light);
+        mSwipeRefreshWidget.setColorSchemeResources(R.color.color_accent);
         mSwipeRefreshWidget.setOnRefreshListener(getDefaultRefreshLisn());
         mSwipeRefreshWidget.addView(contentView);
         return mSwipeRefreshWidget;
