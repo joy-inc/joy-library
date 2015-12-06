@@ -3,6 +3,7 @@ package com.android.library.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Environment;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -82,5 +83,11 @@ public class DeviceUtil {
     public static boolean isNetworkDisable() {
 
         return !isNetworkEnable();
+    }
+
+    public static boolean sdcardIsEnable() {
+
+        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)
+                && !Environment.getExternalStorageState().equals(Environment.MEDIA_SHARED);
     }
 }
