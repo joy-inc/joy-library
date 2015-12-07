@@ -8,6 +8,7 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 
 import com.android.library.BaseApplication;
+import com.android.library.utils.DeviceUtil;
 
 import java.util.List;
 
@@ -31,7 +32,6 @@ public class ShareWeiBoUtil {
         weiboIntent.putExtra(Intent.EXTRA_TEXT, content);
 
 
-
         PackageManager pm = context.getPackageManager();
         List<ResolveInfo> matches = pm.queryIntentActivities(weiboIntent, PackageManager.MATCH_DEFAULT_ONLY);
         String packageName = "com.sina.weibo";
@@ -53,18 +53,6 @@ public class ShareWeiBoUtil {
      * @return
      */
     public static boolean hasSinaWeiboClient() {
-        try {
-
-            PackageInfo packageInfo = BaseApplication.getContext().getPackageManager().getPackageInfo("com.sina.weibo", 0);
-            if (packageInfo == null)
-                return false;
-
-            int highBit = packageInfo.versionName.charAt(0);
-            return highBit > 50 ? true : false;// 50 = 2
-
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-            return false;
-        }
+        return DeviceUtil.checkAppHas("com.sina.weibo");
     }
 }

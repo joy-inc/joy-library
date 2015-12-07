@@ -1,6 +1,8 @@
 package com.android.library.utils;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
@@ -89,5 +91,26 @@ public class DeviceUtil {
 
         return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)
                 && !Environment.getExternalStorageState().equals(Environment.MEDIA_SHARED);
+    }
+
+    /**
+     * 检查app是否有安装
+     * @param packageName
+     * @return
+     */
+    public static boolean checkAppHas(String packageName) {
+        try {
+
+            PackageInfo packageInfo = BaseApplication.getContext().getPackageManager().getPackageInfo(packageName, 0);
+            if (packageInfo == null)
+                return false;
+
+            int highBit = packageInfo.versionName.charAt(0);
+            return highBit > 50 ? true : false;// 50 = 2
+
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

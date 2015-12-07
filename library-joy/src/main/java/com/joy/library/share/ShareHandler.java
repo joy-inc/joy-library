@@ -2,8 +2,6 @@ package com.joy.library.share;
 
 import android.app.Activity;
 
-import com.android.library.utils.TextUtil;
-
 /**
  * 这里做的事情就是把分享的代码实现,不负责界面展现功能,集成友盟的jar包
  * 在结束activity结束的时候需要调用destroy方法
@@ -66,7 +64,7 @@ public class ShareHandler {
      */
     private void handleWeixinMessage(ShareInfo info) {
 
-        ShareWeixinUtil.getInstance().send2Weixin(info.getUrl(), info.getContent(), info.getMediaResId());
+        ShareWeixinUtil.getInstance().send2WeixinFriend(info.getContent(), info.getUrl(), info.getMediaResId());
     }
 
     /**
@@ -75,7 +73,7 @@ public class ShareHandler {
      * @param info
      */
     private void handleWeiXinCircleMessage(ShareInfo info) {
-        ShareWeixinUtil.getInstance().sendWeixinFriend(info.getTitle(), info.getContent(), info.getUrl(), info.getMediaResId());
+        ShareWeixinUtil.getInstance().send2WeixinCircle(info.getUrl(), info.getContent(), info.getMediaResId());
 
     }
 
