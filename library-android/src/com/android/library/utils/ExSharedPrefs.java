@@ -132,8 +132,7 @@ public class ExSharedPrefs {
 
         } catch (IOException e) {
 
-            if (LogMgr.isDebug())
-                e.printStackTrace();
+            e.printStackTrace();
 
         } finally {
 
@@ -165,8 +164,7 @@ public class ExSharedPrefs {
 
         } catch (Exception e) {
 
-            if (LogMgr.isDebug())
-                e.printStackTrace();
+            e.printStackTrace();
 
         } finally {
 
@@ -217,8 +215,7 @@ public class ExSharedPrefs {
 
         } catch (Exception e) {
 
-            if (LogMgr.isDebug())
-                e.printStackTrace();
+            e.printStackTrace();
         }
 
         return false;

@@ -2,7 +2,6 @@ package com.android.library.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 import junit.framework.Assert;
 
@@ -27,8 +26,7 @@ public class ImageUtil {
             return baos.toByteArray();
         } catch (Throwable t) {
 
-            if (LogMgr.isDebug())
-                t.printStackTrace();
+            t.printStackTrace();
         }
 
         return null;
