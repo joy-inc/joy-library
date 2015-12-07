@@ -9,6 +9,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
@@ -223,6 +224,27 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
         lp.rightMargin = getToolbar().getContentInsetLeft();
         mToolbar.addView(v, lp);
     }
+
+    	/*
+	 * fragment activity part
+	 */
+
+    protected void addFragment(int frameId, Fragment f){
+
+        if(f == null)
+            return;
+
+        getSupportFragmentManager().beginTransaction().add(frameId, f).commitAllowingStateLoss();
+    }
+
+    protected void addFragment(int frameId, Fragment f, String tag){
+
+        if(f == null)
+            return;
+
+        getSupportFragmentManager().beginTransaction().add(frameId, f, tag).commitAllowingStateLoss();
+    }
+
 
     protected boolean isNetworkEnable() {
 
