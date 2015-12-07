@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <color name="color_accent">#fa617d</color>
+
     <color name="black_trans05">#0D000000</color>
     <color name="black_trans10">#1A000000</color>
     <color name="black_trans12">#1F000000</color>

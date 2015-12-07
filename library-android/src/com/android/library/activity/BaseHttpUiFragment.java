@@ -202,10 +202,10 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
                 if (isFinishing())
                     return;
 
-                if (!isRespIntermediate())
-                    hideLoading();
                 if (!invalidateContent(t))
                     showNoContentTip();
+                if (!isRespIntermediate())
+                    hideLoading();
             }
 
             @Override
@@ -214,9 +214,9 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
                 if (isFinishing())
                     return;
 
+                onHttpFailed(tag, msg);
                 showFailedTip();
                 hideLoading();
-                onHttpFailed(tag, msg);
             }
         };
     }

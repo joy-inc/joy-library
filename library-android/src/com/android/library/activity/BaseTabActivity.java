@@ -1,6 +1,7 @@
 package com.android.library.activity;
 
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
@@ -8,14 +9,18 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.AppBarLayout.LayoutParams;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.library.R;
 import com.android.library.adapter.ExFragmentPagerAdapter;
@@ -68,6 +73,8 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
         // toolbar
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+
+        setTitle(null);
     }
 
     protected void initContentView() {
@@ -98,9 +105,36 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
         return mToolbar;
     }
 
-    protected void setTitleBgColor(@ColorInt int color) {
+    protected LayoutParams getToolbarLp() {
 
-        mToolbar.setBackgroundColor(color);
+        return (LayoutParams) mToolbar.getLayoutParams();
+    }
+
+    protected void setStatusBarTranslucent(boolean translucent) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+
+            if (translucent) {
+
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//                getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            } else {
+
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            }
+        }
+    }
+
+    protected void setStatusBarColorResId(@ColorRes int colorResId) {
+
+        setStatusBarColor(getResources().getColor(colorResId));
+    }
+
+    protected void setStatusBarColor(@ColorInt int color) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            getWindow().setStatusBarColor(color);
     }
 
     protected void setTitleBgColorResId(@ColorRes int colorResId) {
@@ -108,9 +142,9 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
         setTitleBgColor(getResources().getColor(colorResId));
     }
 
-    protected void setTitleText(String text) {
+    protected void setTitleBgColor(@ColorInt int color) {
 
-        mToolbar.setTitle(text);
+        mToolbar.setBackgroundColor(color);
     }
 
     protected void setTitleText(@StringRes int resId) {
@@ -118,14 +152,19 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
         setTitleText(getString(resId));
     }
 
-    protected void setSubtitle(String text) {
+    protected void setTitleText(String text) {
 
-        mToolbar.setSubtitle(text);
+        mToolbar.setTitle(text);
     }
 
     protected void setSubTitle(@StringRes int resId) {
 
         setSubtitle(getString(resId));
+    }
+
+    protected void setSubtitle(String text) {
+
+        mToolbar.setSubtitle(text);
     }
 
     protected void setTitleTextColor(@ColorInt int color) {
@@ -145,7 +184,7 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
 
     protected void addTitleLeftBackView() {
 
-        addTitleLeftView(R.drawable.abc_ic_ab_back_mtrl_am_alpha, new View.OnClickListener() {
+        addTitleLeftView(R.drawable.ic_back, new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -155,19 +194,51 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
         });
     }
 
-    protected void addTitleLeftView(@DrawableRes int resId, View.OnClickListener listener) {
+    protected void addTitleLeftView(@DrawableRes int resId, View.OnClickListener lisn) {
 
         mToolbar.setNavigationIcon(resId);
-        mToolbar.setNavigationOnClickListener(listener);
+        mToolbar.setNavigationOnClickListener(lisn);
     }
 
-    protected void addTitleRightView(View v, View.OnClickListener lisn) {
+    protected TextView addTitleMiddleView(@StringRes int resId) {
+
+        return addTitleMiddleView(getResources().getString(resId));
+    }
+
+    protected TextView addTitleMiddleView(String str) {
+
+        TextView tvTitle = new TextView(this);
+        tvTitle.setTextAppearance(this, R.style.lib_style_toolbar_title);
+        tvTitle.setSingleLine();
+        tvTitle.setEllipsize(TextUtils.TruncateAt.END);
+        tvTitle.setText(str);
+        return (TextView) addTitleMiddleView(tvTitle, null);
+    }
+
+    protected View addTitleMiddleView(View v, View.OnClickListener lisn) {
+
+        v.setOnClickListener(lisn);
+        Toolbar.LayoutParams lp = new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
+        lp.gravity = Gravity.CENTER;
+        mToolbar.addView(v, lp);
+        return v;
+    }
+
+    protected ImageView addTitleRightView(@DrawableRes int resId, View.OnClickListener lisn) {
+
+        ImageView iv = new ImageView(this);
+        iv.setImageResource(resId);
+        return (ImageView) addTitleRightView(iv, lisn);
+    }
+
+    protected View addTitleRightView(View v, View.OnClickListener lisn) {
 
         v.setOnClickListener(lisn);
         Toolbar.LayoutParams lp = new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
         lp.gravity = Gravity.RIGHT;
         lp.rightMargin = getToolbar().getContentInsetLeft();
         mToolbar.addView(v, lp);
+        return v;
     }
 
     protected TabLayout getTabLayout() {
@@ -286,13 +357,13 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
         ViewUtil.goneImageView(v);
     }
 
-    protected View inflateLayout(@LayoutRes int layoutResID) {
+    protected View inflateLayout(@LayoutRes int layoutResId) {
 
-        return inflateLayout(layoutResID, null);
+        return inflateLayout(layoutResId, null);
     }
 
-    protected View inflateLayout(@LayoutRes int layoutResID, @Nullable ViewGroup root) {
+    protected View inflateLayout(@LayoutRes int layoutResId, @Nullable ViewGroup root) {
 
-        return getLayoutInflater().inflate(layoutResID, root);
+        return getLayoutInflater().inflate(layoutResId, root);
     }
 }

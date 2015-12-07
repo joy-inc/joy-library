@@ -12,6 +12,7 @@ import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,8 +71,11 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
         mToolbar = (Toolbar) inflateLayout(R.layout.lib_view_toolbar);
         setSupportActionBar(mToolbar);
         LayoutParams toolbarLp = new LayoutParams(LayoutParams.MATCH_PARENT, height);
+        toolbarLp.topMargin = overlay ? STATUS_BAR_HEIGHT : 0;
         toolbarLp.gravity = Gravity.TOP;
         rootView.addView(mToolbar, toolbarLp);
+
+        setTitle(null);
     }
 
     protected void initData() {
@@ -114,21 +118,15 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
         }
     }
 
+    protected void setStatusBarColorResId(@ColorRes int colorResId) {
+
+        setStatusBarColor(getResources().getColor(colorResId));
+    }
+
     protected void setStatusBarColor(@ColorInt int color) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             getWindow().setStatusBarColor(color);
-    }
-
-    protected void setStatusBarColorResource(@ColorRes int colorResId) {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            setStatusBarColor(getResources().getColor(colorResId));
-    }
-
-    protected void setTitleBgColor(@ColorInt int color) {
-
-        mToolbar.setBackgroundColor(color);
     }
 
     protected void setTitleBgColorResId(@ColorRes int colorResId) {
@@ -136,9 +134,9 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
         setTitleBgColor(getResources().getColor(colorResId));
     }
 
-    protected void setTitleText(String text) {
+    protected void setTitleBgColor(@ColorInt int color) {
 
-        mToolbar.setTitle(text);
+        mToolbar.setBackgroundColor(color);
     }
 
     protected void setTitleText(@StringRes int resId) {
@@ -146,14 +144,19 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
         setTitleText(getString(resId));
     }
 
-    protected void setSubtitle(String text) {
+    protected void setTitleText(String text) {
 
-        mToolbar.setSubtitle(text);
+        mToolbar.setTitle(text);
     }
 
     protected void setSubTitle(@StringRes int resId) {
 
         setSubtitle(getString(resId));
+    }
+
+    protected void setSubtitle(String text) {
+
+        mToolbar.setSubtitle(text);
     }
 
     protected void setTitleTextColor(@ColorInt int color) {
@@ -173,7 +176,7 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
 
     protected void addTitleLeftBackView() {
 
-        addTitleLeftView(R.drawable.abc_ic_ab_back_mtrl_am_alpha, new View.OnClickListener() {
+        addTitleLeftView(R.drawable.ic_back, new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -189,40 +192,45 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
         mToolbar.setNavigationOnClickListener(lisn);
     }
 
-    protected void addTitleMiddleView(@StringRes int resId) {
+    protected TextView addTitleMiddleView(@StringRes int resId) {
 
-        addTitleMiddleView(getResources().getString(resId));
+        return addTitleMiddleView(getResources().getString(resId));
     }
 
-    protected void addTitleMiddleView(String str) {
+    protected TextView addTitleMiddleView(String str) {
 
-        TextView title = new TextView(this);
-        title.setText(str);
-        addTitleMiddleView(title, null);
+        TextView tvTitle = new TextView(this);
+        tvTitle.setTextAppearance(this, R.style.lib_style_toolbar_title);
+        tvTitle.setSingleLine();
+        tvTitle.setEllipsize(TextUtils.TruncateAt.END);
+        tvTitle.setText(str);
+        return (TextView) addTitleMiddleView(tvTitle, null);
     }
 
-    protected void addTitleMiddleView(View v, View.OnClickListener lisn) {
+    protected View addTitleMiddleView(View v, View.OnClickListener lisn) {
 
         v.setOnClickListener(lisn);
         Toolbar.LayoutParams lp = new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
         lp.gravity = Gravity.CENTER;
         mToolbar.addView(v, lp);
+        return v;
     }
 
-    protected void addTitleRightView(@DrawableRes int resId, View.OnClickListener lisn) {
+    protected ImageView addTitleRightView(@DrawableRes int resId, View.OnClickListener lisn) {
 
-        ImageView imageView = new ImageView(this);
-        imageView.setImageResource(resId);
-        addTitleRightView(imageView, lisn);
+        ImageView iv = new ImageView(this);
+        iv.setImageResource(resId);
+        return (ImageView) addTitleRightView(iv, lisn);
     }
 
-    protected void addTitleRightView(View v, View.OnClickListener lisn) {
+    protected View addTitleRightView(View v, View.OnClickListener lisn) {
 
         v.setOnClickListener(lisn);
         Toolbar.LayoutParams lp = new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
         lp.gravity = Gravity.RIGHT;
         lp.rightMargin = getToolbar().getContentInsetLeft();
         mToolbar.addView(v, lp);
+        return v;
     }
 
     	/*

@@ -51,7 +51,6 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
     protected RecyclerView getDefaultRecyclerView() {
 
         JRecyclerView jrv = (JRecyclerView) inflateLayout(R.layout.lib_view_recycler);
-//        jrv.setLoadMoreEnable(false);
         jrv.setLoadMoreView(JLoadingView.getLoadMore(getActivity()), JLoadingView.getLoadMoreLp());
         jrv.setLoadMoreListener(getDefaultLoadMoreLisn());
         return jrv;
@@ -73,7 +72,8 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
     private View wrapSwipeRefresh(View contentView) {
 
         mSwipeRefreshWidget = new SwipeRefreshLayout(getActivity());
-        mSwipeRefreshWidget.setColorSchemeResources(R.color.holo_blue_bright, R.color.holo_green_light, R.color.holo_orange_light, R.color.holo_red_light);
+//        mSwipeRefreshWidget.setColorSchemeResources(R.color.holo_blue_bright, R.color.holo_green_light, R.color.holo_orange_light, R.color.holo_red_light);
+        mSwipeRefreshWidget.setColorSchemeResources(R.color.color_accent);
         mSwipeRefreshWidget.setOnRefreshListener(getDefaultRefreshLisn());
         mSwipeRefreshWidget.addView(contentView);
         return mSwipeRefreshWidget;
@@ -169,7 +169,6 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
 
     protected void setAdapter(ExRvAdapter adapter) {
 
-//        mRecyclerView.setAdapter(adapter);
         RecyclerAdapter ra = new RecyclerAdapter(adapter, getDefaultLayoutManager());
         getRecyclerView().setAdapter(ra);
     }
@@ -190,7 +189,7 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
         if (CollectionUtil.isEmpty(datas))
             return false;
 
-        if (mLoadMoreEnable && mRecyclerView instanceof JRecyclerView) {
+        if (mRecyclerView instanceof JRecyclerView && isLoadMoreEnable()) {
 
             JRecyclerView jrv = (JRecyclerView) mRecyclerView;
             jrv.setLoadMoreEnable(datas.size() >= mPageLimit);
@@ -298,21 +297,25 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
 
     protected final boolean isLoadingMore() {
 
-        if (mLoadMoreEnable && mRecyclerView instanceof JRecyclerView)
-            return ((JRecyclerView) mRecyclerView).isLoadingMore();
+        if (mRecyclerView instanceof JRecyclerView)
+            return isLoadMoreEnable() && ((JRecyclerView) mRecyclerView).isLoadingMore();
         return false;
     }
 
     protected final void onLoadMoreFailed() {
 
-        if (mLoadMoreEnable && mRecyclerView instanceof JRecyclerView)
+        if (mRecyclerView instanceof JRecyclerView && isLoadMoreEnable())
             ((JRecyclerView) mRecyclerView).stopLoadMoreFailed();
     }
 
-    private boolean mLoadMoreEnable = true;
-
     protected void setLoadMoreEnable(boolean enable) {
 
-        mLoadMoreEnable = enable;
+        if (mRecyclerView instanceof JRecyclerView)
+            ((JRecyclerView) mRecyclerView).setLoadMoreEnable(enable);
+    }
+
+    private boolean isLoadMoreEnable() {
+
+        return ((JRecyclerView) mRecyclerView).isLoadMoreEnable();
     }
 }
