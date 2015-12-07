@@ -1,6 +1,5 @@
 package com.joy.library.share;
 
-import com.umeng.socialize.bean.SHARE_MEDIA;
 
 /**
  * 返回对应的分享文案等信息
@@ -13,5 +12,5 @@ public interface IShareInfo {
      * @param platform 平台类型
      * @return
      */
-    ShareInfo getShareInfo(SHARE_MEDIA platform);
+    ShareInfo getShareInfo(ShareType platform);
 }
