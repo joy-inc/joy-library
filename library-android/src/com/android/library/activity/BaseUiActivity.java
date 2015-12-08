@@ -215,6 +215,13 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
         mToolbar.addView(v, lp);
         return v;
     }
+    protected View addTitleMiddleView(View v) {
+
+        Toolbar.LayoutParams lp = new Toolbar.LayoutParams(Toolbar.LayoutParams.MATCH_PARENT, Toolbar.LayoutParams.MATCH_PARENT);
+        lp.gravity = Gravity.CENTER;
+        mToolbar.addView(v, lp);
+        return v;
+    }
 
     protected ImageView addTitleRightView(@DrawableRes int resId, View.OnClickListener lisn) {
 
@@ -320,7 +327,6 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
     }
 
     protected View inflateLayout(@LayoutRes int layoutResId, @Nullable ViewGroup root) {
-
         return getLayoutInflater().inflate(layoutResId, root);
     }
 }
