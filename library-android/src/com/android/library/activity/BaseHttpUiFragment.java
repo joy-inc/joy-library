@@ -145,6 +145,7 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
 
         cancelRequest();
         mObjReq = getObjectRequest();
+        mObjReq.setCacheMode(CacheMode.NONE);
         mObjReq.setResponseListener(getObjRespLis());
         addRequestNoCache(mObjReq);
     }
@@ -192,8 +193,9 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
             @Override
             public void onPre() {
 
-                showLoading();
+                hideContentView();
                 hideTipView();
+                showLoading();
             }
 
             @Override
@@ -202,7 +204,9 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
                 if (isFinishing())
                     return;
 
-                if (!invalidateContent(t))
+                if (invalidateContent(t))
+                    showContentView();
+                else
                     showNoContentTip();
                 if (!isRespIntermediate())
                     hideLoading();
@@ -215,10 +219,22 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
                     return;
 
                 onHttpFailed(tag, msg);
-                showFailedTip();
+
                 hideLoading();
+                hideContentView();
+                showFailedTip();
             }
         };
+    }
+
+    protected void showContentView() {
+
+        showView(getContentView());
+    }
+
+    protected void hideContentView() {
+
+        hideView(getContentView());
     }
 
     protected void showFailedTip() {

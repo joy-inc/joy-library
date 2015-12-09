@@ -68,7 +68,9 @@ public class JListView extends ListView implements OnScrollListener {
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
-        if (!mIsLoadMoreEnable || mIsLoadingMore || isLoadMoreFailed() || totalItemCount <= 1)
+        int extraItemsCount = getHeaderViewsCount() + getFooterViewsCount();
+
+        if (!mIsLoadMoreEnable || mIsLoadingMore || isLoadMoreFailed() || totalItemCount <= extraItemsCount)
             return;
 
         if (visibleItemCount + firstVisibleItem == totalItemCount) {

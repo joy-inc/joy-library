@@ -63,6 +63,20 @@ public class JRecyclerView extends RecyclerView {
         }
     }
 
+    private int getHeaderViewsCount() {
+
+        if (getAdapter() instanceof RecyclerAdapter)
+            return ((RecyclerAdapter) getAdapter()).getHeadersCount();
+        return 0;
+    }
+
+    private int getFooterViewsCount() {
+
+        if (getAdapter() instanceof RecyclerAdapter)
+            return ((RecyclerAdapter) getAdapter()).getFootersCount();
+        return 0;
+    }
+
     @Override
     public void setLayoutManager(LayoutManager layout) {
 
@@ -81,9 +95,10 @@ public class JRecyclerView extends RecyclerView {
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 
-            int totalItemCount = mLayoutMgr.getItemCount();
+            int totalItemsCount = mLayoutMgr.getItemCount();
+            int extraItemsCount = getHeaderViewsCount() + getFooterViewsCount();
 
-            if (!mIsLoadMoreEnable || mIsLoadingMore || isLoadMoreFailed() || totalItemCount == 0)
+            if (!mIsLoadMoreEnable || mIsLoadingMore || isLoadMoreFailed() || totalItemsCount <= extraItemsCount)
                 return;
 
             int lastVisiblePos;
@@ -103,7 +118,7 @@ public class JRecyclerView extends RecyclerView {
                 return;
             }
 
-            if (lastVisiblePos == totalItemCount - 1) {
+            if (lastVisiblePos == totalItemsCount - 1) {
 
                 startLoadMore(true);
             }
