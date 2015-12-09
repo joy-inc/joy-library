@@ -87,4 +87,19 @@ public class TextUtil {
         Matcher m = p.matcher(str);
         return m.matches();
     }
+
+
+    public static int calculateWeiboLength(CharSequence c) {
+
+        double len = 0;
+        for (int i = 0; i < c.length(); i++) {
+            int temp = (int) c.charAt(i);
+            if (temp > 0 && temp < 127) {
+                len += 0.5;
+            } else {
+                len++;
+            }
+        }
+        return (int) Math.round(len);
+    }
 }

@@ -8,7 +8,7 @@ package com.joy.library.share;
  */
 public class ShareConstant {
 
-    private String descriptor = "com.joy.lib" ;//"com.umeng.share";
+    private String descriptor = "com.joy.lib";//"com.umeng.share";
 
     //微信
     private String weixinAppid;
@@ -18,10 +18,10 @@ public class ShareConstant {
     private String qqZoneKey;
     private String qqZoneUrl;
     //微博
-    //    private String weiboAppid;
-    //    private String weiboSecret;
-    //    private String weiboUrl;
-    //    private String weiboscope;
+    private String weiboAppid;
+    private String weiboSecret;
+    private String weiboUrl;
+    private String weiboScope;
     private static ShareConstant mShareConstant = null;
 
     private ShareConstant() {
@@ -81,5 +81,38 @@ public class ShareConstant {
 
     public void setDescriptor(String descriptor) {
         this.descriptor = descriptor;
+    }
+
+    public String getWeiboAppid() {
+        return weiboAppid;
+    }
+
+    public void setWeiboAppid(String weiboAppid) {
+        this.weiboAppid = weiboAppid;
+    }
+
+    public String getWeiboSecret() {
+        return weiboSecret;
+    }
+
+    public void setWeiboSecret(String weiboSecret) {
+        this.weiboSecret = weiboSecret;
+    }
+
+
+    public String getWeiboUrl() {
+        return weiboUrl;
+    }
+
+    public void setWeiboUrl(String weiboUrl) {
+        this.weiboUrl = weiboUrl;
+    }
+
+    public String getWeiboScope() {
+        return weiboScope;
+    }
+
+    public void setWeiboScope(String weiboScope) {
+        this.weiboScope = weiboScope;
     }
 }

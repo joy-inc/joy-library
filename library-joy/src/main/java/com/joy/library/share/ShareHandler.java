@@ -2,6 +2,8 @@ package com.joy.library.share;
 
 import android.app.Activity;
 
+import com.joy.library.share.weibo.auth.WeiBoAuthActivity;
+
 /**
  * 这里做的事情就是把分享的代码实现,不负责界面展现功能,集成友盟的jar包
  * 在结束activity结束的时候需要调用destroy方法
@@ -52,8 +54,8 @@ public class ShareHandler {
      */
     private void handleSinaMessage(ShareInfo info) {
 
-        ShareWeiBoUtil.openSinaClient(mActivity, info.getContent(), info.getMediaUrl());
-
+//        ShareWeiBoUtil.openSinaClient(mActivity, info.getContent(), info.getMediaUrl());
+        WeiBoAuthActivity.startActivity(mActivity,info.getContent(),info.getMediaUrl(),true);
     }
 
 
