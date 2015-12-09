@@ -252,6 +252,13 @@ public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
             super.showFailedTip();
     }
 
+    @Override
+    protected void hideContentView() {
+
+        if (getAdapter().isEmpty())
+            super.hideContentView();
+    }
+
     protected void setSwipeRefreshEnable(boolean enable) {
 
         mSwipeRefreshWidget.setEnabled(enable);

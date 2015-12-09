@@ -235,6 +235,13 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
             super.showFailedTip();
     }
 
+    @Override
+    protected void hideContentView() {
+
+        if (getAdapter().isEmpty())
+            super.showContentView();
+    }
+
     protected void setSwipeRefreshEnable(boolean enable) {
 
         mSwipeRefreshWidget.setEnabled(enable);

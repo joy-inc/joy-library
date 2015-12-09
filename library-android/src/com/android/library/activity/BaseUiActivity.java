@@ -4,6 +4,7 @@ import android.animation.LayoutTransition;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.ArrayRes;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
@@ -230,6 +231,7 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
         mToolbar.addView(v, lp);
         return v;
     }
+
     protected View addTitleMiddleView(View v) {
 
         Toolbar.LayoutParams lp = new Toolbar.LayoutParams(Toolbar.LayoutParams.MATCH_PARENT, Toolbar.LayoutParams.MATCH_PARENT);
@@ -372,6 +374,12 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
     }
 
     protected View inflateLayout(@LayoutRes int layoutResId, @Nullable ViewGroup root) {
+
         return getLayoutInflater().inflate(layoutResId, root);
+    }
+
+    protected String[] getStringArray(@ArrayRes int resId) {
+
+        return getResources().getStringArray(resId);
     }
 }
