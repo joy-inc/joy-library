@@ -43,6 +43,7 @@ public class ObjectRequest<T> extends Request<T> {
         super(method, url, null);
         mClazz = clazz;
         mHasCache = BaseApplication.getVolleyCache().get(getCacheKey()) != null;
+        setShouldCache(false);
         addEntryListener();
     }
 
