@@ -1,5 +1,6 @@
 package com.android.library.activity;
 
+import android.animation.LayoutTransition;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
@@ -15,6 +16,7 @@ import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 
 import com.android.library.BaseApplication;
+import com.android.library.R;
 import com.android.library.utils.DeviceUtil;
 import com.android.library.utils.DimenCons;
 import com.android.library.utils.ToastUtil;
@@ -26,14 +28,15 @@ import com.android.library.utils.ViewUtil;
  */
 public abstract class BaseUiFragment extends Fragment implements DimenCons {
 
-    private FrameLayout mFrameView;
     private CharSequence mLableText;
+    private FrameLayout mFlRoot;
+    private View mContentView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        mFrameView = new FrameLayout(getActivity());
-        return mFrameView;
+        mFlRoot = new FrameLayout(getActivity());
+        return mFlRoot;
     }
 
     protected void setContentView(@LayoutRes int layoutResID) {
@@ -43,21 +46,40 @@ public abstract class BaseUiFragment extends Fragment implements DimenCons {
 
     protected void setContentView(View contentView) {
 
-        wrapContentView(mFrameView, contentView);
+        mContentView = contentView;
+        wrapContentView(mFlRoot, mContentView);
         initData();
         initContentView();
     }
 
     protected void wrapContentView(FrameLayout rootView, View contentView) {
 
+        // add transition animation
+        LayoutTransition lt = new LayoutTransition();
+        lt.setDuration(100);
+        mFlRoot.setLayoutTransition(lt);
+
         // content view
-        rootView.addView(contentView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        contentView.setId(R.id.id_contentview);
+        LayoutParams contentLp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        rootView.addView(contentView, contentLp);
     }
 
     protected void initData() {
     }
 
     protected void initContentView() {
+    }
+
+    protected FrameLayout getRootView() {
+
+        return mFlRoot;
+    }
+
+    protected View getContentView() {
+
+//        return mFlRoot.findViewById(R.id.id_contentview);
+        return mContentView;
     }
 
     public BaseUiFragment setLableText(CharSequence lableText) {

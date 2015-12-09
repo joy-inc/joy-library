@@ -1,5 +1,6 @@
 package com.android.library.activity;
 
+import android.animation.LayoutTransition;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -36,6 +37,7 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
 
     private Toolbar mToolbar;
     private FrameLayout mFlRoot;
+    private View mContentView;
 
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
@@ -46,8 +48,9 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
     @Override
     public void setContentView(View contentView) {
 
+        mContentView = contentView;
         mFlRoot = new FrameLayout(this);
-        wrapContentView(mFlRoot, contentView);
+        wrapContentView(mFlRoot, mContentView);
         super.setContentView(mFlRoot);
 
         initData();
@@ -57,12 +60,18 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
 
     protected void wrapContentView(FrameLayout rootView, View contentView) {
 
+        // add transition animation
+        LayoutTransition lt = new LayoutTransition();
+        lt.setDuration(100);
+        rootView.setLayoutTransition(lt);
+
         TypedArray a = obtainStyledAttributes(R.styleable.Toolbar);
         boolean overlay = a.getBoolean(R.styleable.Toolbar_overlay, false);
         int height = a.getDimensionPixelSize(R.styleable.Toolbar_android_minHeight, TITLE_BAR_HEIGHT);
         a.recycle();
 
         // content view
+        contentView.setId(R.id.id_contentview);
         LayoutParams contentLp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         contentLp.topMargin = overlay ? -STATUS_BAR_HEIGHT : height;
         rootView.addView(contentView, contentLp);
@@ -90,6 +99,12 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
     protected FrameLayout getRootView() {
 
         return mFlRoot;
+    }
+
+    protected View getContentView() {
+
+//        return mFlRoot.findViewById(R.id.id_contentview);
+        return mContentView;
     }
 
     protected Toolbar getToolbar() {
@@ -233,26 +248,56 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
         return v;
     }
 
-    	/*
-	 * fragment activity part
-	 */
+    /**
+     * fragment activity part
+     */
+    protected void addFragment(Fragment f, String tag) {
 
-    protected void addFragment(int frameId, Fragment f){
+        if (f == null)
+            return;
 
-        if(f == null)
+        getSupportFragmentManager().beginTransaction().add(f, tag).commitAllowingStateLoss();
+    }
+
+    protected void addFragment(int frameId, Fragment f) {
+
+        if (f == null)
             return;
 
         getSupportFragmentManager().beginTransaction().add(frameId, f).commitAllowingStateLoss();
     }
 
-    protected void addFragment(int frameId, Fragment f, String tag){
+    protected void addFragment(int frameId, Fragment f, String tag) {
 
-        if(f == null)
+        if (f == null)
             return;
 
         getSupportFragmentManager().beginTransaction().add(frameId, f, tag).commitAllowingStateLoss();
     }
 
+    protected void replaceFragment(int frameId, Fragment f) {
+
+        if (f == null)
+            return;
+
+        getSupportFragmentManager().beginTransaction().replace(frameId, f).commitAllowingStateLoss();
+    }
+
+    protected void replaceFragment(int frameId, Fragment f, String tag) {
+
+        if (f == null)
+            return;
+
+        getSupportFragmentManager().beginTransaction().replace(frameId, f, tag).commitAllowingStateLoss();
+    }
+
+    protected void removeFragment(Fragment f) {
+
+        if (f == null)
+            return;
+
+        getSupportFragmentManager().beginTransaction().remove(f).commitAllowingStateLoss();
+    }
 
     protected boolean isNetworkEnable() {
 

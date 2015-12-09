@@ -147,6 +147,7 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
 
         cancelRequest();
         mObjReq = getObjectRequest();
+        mObjReq.setCacheMode(CacheMode.NONE);
         mObjReq.setResponseListener(getObjRespLis());
         addRequestNoCache(mObjReq);
     }
@@ -194,8 +195,9 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
             @Override
             public void onPre() {
 
-                showLoading();
+                hideContentView();
                 hideTipView();
+                showLoading();
             }
 
             @Override
@@ -204,7 +206,9 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
                 if (isFinishing())
                     return;
 
-                if (!invalidateContent(t))
+                if (invalidateContent(t))
+                    showContentView();
+                else
                     showNoContentTip();
                 if (!isRespIntermediate())
                     hideLoading();
@@ -217,10 +221,22 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
                     return;
 
                 onHttpFailed(tag, msg);
-                showFailedTip();
+
                 hideLoading();
+                hideContentView();
+                showFailedTip();
             }
         };
+    }
+
+    protected void showContentView() {
+
+        showView(getContentView());
+    }
+
+    protected void hideContentView() {
+
+        hideView(getContentView());
     }
 
     protected void showFailedTip() {

@@ -27,7 +27,7 @@ public class ObjectRequest<T> extends Request<T> {
     private Class mClazz;
     private ObjectResponseListener<T> mObjRespLis;
     private Map<String, String> mHeaders, mParams;
-    private CacheMode mCacheMode;
+    private CacheMode mCacheMode = CacheMode.NONE;
     private boolean mHasCache;
     private Response<T> mObjResp;
 
@@ -65,7 +65,8 @@ public class ObjectRequest<T> extends Request<T> {
         @Override
         public void onEntry(TestEntry entry) {
 
-            entry.setCacheMode(mCacheMode);
+            if (entry != null)
+                entry.setCacheMode(mCacheMode);
         }
     };
 
@@ -199,7 +200,8 @@ public class ObjectRequest<T> extends Request<T> {
 
     private QyerResponse<T> onResponse(String json) {
 
-        LogMgr.d("ObjectRequest","~~json: "+json);
+        if (LogMgr.isDebug())
+            LogMgr.d("ObjectRequest", "~~json: " + json);
 
         QyerResponse<T> resp = new QyerResponse();
 
@@ -246,9 +248,14 @@ public class ObjectRequest<T> extends Request<T> {
     protected void onFinish() {
 
 //        super.onFinish();
-        mClazz = null;
-        mObjRespLis = null;
         t = null;
+        mClazz = null;
+        mHasCache = false;
+        mCacheMode = CacheMode.NONE;
+        mObjRespLis = null;
+        mObjResp = null;
+
+        removeEntryListener();
 
         if (mHeaders != null) {
             mHeaders.clear();
@@ -258,7 +265,6 @@ public class ObjectRequest<T> extends Request<T> {
             mParams.clear();
             mParams = null;
         }
-        removeEntryListener();
     }
 
     // --- for test data ---
@@ -272,5 +278,13 @@ public class ObjectRequest<T> extends Request<T> {
     private boolean isTestMode() {
 
         return t != null;
+    }
+
+    @Override
+    public void cancel() {
+
+        super.cancel();
+        if (LogMgr.isDebug())
+            LogMgr.d("ObjectRequest", "~~cancel tag: " + getTag());
     }
 }
