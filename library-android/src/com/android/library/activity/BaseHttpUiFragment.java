@@ -1,6 +1,6 @@
 package com.android.library.activity;
 
-import android.support.annotation.DrawableRes;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -254,10 +254,19 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
         showImageView(mIvTip, mTipResId);
     }
 
-    protected void showCustomTip(@DrawableRes int resId) {
+    protected void addCustomView(View v) {
 
-        mTipResId = resId;
-        showImageView(mIvTip, mTipResId);
+        hideContentView();
+        hideTipView();
+        hideLoading();
+        LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        lp.gravity = Gravity.CENTER;
+        getRootView().addView(v, lp);
+    }
+
+    protected void removeCustomView(View v) {
+
+        getRootView().removeView(v);
     }
 
     protected void showLoading() {
