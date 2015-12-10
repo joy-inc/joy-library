@@ -55,9 +55,9 @@ public abstract class BaseUiFragment extends Fragment implements DimenCons {
     protected void wrapContentView(FrameLayout rootView, View contentView) {
 
         // add transition animation
-        LayoutTransition lt = new LayoutTransition();
-        lt.setDuration(100);
-        mFlRoot.setLayoutTransition(lt);
+//        LayoutTransition lt = new LayoutTransition();
+//        lt.setDuration(100);
+//        mFlRoot.setLayoutTransition(lt);
 
         // content view
         contentView.setId(R.id.id_contentview);

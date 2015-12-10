@@ -62,9 +62,9 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
     protected void wrapContentView(FrameLayout rootView, View contentView) {
 
         // add transition animation
-        LayoutTransition lt = new LayoutTransition();
-        lt.setDuration(100);
-        rootView.setLayoutTransition(lt);
+//        LayoutTransition lt = new LayoutTransition();
+//        lt.setDuration(100);
+//        rootView.setLayoutTransition(lt);
 
         TypedArray a = obtainStyledAttributes(R.styleable.Toolbar);
         boolean overlay = a.getBoolean(R.styleable.Toolbar_overlay, false);
