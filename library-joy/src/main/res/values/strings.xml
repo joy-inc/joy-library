@@ -9,5 +9,9 @@
      <string name="share_error">分享失败</string>
      <string name="share_null">请编写分享内容</string>
      <string name="share_to_long">文本过长</string>
+     <string name="ok">确定</string>
+     <string name="cancel">取消</string>
+     <string name="dialog_logout_share_account">确认登出该微博帐号？</string>
+
 
 </resources>
