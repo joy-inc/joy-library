@@ -2,6 +2,7 @@ package com.joy.library.share.weibo.auth;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +11,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -25,8 +27,10 @@ import com.android.library.httptask.ObjectRequest;
 import com.android.library.utils.ImageUtil;
 import com.android.library.utils.TextUtil;
 import com.android.library.utils.ToastUtil;
+import com.android.library.widget.JDialog;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.joy.library.R;
+import com.joy.library.dialog.DialogUtil;
 import com.joy.library.share.ShareConstant;
 import com.joy.library.share.weibo.openapi.StatusesAPI;
 import com.joy.library.share.weibo.openapi.UsersAPI;
@@ -58,6 +62,7 @@ public class WeiboEditActivitiy extends BaseHttpUiActivity<String> {
     private int mMaxWordCount = 140;
     private int mNowWordCount = 0;
     private Bitmap mBitmap;
+    private AlertDialog mExitDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -237,6 +242,16 @@ public class WeiboEditActivitiy extends BaseHttpUiActivity<String> {
 
     private void showExitDialog() {
 
+        if (mExitDialog == null) {
+            mExitDialog = DialogUtil.getOkCancelDialog(this, R.string.ok, R.string.cancel, getString(R.string.dialog_logout_share_account), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    AccessTokenKeeper.clear(WeiboEditActivitiy.this);
+                    WeiboEditActivitiy.this.finish();
+                }
+            });
+        }
+        mExitDialog.show();
 
     }
 
