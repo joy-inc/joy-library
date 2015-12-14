@@ -116,6 +116,13 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
 
     protected abstract ObjectRequest<T> getObjectRequest(int pageIndex, int pageLimit);
 
+    protected void executeSwipeRefresh() {
+
+        showSwipeRefresh();
+        mPageIndex = PAGE_START_INDEX;
+        onRetryCallback();
+    }
+
     /**
      * 设置分页大小
      *

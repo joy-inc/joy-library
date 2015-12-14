@@ -252,7 +252,7 @@ public class ObjectRequest<T> extends Request<T> {
         t = null;
         mClazz = null;
         mHasCache = false;
-        mCacheMode = CacheMode.NONE;
+//        mCacheMode = CacheMode.NONE;
         mObjRespLis = null;
         mObjResp = null;
 

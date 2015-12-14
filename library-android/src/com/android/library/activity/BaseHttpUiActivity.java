@@ -83,8 +83,13 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
         if (isNetworkDisable()) {
 
             showToast(R.string.toast_common_no_network);
-            return;
+        } else {
+
+            onRetryCallback();
         }
+    }
+
+    protected void onRetryCallback() {
 
         switch (getReqCacheMode()) {
 
