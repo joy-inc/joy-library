@@ -234,6 +234,7 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
     protected View addTitleRightView(View v, View.OnClickListener lisn) {
 
         v.setOnClickListener(lisn);
+        v.setPadding(DP_3_PX, DP_3_PX, DP_3_PX, DP_3_PX);
         Toolbar.LayoutParams lp = new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
         lp.gravity = Gravity.RIGHT;
         lp.rightMargin = getToolbar().getContentInsetLeft();
