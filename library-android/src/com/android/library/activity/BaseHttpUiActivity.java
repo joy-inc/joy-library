@@ -148,7 +148,7 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
     /**
      * fetch net-->response.
      */
-    protected void executeRefreshOnly() {
+    protected final void executeRefreshOnly() {
 
         cancelRequest();
         mObjReq = getObjectRequest();
@@ -160,7 +160,7 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
     /**
      * fetch cache-->response.
      */
-    protected void executeCacheOnly() {
+    protected final void executeCacheOnly() {
 
         cancelRequest();
         mObjReq = getObjectRequest();
@@ -172,7 +172,7 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
     /**
      * cache expired: fetch net, update cache-->response.
      */
-    protected void executeRefreshAndCache() {
+    protected final void executeRefreshAndCache() {
 
         cancelRequest();
         mObjReq = getObjectRequest();
@@ -184,7 +184,7 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
     /**
      * cache update needed: fetch cache-->response, fetch net, update cache-->response.
      */
-    protected void executeCacheAndRefresh() {
+    protected final void executeCacheAndRefresh() {
 
         cancelRequest();
         mObjReq = getObjectRequest();

@@ -132,9 +132,21 @@ public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
 
     protected abstract ObjectRequest<T> getObjectRequest(int pageIndex, int pageLimit);
 
+    /**
+     * show swipe refresh view
+     */
     protected void executeSwipeRefresh() {
 
-        showSwipeRefresh();
+        mSwipeRefreshWidget.setRefreshing(true);
+        mPageIndex = PAGE_START_INDEX;
+        onRetryCallback();
+    }
+
+    /**
+     * show frame refresh view {@link JLoadingView}
+     */
+    protected void executeFrameRefresh() {
+
         mPageIndex = PAGE_START_INDEX;
         onRetryCallback();
     }
