@@ -81,8 +81,13 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
         if (isNetworkDisable()) {
 
             showToast(R.string.toast_common_no_network);
-            return;
+        } else {
+
+            onRetryCallback();
         }
+    }
+
+    protected void onRetryCallback() {
 
         switch (getReqCacheMode()) {
 
