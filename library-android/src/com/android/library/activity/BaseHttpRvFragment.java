@@ -92,7 +92,7 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
                     showToast(R.string.toast_common_no_network);
                 } else {
 
-                    mPageIndex = PAGE_START_INDEX;
+                    resetmPageIndex();
                     startRefresh();
                 }
             }
@@ -173,6 +173,16 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
         getRecyclerView().setAdapter(ra);
     }
 
+    public void resetmPageIndex() {
+        this.mPageIndex = PAGE_START_INDEX;
+    }
+
+    @Override
+    protected void executeRefreshOnly() {
+        resetmPageIndex();
+        super.executeRefreshOnly();
+    }
+
     protected ExRvAdapter getAdapter() {
 
         Adapter adapter = mRecyclerView.getAdapter();
@@ -200,10 +210,18 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
         ExRvAdapter adapter = getAdapter();
         if (adapter != null) {
 
-            if (mPageIndex == PAGE_START_INDEX)
-                adapter.setData(datas);
-            else
+            if (mPageIndex == PAGE_START_INDEX){
+                if(adapter.getData() == null){
+
+                    adapter.setData(datas);
+                }else{
+                    adapter.clear();
+                    adapter.addAll(datas);
+                }
+            }
+            else{
                 adapter.addAll(datas);
+            }
 
             adapter.notifyDataSetChanged();
 
