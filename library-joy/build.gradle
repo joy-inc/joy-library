@@ -33,7 +33,6 @@ android {
     }
     sourceSets {
         main {
-            jniLibs.srcDirs = ['src/jniLibs']
         }
         debug {
         }
