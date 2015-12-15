@@ -16,6 +16,7 @@ import com.android.library.httptask.CacheMode;
 import com.android.library.httptask.ObjectRequest;
 import com.android.library.listener.OnLoadMoreListener;
 import com.android.library.utils.CollectionUtil;
+import com.android.library.utils.LogMgr;
 import com.android.library.widget.JListView;
 import com.android.library.widget.JLoadingView;
 
@@ -31,6 +32,7 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
     private int mPageLimit = 20;
     private static final int PAGE_START_INDEX = 1;// 默认从第一页开始
     private int mPageIndex = PAGE_START_INDEX;
+    private int mSortIndex = mPageIndex;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -56,7 +58,6 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
     private View wrapSwipeRefresh(View contentView) {
 
         mSwipeRefreshWidget = new SwipeRefreshLayout(getActivity());
-//        mSwipeRefreshWidget.setColorSchemeResources(R.color.holo_blue_bright, R.color.holo_green_light, R.color.holo_orange_light, R.color.holo_red_light);
         mSwipeRefreshWidget.setColorSchemeResources(R.color.color_accent);
         mSwipeRefreshWidget.setOnRefreshListener(getDefaultRefreshLisn());
         mSwipeRefreshWidget.addView(contentView);
@@ -76,7 +77,9 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
                     showToast(R.string.toast_common_no_network);
                 } else {
 
+                    mSortIndex = mPageIndex;
                     mPageIndex = PAGE_START_INDEX;
+                    stopLoadMore();
                     startRefresh();
                 }
             }
@@ -92,11 +95,19 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
 
                 if (isNetworkDisable()) {
 
-                    onLoadMoreFailed();
+                    setLoadMoreFailed();
                     if (!isAuto)
                         showToast(R.string.toast_common_no_network);
                 } else {
 
+                    if (mPageIndex == PAGE_START_INDEX) {
+
+                        if (getAdapter().getCount() == mPageLimit)
+                            mPageIndex++;
+                        else
+                            mPageIndex = mSortIndex;
+                    }
+                    hideSwipeRefresh();
                     startRefresh();
                 }
             }
@@ -117,11 +128,11 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
     protected abstract ObjectRequest<T> getObjectRequest(int pageIndex, int pageLimit);
 
     /**
-     * show swipe refresh view
+     * show swipe refresh view {@link SwipeRefreshLayout}
      */
     protected void executeSwipeRefresh() {
 
-        mSwipeRefreshWidget.setRefreshing(true);
+        showSwipeRefresh();
         mPageIndex = PAGE_START_INDEX;
         onRetryCallback();
     }
@@ -143,6 +154,16 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
     protected void setPageLimit(int pageLimit) {
 
         mPageLimit = pageLimit;
+    }
+
+    /**
+     * 设置页码
+     *
+     * @param index
+     */
+    protected void setPageIndex(int index) {
+
+        mPageIndex = index;
     }
 
     protected ListView getListView() {
@@ -191,13 +212,8 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
         if (CollectionUtil.isEmpty(datas))
             return false;
 
-        if (mListView instanceof JListView && isLoadMoreEnable()) {
-
-            JListView jlv = (JListView) mListView;
-            jlv.setLoadMoreEnable(datas.size() >= mPageLimit);
-            if (jlv.isLoadMoreEnable())
-                jlv.stopLoadMore();
-        }
+        setLoadMoreEnable(datas.size() >= mPageLimit);
+        stopLoadMore();
 
         ExAdapter adapter = getAdapter();
         if (adapter != null) {
@@ -221,46 +237,68 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
     }
 
     @Override
-    protected void onHttpFailed(Object tag, String msg) {
+    final void onHttpFailed(String msg) {
 
-        if (isRespIntermediate())
-            mPageIndex++;
+        if (LogMgr.isDebug())
+            showToast(getClass().getSimpleName() + ": " + msg);
 
-        onLoadMoreFailed();
+        if (isSwipeRefreshing()) {// 下拉刷新触发
+
+        } else if (isLoadingMore()) {// 加载更多触发
+
+            setLoadMoreFailed();
+        } else {// 首次加载触发
+
+        }
     }
 
     @Override
-    protected void showLoading() {
+    protected final void showLoading() {
 
         if (getReqCacheMode() == CacheMode.CACHE_AND_REFRESH && isReqHasCache())
-            showSwipeRefresh();
+            postSwipeRefresh();
         else if (!isSwipeRefreshing() && !isLoadingMore())
             super.showLoading();
     }
 
     @Override
-    protected void hideLoading() {
+    protected final void hideLoading() {
 
         if (isSwipeRefreshing())
             hideSwipeRefresh();
-        else if (!isLoadingMore())
+        else
             super.hideLoading();
     }
 
     @Override
-    protected void showFailedTip() {
+    protected final void showFailedTip() {
 
-        if (!isSwipeRefreshing() && !isLoadingMore() && getAdapter().isEmpty())
+        if (getItemCount() - 1 == 0)
             super.showFailedTip();
     }
 
     @Override
-    protected void hideContentView() {
+    protected final void showNoContentTip() {
 
-        if (getAdapter().isEmpty())
-            super.showContentView();
+        if (getItemCount() - 1 == 0)
+            super.showNoContentTip();
     }
 
+    @Override
+    protected final void hideContentView() {
+
+        if (getItemCount() - 1 == 0)
+            super.hideContentView();
+    }
+
+    private int getItemCount() {
+
+        return mListView.getHeaderViewsCount() + mListView.getFooterViewsCount() + getAdapter().getCount();
+    }
+
+
+    // swipe refresh
+    // =============================================================================================
     protected void setSwipeRefreshEnable(boolean enable) {
 
         mSwipeRefreshWidget.setEnabled(enable);
@@ -281,19 +319,24 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
         return mSwipeRefreshWidget.isRefreshing();
     }
 
-    protected void showSwipeRefresh() {
-
-        if (isSwipeRefreshing())
-            return;
+    protected void postSwipeRefresh() {
 
         mSwipeRefreshWidget.post(new Runnable() {
 
             @Override
             public void run() {
 
-                mSwipeRefreshWidget.setRefreshing(true);
+                showSwipeRefresh();
             }
         });
+    }
+
+    protected void showSwipeRefresh() {
+
+        if (isSwipeRefreshing())
+            return;
+
+        mSwipeRefreshWidget.setRefreshing(true);
     }
 
     protected void hideSwipeRefresh() {
@@ -303,28 +346,63 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
 
         mSwipeRefreshWidget.setRefreshing(false);
     }
+    // =============================================================================================
 
+
+    // load more
+    // =============================================================================================
     protected final boolean isLoadingMore() {
 
-        if (mListView instanceof JListView)
-            return isLoadMoreEnable() && ((JListView) mListView).isLoadingMore();
-        return false;
+        if (!(mListView instanceof JListView))
+            return false;
+        if (!isLoadMoreEnable())
+            return false;
+
+        return ((JListView) mListView).isLoadingMore();
     }
 
-    protected final void onLoadMoreFailed() {
+    protected final void stopLoadMore() {
 
-        if (mListView instanceof JListView && isLoadMoreEnable())
-            ((JListView) mListView).stopLoadMoreFailed();
+        if (!(mListView instanceof JListView))
+            return;
+        if (!isLoadMoreEnable())
+            return;
+
+        ((JListView) mListView).stopLoadMore();
     }
 
-    protected void setLoadMoreEnable(boolean enable) {
+    protected final void setLoadMoreFailed() {
 
-        if (mListView instanceof JListView)
-            ((JListView) mListView).setLoadMoreEnable(enable);
+        if (!(mListView instanceof JListView))
+            return;
+        if (!isLoadMoreEnable())
+            return;
+
+        ((JListView) mListView).stopLoadMoreFailed();
     }
 
-    private boolean isLoadMoreEnable() {
+    protected final boolean isLoadMoreFailed() {
+
+        if (!(mListView instanceof JListView))
+            return false;
+
+        return ((JListView) mListView).isLoadMoreFailed();
+    }
+
+    protected final void setLoadMoreEnable(boolean enable) {
+
+        if (!(mListView instanceof JListView))
+            return;
+
+        ((JListView) mListView).setLoadMoreEnable(enable);
+    }
+
+    protected final boolean isLoadMoreEnable() {
+
+        if (!(mListView instanceof JListView))
+            return false;
 
         return ((JListView) mListView).isLoadMoreEnable();
     }
+    // =============================================================================================
 }

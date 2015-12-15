@@ -223,6 +223,7 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
                 if (isFinishing())
                     return;
 
+                onHttpFailed(msg);
                 onHttpFailed(tag, msg);
 
                 hideLoading();
@@ -290,6 +291,9 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
      * 子类可以继承此方法得到失败时的错误信息，用于Toast提示
      */
     protected void onHttpFailed(Object tag, String msg) {
+    }
+
+    void onHttpFailed(String msg) {
     }
 
     protected RequestQueue getRequestQueue() {
