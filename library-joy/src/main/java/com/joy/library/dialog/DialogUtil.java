@@ -32,9 +32,15 @@ public class DialogUtil {
         ok.setText(okStr);
 
         View.OnClickListener clickListener = new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                dialogClick.onClick(null, 1);
+
+                if (v.getId() == R.id.tvOk) {
+                    dialogClick.onClick(null, DialogInterface.BUTTON_POSITIVE);
+                } else if (v.getId() == R.id.tvCancle) {
+                    dialogClick.onClick(null, DialogInterface.BUTTON_NEGATIVE);
+                }
             }
         };
 
