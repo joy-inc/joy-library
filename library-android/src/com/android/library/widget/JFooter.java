@@ -1,6 +1,7 @@
 package com.android.library.widget;
 
 import android.content.Context;
+import android.support.annotation.ColorRes;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +17,9 @@ import com.android.library.utils.ViewUtil;
  */
 public class JFooter extends LinearLayout {
 
-    private View mRootView, mRetryView, mLoadingDiv;
+    private View mRootView, mLoadingDiv;
     private OnRetryListener mOnRetryLisn;
+    private JTextView mJtvHint, mJtvRetry;
 
     public JFooter(Context context) {
 
@@ -39,8 +41,9 @@ public class JFooter extends LinearLayout {
         mRootView = LayoutInflater.from(context).inflate(R.layout.lib_view_footer, null);
         addView(mRootView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 
-        mRetryView = findViewById(R.id.jtvReload);
         mLoadingDiv = findViewById(R.id.llLoadingDiv);
+        mJtvHint = (JTextView) findViewById(R.id.jtvHint);
+        mJtvRetry = (JTextView) findViewById(R.id.jtvRetry);
 
         setOnClickListener(new OnClickListener() {
 
@@ -55,19 +58,19 @@ public class JFooter extends LinearLayout {
 
     public void loading() {
 
-        ViewUtil.hideView(mRetryView);
+        ViewUtil.hideView(mJtvRetry);
         ViewUtil.showView(mLoadingDiv);
     }
 
     public void failed() {
 
         ViewUtil.hideView(mLoadingDiv);
-        ViewUtil.showView(mRetryView);
+        ViewUtil.showView(mJtvRetry);
     }
 
     public boolean isFailed() {
 
-        return mRetryView.getVisibility() == VISIBLE;
+        return mJtvRetry.getVisibility() == VISIBLE;
     }
 
     public void setLoadingView(View v, FrameLayout.LayoutParams flLp) {
@@ -77,6 +80,22 @@ public class JFooter extends LinearLayout {
             flDiv.removeAllViews();
 
         flDiv.addView(v, flLp);
+    }
+
+    public void setDarkTheme() {
+
+        setHintTextColor(R.color.black_trans54);
+    }
+
+    public void setLightTheme() {
+
+        setHintTextColor(R.color.white_trans87);
+    }
+
+    public void setHintTextColor(@ColorRes int resId) {
+
+        mJtvHint.setTextColor(getResources().getColor(resId));
+        mJtvRetry.setTextColor(getResources().getColor(resId));
     }
 
     public void done() {

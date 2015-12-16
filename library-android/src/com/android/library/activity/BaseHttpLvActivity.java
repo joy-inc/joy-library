@@ -1,6 +1,7 @@
 package com.android.library.activity;
 
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.View;
@@ -16,7 +17,6 @@ import com.android.library.httptask.CacheMode;
 import com.android.library.httptask.ObjectRequest;
 import com.android.library.listener.OnLoadMoreListener;
 import com.android.library.utils.CollectionUtil;
-import com.android.library.utils.LogMgr;
 import com.android.library.widget.JListView;
 import com.android.library.widget.JLoadingView;
 
@@ -239,8 +239,7 @@ public abstract class BaseHttpLvActivity<T> extends BaseHttpUiActivity<T> {
     @Override
     final void onHttpFailed(String msg) {
 
-        if (LogMgr.isDebug())
-            showToast(getClass().getSimpleName() + ": " + msg);
+        super.onHttpFailed(msg);
 
         if (isSwipeRefreshing()) {// 下拉刷新触发
 
@@ -403,6 +402,30 @@ public abstract class BaseHttpLvActivity<T> extends BaseHttpUiActivity<T> {
             return false;
 
         return ((JListView) mListView).isLoadMoreEnable();
+    }
+
+    protected final void setLoadMoreDarkTheme() {
+
+        if (!(mListView instanceof JListView))
+            return;
+
+        ((JListView) mListView).setLoadMoreDarkTheme();
+    }
+
+    protected final void setLoadMoreLightTheme() {
+
+        if (!(mListView instanceof JListView))
+            return;
+
+        ((JListView) mListView).setLoadMoreLightTheme();
+    }
+
+    protected final void setLoadMoreHintTextColor(@ColorRes int resId) {
+
+        if (!(mListView instanceof JListView))
+            return;
+
+        ((JListView) mListView).setLoadMoreHintTextColor(resId);
     }
     // =============================================================================================
 }

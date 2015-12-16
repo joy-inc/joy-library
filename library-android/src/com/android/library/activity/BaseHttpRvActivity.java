@@ -1,6 +1,7 @@
 package com.android.library.activity;
 
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,7 +16,6 @@ import com.android.library.httptask.CacheMode;
 import com.android.library.httptask.ObjectRequest;
 import com.android.library.listener.OnLoadMoreListener;
 import com.android.library.utils.CollectionUtil;
-import com.android.library.utils.LogMgr;
 import com.android.library.view.recyclerview.RecyclerAdapter;
 import com.android.library.view.recyclerview.RecyclerAdapter.OnItemClickListener;
 import com.android.library.view.recyclerview.RecyclerAdapter.OnItemLongClickListener;
@@ -256,8 +256,7 @@ public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
     @Override
     final void onHttpFailed(String msg) {
 
-        if (LogMgr.isDebug())
-            showToast(getClass().getSimpleName() + ": " + msg);
+        super.onHttpFailed(msg);
 
         if (isSwipeRefreshing()) {// 下拉刷新触发
 
@@ -420,6 +419,30 @@ public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
             return false;
 
         return ((JRecyclerView) mRecyclerView).isLoadMoreEnable();
+    }
+
+    protected final void setLoadMoreDarkTheme() {
+
+        if (!(mRecyclerView instanceof JRecyclerView))
+            return;
+
+        ((JRecyclerView) mRecyclerView).setLoadMoreDarkTheme();
+    }
+
+    protected final void setLoadMoreLightTheme() {
+
+        if (!(mRecyclerView instanceof JRecyclerView))
+            return;
+
+        ((JRecyclerView) mRecyclerView).setLoadMoreLightTheme();
+    }
+
+    protected final void setLoadMoreHintTextColor(@ColorRes int resId) {
+
+        if (!(mRecyclerView instanceof JRecyclerView))
+            return;
+
+        ((JRecyclerView) mRecyclerView).setLoadMoreHintTextColor(resId);
     }
     // =============================================================================================
 }

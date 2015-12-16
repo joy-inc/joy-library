@@ -1,6 +1,7 @@
 package com.android.library.widget;
 
 import android.content.Context;
+import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -208,6 +209,21 @@ public class JRecyclerView extends RecyclerView {
     public void setLoadMoreView(View v, FrameLayout.LayoutParams flLp) {
 
         mFooterView.setLoadingView(v, flLp);
+    }
+
+    public void setLoadMoreDarkTheme() {
+
+        mFooterView.setDarkTheme();
+    }
+
+    public void setLoadMoreLightTheme() {
+
+        mFooterView.setLightTheme();
+    }
+
+    public void setLoadMoreHintTextColor(@ColorRes int resId) {
+
+        mFooterView.setHintTextColor(resId);
     }
 
     public void setLoadMoreListener(OnLoadMoreListener l) {

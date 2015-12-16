@@ -14,6 +14,7 @@ import com.android.library.R;
 import com.android.library.httptask.CacheMode;
 import com.android.library.httptask.ObjectRequest;
 import com.android.library.httptask.ObjectResponseListener;
+import com.android.library.utils.LogMgr;
 import com.android.library.widget.JLoadingView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -198,7 +199,7 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
             @Override
             public void onPre() {
 
-                hideContentView();
+//                hideContentView();
                 hideTipView();
                 showLoading();
             }
@@ -209,10 +210,15 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
                 if (isFinishing())
                     return;
 
-                if (invalidateContent(t))
+                if (invalidateContent(t)) {
+
+//                    hideTipView();
                     showContentView();
-                else
+                } else {
+
+                    hideContentView();
                     showNoContentTip();
+                }
                 if (!isRespIntermediate())
                     hideLoading();
             }
@@ -294,6 +300,9 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
     }
 
     void onHttpFailed(String msg) {
+
+        if (LogMgr.isDebug())
+            showToast(getClass().getSimpleName() + ": " + msg);
     }
 
     protected RequestQueue getRequestQueue() {

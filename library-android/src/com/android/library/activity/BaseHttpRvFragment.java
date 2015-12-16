@@ -1,6 +1,7 @@
 package com.android.library.activity;
 
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,7 +16,6 @@ import com.android.library.httptask.CacheMode;
 import com.android.library.httptask.ObjectRequest;
 import com.android.library.listener.OnLoadMoreListener;
 import com.android.library.utils.CollectionUtil;
-import com.android.library.utils.LogMgr;
 import com.android.library.view.recyclerview.RecyclerAdapter;
 import com.android.library.view.recyclerview.RecyclerAdapter.OnItemClickListener;
 import com.android.library.view.recyclerview.RecyclerAdapter.OnItemLongClickListener;
@@ -35,6 +35,7 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
     private static final int PAGE_START_INDEX = 1;// 默认从第一页开始
     private int mPageIndex = PAGE_START_INDEX;
     private int mSortIndex = mPageIndex;
+    private RefreshMode mRefreshMode;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -133,6 +134,8 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
 
     private void startRefresh() {
 
+        mRefreshMode = RefreshMode.NONE;
+
         executeRefreshOnly();
     }
 
@@ -149,6 +152,8 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
      */
     protected void executeSwipeRefresh() {
 
+        mRefreshMode = RefreshMode.SWIPE;
+
         mPageIndex = PAGE_START_INDEX;
         showSwipeRefresh();
         onRetryCallback();
@@ -158,6 +163,8 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
      * show frame refresh view {@link JLoadingView}
      */
     protected void executeFrameRefresh() {
+
+        mRefreshMode = RefreshMode.FRAME;
 
         mPageIndex = PAGE_START_INDEX;
         hideSwipeRefresh();
@@ -263,8 +270,7 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
     @Override
     final void onHttpFailed(String msg) {
 
-        if (LogMgr.isDebug())
-            showToast(getClass().getSimpleName() + ": " + msg);
+        super.onHttpFailed(msg);
 
         if (isSwipeRefreshing()) {// 下拉刷新触发
 
@@ -297,21 +303,21 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
     @Override
     protected final void showFailedTip() {
 
-        if (getItemCount() - 1 == 0)
+        if (mRefreshMode == RefreshMode.FRAME || getItemCount() - 1 == 0)
             super.showFailedTip();
     }
 
     @Override
     protected final void showNoContentTip() {
 
-        if (getItemCount() - 1 == 0)
+        if (mRefreshMode == RefreshMode.FRAME || getItemCount() - 1 == 0)
             super.showNoContentTip();
     }
 
     @Override
     protected final void hideContentView() {
 
-        if (getItemCount() - 1 == 0)
+        if (mRefreshMode == RefreshMode.FRAME || getItemCount() - 1 == 0)
             super.hideContentView();
     }
 
@@ -435,6 +441,30 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
             return;
 
         ((JRecyclerView) mRecyclerView).hideLoadMore();
+    }
+
+    protected final void setLoadMoreDarkTheme() {
+
+        if (!(mRecyclerView instanceof JRecyclerView))
+            return;
+
+        ((JRecyclerView) mRecyclerView).setLoadMoreDarkTheme();
+    }
+
+    protected final void setLoadMoreLightTheme() {
+
+        if (!(mRecyclerView instanceof JRecyclerView))
+            return;
+
+        ((JRecyclerView) mRecyclerView).setLoadMoreLightTheme();
+    }
+
+    protected final void setLoadMoreHintTextColor(@ColorRes int resId) {
+
+        if (!(mRecyclerView instanceof JRecyclerView))
+            return;
+
+        ((JRecyclerView) mRecyclerView).setLoadMoreHintTextColor(resId);
     }
     // =============================================================================================
 }

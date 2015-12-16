@@ -1,6 +1,7 @@
 package com.android.library.widget;
 
 import android.content.Context;
+import android.support.annotation.ColorRes;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AbsListView;
@@ -145,6 +146,21 @@ public class JListView extends ListView implements OnScrollListener {
     public void setLoadMoreView(View v, FrameLayout.LayoutParams flLp) {
 
         mFooterView.setLoadingView(v, flLp);
+    }
+
+    public void setLoadMoreDarkTheme() {
+
+        mFooterView.setDarkTheme();
+    }
+
+    public void setLoadMoreLightTheme() {
+
+        mFooterView.setLightTheme();
+    }
+
+    public void setLoadMoreHintTextColor(@ColorRes int resId) {
+
+        mFooterView.setHintTextColor(resId);
     }
 
     public void setLoadMoreListener(OnLoadMoreListener l) {

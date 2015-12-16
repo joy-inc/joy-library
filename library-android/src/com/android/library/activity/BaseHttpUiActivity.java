@@ -14,6 +14,7 @@ import com.android.library.R;
 import com.android.library.httptask.CacheMode;
 import com.android.library.httptask.ObjectRequest;
 import com.android.library.httptask.ObjectResponseListener;
+import com.android.library.utils.LogMgr;
 import com.android.library.widget.JLoadingView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -296,6 +297,9 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
     }
 
     void onHttpFailed(String msg) {
+
+        if (LogMgr.isDebug())
+            showToast(getClass().getSimpleName() + ": " + msg);
     }
 
     protected RequestQueue getRequestQueue() {
