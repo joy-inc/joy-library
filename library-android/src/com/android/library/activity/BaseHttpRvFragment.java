@@ -96,6 +96,7 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
                     mSortIndex = mPageIndex;
                     mPageIndex = PAGE_START_INDEX;
                     stopLoadMore();
+                    BaseHttpRvFragment.super.hideLoading();
                     startRefresh();
                 }
             }
@@ -148,8 +149,8 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
      */
     protected void executeSwipeRefresh() {
 
-        showSwipeRefresh();
         mPageIndex = PAGE_START_INDEX;
+        showSwipeRefresh();
         onRetryCallback();
     }
 
@@ -159,6 +160,9 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
     protected void executeFrameRefresh() {
 
         mPageIndex = PAGE_START_INDEX;
+        hideSwipeRefresh();
+//        stopLoadMore();
+        hideLoadMore();
         onRetryCallback();
     }
 
@@ -235,13 +239,16 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
         ExRvAdapter adapter = getAdapter();
         if (adapter != null) {
 
-            if (mPageIndex == PAGE_START_INDEX)
+            if (mPageIndex == PAGE_START_INDEX) {
+
                 adapter.setData(datas);
-            else
+                adapter.notifyDataSetChanged();
+                mRecyclerView.getLayoutManager().scrollToPosition(0);
+            } else {
+
                 adapter.addAll(datas);
-
-            adapter.notifyDataSetChanged();
-
+                adapter.notifyDataSetChanged();
+            }
             if (!isRespIntermediate())
                 mPageIndex++;
         }
@@ -420,6 +427,14 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
             return false;
 
         return ((JRecyclerView) mRecyclerView).isLoadMoreEnable();
+    }
+
+    protected final void hideLoadMore() {
+
+        if (!(mRecyclerView instanceof JRecyclerView))
+            return;
+
+        ((JRecyclerView) mRecyclerView).hideLoadMore();
     }
     // =============================================================================================
 }

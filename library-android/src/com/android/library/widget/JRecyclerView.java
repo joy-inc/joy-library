@@ -199,6 +199,12 @@ public class JRecyclerView extends RecyclerView {
         }
     }
 
+    public void hideLoadMore() {
+
+//        mFooterView.done();
+        setLoadMoreEnable(false);
+    }
+
     public void setLoadMoreView(View v, FrameLayout.LayoutParams flLp) {
 
         mFooterView.setLoadingView(v, flLp);
