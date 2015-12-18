@@ -82,7 +82,7 @@ public abstract class ExPagerAdapter<T> extends PagerAdapter {
         mOnItemViewClickLisn = lisn;
     }
 
-    protected void callbackItemViewClick(int position, View view) {
+    public void callbackItemViewClick(int position, View view) {
 
         if (mOnItemViewClickLisn != null)
             mOnItemViewClickLisn.onItemViewClick(position, view, getItem(position));
