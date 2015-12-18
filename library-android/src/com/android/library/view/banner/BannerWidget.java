@@ -40,11 +40,11 @@ public class BannerWidget<T> extends ExLayoutWidget implements DimenCons, Banner
     @Override
     protected View onCreateView(Activity activity, Object... args) {
 
-        View rootView = activity.getLayoutInflater().inflate(R.layout.lib_view_auto_vp, null);
-        mBannerView = (BannerView) rootView.findViewById(R.id.avpBanner);
+        View rootView = activity.getLayoutInflater().inflate(R.layout.lib_view_banner, null);
+        mBannerView = (BannerView) rootView.findViewById(R.id.banner);
         mBannerView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, SCREEN_WIDTH / 9 * 5));
         mBannerView.setOnItemClickListener(this);
-        mIndicator = (CircleIndicator) rootView.findViewById(R.id.cpIndicator);
+        mIndicator = (CircleIndicator) rootView.findViewById(R.id.indicator);
         return rootView;
     }
 

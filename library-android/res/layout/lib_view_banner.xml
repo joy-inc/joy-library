@@ -4,25 +4,24 @@
     android:layout_height="wrap_content">
 
     <com.android.library.view.banner.BannerView
-        android:id="@+id/avpBanner"
+        android:id="@+id/banner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <View
-        android:id="@+id/vMask"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/avpBanner"
-        android:layout_alignLeft="@id/avpBanner"
-        android:layout_alignRight="@id/avpBanner"
-        android:layout_alignTop="@id/avpBanner"
+        android:layout_alignBottom="@id/banner"
+        android:layout_alignLeft="@id/banner"
+        android:layout_alignRight="@id/banner"
+        android:layout_alignTop="@id/banner"
         android:background="@color/black_trans26" />
 
     <com.android.library.view.banner.indicator.CircleIndicator
-        android:id="@+id/cpIndicator"
+        android:id="@+id/indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/avpBanner"
+        android:layout_alignBottom="@id/banner"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp" />
 </RelativeLayout>
