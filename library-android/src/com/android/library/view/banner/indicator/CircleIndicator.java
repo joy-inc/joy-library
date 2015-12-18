@@ -39,7 +39,7 @@ import static android.graphics.Paint.ANTI_ALIAS_FLAG;
 /**
  * Draws circles (one for each view). The current view position is filled and
  * others are only stroked.
- * <p>
+ * <p/>
  * Modified by KEVIN.DAI on 15/12/17.
  */
 public class CircleIndicator extends View implements Indicator {
@@ -62,6 +62,7 @@ public class CircleIndicator extends View implements Indicator {
     private float mLastMotionX = -1;
     private int mActivePointerId = INVALID_POINTER;
     private boolean mIsDragging;
+    private int mIndicatorCount;
 
     public CircleIndicator(Context context) {
 
@@ -167,7 +168,7 @@ public class CircleIndicator extends View implements Indicator {
         if (mViewPager == null) {
             return;
         }
-        final int count = ((IndicatorAdapter) mViewPager.getAdapter()).getIndicatorCount();
+        final int count = mIndicatorCount;
         if (count == 0) {
             return;
         }
@@ -224,7 +225,7 @@ public class CircleIndicator extends View implements Indicator {
         if (super.onTouchEvent(ev)) {
             return true;
         }
-        if ((mViewPager == null) || (((IndicatorAdapter) mViewPager.getAdapter()).getIndicatorCount() == 0)) {
+        if (mViewPager == null || mIndicatorCount == 0) {
             return false;
         }
 
@@ -259,7 +260,7 @@ public class CircleIndicator extends View implements Indicator {
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
                 if (!mIsDragging) {
-                    final int count = ((IndicatorAdapter) mViewPager.getAdapter()).getIndicatorCount();
+                    final int count = mIndicatorCount;
                     final int width = getWidth();
                     final float halfWidth = width / 2f;
                     final float sixthWidth = width / 6f;
@@ -314,6 +315,7 @@ public class CircleIndicator extends View implements Indicator {
         if (view.getAdapter() == null) {
             throw new IllegalStateException("ViewPager does not have adapter instance.");
         }
+        mIndicatorCount = ((IndicatorAdapter) view.getAdapter()).getIndicatorCount();
         mViewPager = view;
         mViewPager.setOnPageChangeListener(this);
         invalidate();
@@ -353,7 +355,10 @@ public class CircleIndicator extends View implements Indicator {
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-        position = position % ((IndicatorAdapter) mViewPager.getAdapter()).getIndicatorCount();
+        if (mIndicatorCount == 0)
+            return;
+
+        position = position % mIndicatorCount;
 
         mCurrentPage = position;
         mPageOffset = positionOffset;
@@ -366,7 +371,10 @@ public class CircleIndicator extends View implements Indicator {
     @Override
     public void onPageSelected(int position) {
 
-        position = position % ((IndicatorAdapter) mViewPager.getAdapter()).getIndicatorCount();
+        if (mIndicatorCount == 0)
+            return;
+
+        position = position % mIndicatorCount;
 
         if (mSnap || mScrollState == ViewPager.SCROLL_STATE_IDLE) {
 
@@ -412,7 +420,7 @@ public class CircleIndicator extends View implements Indicator {
             result = specSize;
         } else {
             //Calculate the width according the views count
-            final int count = ((IndicatorAdapter) mViewPager.getAdapter()).getIndicatorCount();
+            final int count = mIndicatorCount;
             result = (int) (getPaddingLeft() + getPaddingRight()
                     + (count * 2 * mRadius) + (count - 1) * mRadius + 1);
             //Respect AT_MOST value if that was what is called for by measureSpec
