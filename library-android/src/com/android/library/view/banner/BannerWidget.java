@@ -64,4 +64,9 @@ public class BannerWidget<T> extends ExLayoutWidget implements DimenCons, Banner
 
         mBannerView.setPageTransformer(true, transformer);
     }
+
+    public void setInterval(long interval) {
+
+        mBannerView.setInterval(interval);
+    }
 }
