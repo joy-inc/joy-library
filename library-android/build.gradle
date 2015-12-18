@@ -52,7 +52,6 @@ android {
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
             jniLibs.srcDirs = ['src/jniLibs']
-
         }
         debug {
         }

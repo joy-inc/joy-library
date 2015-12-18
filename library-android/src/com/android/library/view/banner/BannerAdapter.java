@@ -21,13 +21,13 @@ public class BannerAdapter<T> extends ExPagerAdapter<T> implements IndicatorAdap
     @Override
     public int getCount() {
 
-        return Integer.MAX_VALUE;
+        return getIndicatorCount() > 1 ? Integer.MAX_VALUE : getIndicatorCount();
     }
 
     @Override
     protected View getItem(ViewGroup container, int position) {
 
-        final int realPosition = position % super.getCount();
+        final int realPosition = position % getIndicatorCount();
 
         View v = mHolder.createView(container.getContext());
         mHolder.invalidate(realPosition, getItem(realPosition));
