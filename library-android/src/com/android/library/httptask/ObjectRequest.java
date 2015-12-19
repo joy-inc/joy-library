@@ -228,12 +228,18 @@ public class ObjectRequest<T> extends Request<T> {
                     resp.setData((T) mClazz.newInstance());
                 } else {
 
-                    if (json.startsWith("[")) {// JsonArray
+                    if (mClazz.newInstance() instanceof String) {
 
-                        resp.setData(((T) JSON.parseArray(json, mClazz)));
-                    } else {// JsonObj
+                        resp.setData((T) json);
+                    } else {
 
-                        resp.setData((T) JSON.parseObject(json, mClazz));
+                        if (json.startsWith("[")) {// JsonArray
+
+                            resp.setData(((T) JSON.parseArray(json, mClazz)));
+                        } else {// JsonObj
+
+                            resp.setData((T) JSON.parseObject(json, mClazz));
+                        }
                     }
                 }
             }
@@ -285,6 +291,7 @@ public class ObjectRequest<T> extends Request<T> {
     public void cancel() {
 
         super.cancel();
+
         if (LogMgr.isDebug())
             LogMgr.d("ObjectRequest", "~~cancel tag: " + getTag());
     }
