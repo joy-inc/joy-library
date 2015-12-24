@@ -184,9 +184,6 @@ public class FoldTextView extends TextView {
 
             mAnimating = true;
             startAnimation(new ExpandAnimation());
-        } else {
-
-            //            toggleOnExpandListener();
         }
         mIsUnfolded = true;
     }
@@ -205,9 +202,6 @@ public class FoldTextView extends TextView {
 
             mAnimating = true;
             startAnimation(new ExpandAnimation());
-        } else {
-
-            //            toggleOnCollapseListener();
         }
         mIsUnfolded = false;
     }
@@ -263,6 +257,11 @@ public class FoldTextView extends TextView {
     public void setFoldEnable(boolean enable) {
 
         mIsFoldEnable = enable;
+    }
+
+    public boolean isEnable() {
+
+        return mIsFoldEnable;
     }
 
     private void changeExpanderHeight(float height) {
@@ -324,14 +323,10 @@ public class FoldTextView extends TextView {
 
             mAnimating = false;
 
-            if (mIsUnfolded) {
-
-                //                toggleOnExpandListener();
-            } else {
-
+            if (!mIsUnfolded)
                 mIsFolded = true;
-                //                toggleOnCollapseListener();
-            }
+
+            toggleOnFoldListener(mIsFolded);
         }
     }
 
@@ -510,5 +505,23 @@ public class FoldTextView extends TextView {
             mFoldTexts.clear();
             mFoldTexts = null;
         }
+    }
+
+    public interface OnFoldListener {
+
+        void onFold(boolean isFold);
+    }
+
+    private OnFoldListener mOnFoldListener;
+
+    public void setOnFoldListener(OnFoldListener lisn) {
+
+        mOnFoldListener = lisn;
+    }
+
+    private void toggleOnFoldListener(boolean isFold) {
+
+        if (mOnFoldListener != null)
+            mOnFoldListener.onFold(isFold);
     }
 }
