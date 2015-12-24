@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="Toolbar">
-        <attr name="overlay" format="boolean" />
-    </declare-styleable>
 
-    <declare-styleable name="ViewPagerIndicator">
-        <!-- Style of the circle indicator. -->
-        <attr name="circleIndicatorStyle" format="reference" />
+    <declare-styleable name="Toolbar">
+        <attr name="noTitle" format="boolean" />
+        <attr name="overlay" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="CircleIndicator">
@@ -23,4 +20,21 @@
         <!-- Width of the stroke used to draw the circles. -->
         <attr name="strokeWidth" format="dimension" />
     </declare-styleable>
+
+    <!-- 自动换行ViewGroup -->
+    <declare-styleable name="NewlineLayout">
+        <attr name="horSpacing" format="dimension" />
+        <attr name="verSpacing" format="dimension" />
+        <attr name="showLines" format="integer" />
+    </declare-styleable>
+
+    <!-- 可折叠TextView -->
+    <declare-styleable name="FoldTextView">
+        <attr name="unfolded" format="boolean" />
+        <attr name="minLines" format="integer" />
+        <attr name="promptText" format="string" />
+        <attr name="promptColor" format="color" />
+        <attr name="promptCollapseText" format="string" />
+    </declare-styleable>
+
 </resources>

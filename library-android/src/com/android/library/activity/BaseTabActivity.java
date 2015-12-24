@@ -18,7 +18,6 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -110,22 +109,6 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
         return (LayoutParams) mToolbar.getLayoutParams();
     }
 
-    protected void setStatusBarTranslucent(boolean translucent) {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-
-            if (translucent) {
-
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//                getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            } else {
-
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            }
-        }
-    }
-
     protected void setStatusBarColorResId(@ColorRes int colorResId) {
 
         setStatusBarColor(getResources().getColor(colorResId));
@@ -135,6 +118,17 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             getWindow().setStatusBarColor(color);
+    }
+
+    protected void setNavigationBarColorResId(@ColorRes int colorResId) {
+
+        setNavigationBarColor(getResources().getColor(colorResId));
+    }
+
+    protected final void setNavigationBarColor(@ColorInt int color) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            getWindow().setNavigationBarColor(color);
     }
 
     protected void setTitleBgColorResId(@ColorRes int colorResId) {
@@ -218,7 +212,7 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
     protected View addTitleMiddleView(View v, View.OnClickListener lisn) {
 
         v.setOnClickListener(lisn);
-        Toolbar.LayoutParams lp = new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
+        Toolbar.LayoutParams lp = new Toolbar.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         lp.gravity = Gravity.CENTER;
         mToolbar.addView(v, lp);
         return v;
@@ -235,7 +229,7 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
 
         v.setOnClickListener(lisn);
         v.setPadding(DP_3_PX, DP_3_PX, DP_3_PX, DP_3_PX);
-        Toolbar.LayoutParams lp = new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
+        Toolbar.LayoutParams lp = new Toolbar.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         lp.gravity = Gravity.RIGHT;
         lp.rightMargin = getToolbar().getContentInsetLeft();
         mToolbar.addView(v, lp);

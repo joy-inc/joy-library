@@ -2,7 +2,7 @@ package com.android.library.utils;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
@@ -11,8 +11,6 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
 import com.android.library.BaseApplication;
-
-import java.lang.reflect.Field;
 
 /**
  * Created by KEVIN.DAI on 15/7/10.
@@ -24,17 +22,14 @@ public class DeviceUtil {
         String imei = "";
 
         try {
+
             Context ctx = BaseApplication.getContext();
             TelephonyManager telephonyManager = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
-            if (telephonyManager != null) {
-
-                imei = telephonyManager.getDeviceId();
-                if (TextUtils.isEmpty(imei))
-                    imei = Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID);
-
-                if (imei == null)
-                    imei = "";
-            }
+            imei = telephonyManager.getDeviceId();
+            if (TextUtils.isEmpty(imei))
+                imei = Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID);
+            if (imei == null)
+                imei = "";
         } catch (Exception e) {
 
             e.printStackTrace();
@@ -47,22 +42,29 @@ public class DeviceUtil {
      */
     public static int getStatusBarHeight() {
 
-        int height = 0;
+        Resources resources = BaseApplication.getAppResources();
+        int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
+        return resources.getDimensionPixelSize(resourceId);
+    }
 
-        try {
+    /**
+     * @return 导航栏的高度
+     */
+    public static int getNavigationBarHeight() {
 
-            Class<?> c = Class.forName("com.android.internal.R$dimen");
-            Object obj = c.newInstance();
-            Field field = c.getField("status_bar_height");
-            int id = Integer.parseInt(field.get(obj).toString());
-            height = BaseApplication.getContext().getResources().getDimensionPixelSize(id);
+        Resources resources = BaseApplication.getAppResources();
+        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        return resources.getDimensionPixelSize(resourceId);
+    }
 
-        } catch (Exception e) {
+    /**
+     * @return 是否有导航栏
+     */
+    public static boolean hasNavigationBar() {
 
-            e.printStackTrace();
-        }
-
-        return height;
+        Resources resources = BaseApplication.getAppResources();
+        int resourceId = resources.getIdentifier("config_showNavigationBar", "bool", "android");
+        return resourceId > 0 && resources.getBoolean(resourceId);
     }
 
     public static int getScreenWidth() {
@@ -95,20 +97,19 @@ public class DeviceUtil {
 
     /**
      * 检查app是否有安装
+     *
      * @param packageName
      * @return
      */
     public static boolean checkAppHas(String packageName) {
+
         try {
 
             PackageInfo packageInfo = BaseApplication.getContext().getPackageManager().getPackageInfo(packageName, 0);
-            if (packageInfo == null)
-                return false;
-
             int highBit = packageInfo.versionName.charAt(0);
             return highBit > 50 ? true : false;// 50 = 2
+        } catch (Exception e) {
 
-        } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
             return false;
         }

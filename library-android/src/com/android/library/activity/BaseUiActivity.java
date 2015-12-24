@@ -1,6 +1,5 @@
 package com.android.library.activity;
 
-import android.animation.LayoutTransition;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -15,10 +14,10 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
@@ -67,25 +66,36 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
 //        rootView.setLayoutTransition(lt);
 
         TypedArray a = obtainStyledAttributes(R.styleable.Toolbar);
-        boolean overlay = a.getBoolean(R.styleable.Toolbar_overlay, false);
+        boolean isNoTitle = a.getBoolean(R.styleable.Toolbar_noTitle, false);
+        boolean isOverlay = a.getBoolean(R.styleable.Toolbar_overlay, false);
         int height = a.getDimensionPixelSize(R.styleable.Toolbar_android_minHeight, TITLE_BAR_HEIGHT);
         a.recycle();
+
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(android.R.style.Theme, typedValue, true);
+        int[] attrs = new int[]{android.R.attr.windowTranslucentStatus, android.R.attr.windowTranslucentNavigation};
+        TypedArray typedArray = obtainStyledAttributes(typedValue.resourceId, attrs);
+        boolean isStatusTrans = typedArray.getBoolean(0, false);
+        boolean isNavigationTrans = typedArray.getBoolean(1, false);
+        typedArray.recycle();
 
         // content view
         contentView.setId(R.id.id_contentview);
         LayoutParams contentLp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        contentLp.topMargin = overlay ? -STATUS_BAR_HEIGHT : height;
+        contentLp.topMargin = isNoTitle ? 0 : isOverlay ? -STATUS_BAR_HEIGHT : height;
         rootView.addView(contentView, contentLp);
 
         // toolbar
-        mToolbar = (Toolbar) inflateLayout(R.layout.lib_view_toolbar);
-        setSupportActionBar(mToolbar);
-        LayoutParams toolbarLp = new LayoutParams(LayoutParams.MATCH_PARENT, height);
-        toolbarLp.topMargin = overlay ? STATUS_BAR_HEIGHT : 0;
-        toolbarLp.gravity = Gravity.TOP;
-        rootView.addView(mToolbar, toolbarLp);
+        if (!isNoTitle) {
 
-        setTitle(null);
+            mToolbar = (Toolbar) inflateLayout(R.layout.lib_view_toolbar);
+            setSupportActionBar(mToolbar);
+            LayoutParams toolbarLp = new LayoutParams(LayoutParams.MATCH_PARENT, height);
+            toolbarLp.topMargin = isOverlay || isStatusTrans || isNavigationTrans ? STATUS_BAR_HEIGHT : 0;
+            toolbarLp.gravity = Gravity.TOP;
+            rootView.addView(mToolbar, toolbarLp);
+            setTitle(null);
+        }
     }
 
     protected void initData() {
@@ -118,22 +128,6 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
         return (LayoutParams) mToolbar.getLayoutParams();
     }
 
-    protected void setStatusBarTranslucent(boolean translucent) {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-
-            if (translucent) {
-
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//                getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            } else {
-
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            }
-        }
-    }
-
     protected void setStatusBarColorResId(@ColorRes int colorResId) {
 
         setStatusBarColor(getResources().getColor(colorResId));
@@ -143,6 +137,17 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             getWindow().setStatusBarColor(color);
+    }
+
+    protected void setNavigationBarColorResId(@ColorRes int colorResId) {
+
+        setNavigationBarColor(getResources().getColor(colorResId));
+    }
+
+    protected final void setNavigationBarColor(@ColorInt int color) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            getWindow().setNavigationBarColor(color);
     }
 
     protected void setTitleBgColorResId(@ColorRes int colorResId) {
@@ -226,7 +231,7 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
     protected View addTitleMiddleView(View v, View.OnClickListener lisn) {
 
         v.setOnClickListener(lisn);
-        Toolbar.LayoutParams lp = new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
+        Toolbar.LayoutParams lp = new Toolbar.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         lp.gravity = Gravity.CENTER;
         mToolbar.addView(v, lp);
         return v;
@@ -234,7 +239,7 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
 
     protected View addTitleMiddleView(View v) {
 
-        Toolbar.LayoutParams lp = new Toolbar.LayoutParams(Toolbar.LayoutParams.MATCH_PARENT, Toolbar.LayoutParams.MATCH_PARENT);
+        Toolbar.LayoutParams lp = new Toolbar.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         lp.gravity = Gravity.CENTER;
         mToolbar.addView(v, lp);
         return v;
@@ -251,7 +256,7 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
 
         v.setOnClickListener(lisn);
         v.setPadding(DP_3_PX, DP_3_PX, DP_3_PX, DP_3_PX);
-        Toolbar.LayoutParams lp = new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
+        Toolbar.LayoutParams lp = new Toolbar.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         lp.gravity = Gravity.RIGHT;
         lp.rightMargin = getToolbar().getContentInsetLeft();
         mToolbar.addView(v, lp);

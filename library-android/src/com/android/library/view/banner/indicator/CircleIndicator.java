@@ -71,7 +71,7 @@ public class CircleIndicator extends View implements Indicator {
 
     public CircleIndicator(Context context, AttributeSet attrs) {
 
-        this(context, attrs, R.attr.circleIndicatorStyle);
+        this(context, attrs, 0);
     }
 
     public CircleIndicator(Context context, AttributeSet attrs, int defStyle) {

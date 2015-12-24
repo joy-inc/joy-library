@@ -9,6 +9,7 @@ import com.android.library.utils.CollectionUtil;
 import com.android.library.utils.LogMgr;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Cache.Entry;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -24,6 +25,10 @@ import java.util.Map;
  */
 public class ObjectRequest<T> extends Request<T> {
 
+    /**
+     * The default socket timeout in milliseconds
+     */
+    private static final int DEFAULT_TIMEOUT_MS = 10 * 1000;
     private Class mClazz;
     private ObjectResponseListener<T> mObjRespLis;
     private Map<String, String> mHeaders, mParams;
@@ -45,6 +50,7 @@ public class ObjectRequest<T> extends Request<T> {
         mHasCache = BaseApplication.getVolleyCache().get(getCacheKey()) != null;
         setShouldCache(false);
         addEntryListener();
+        setRetryPolicy(new DefaultRetryPolicy(DEFAULT_TIMEOUT_MS, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 
     private void addEntryListener() {
