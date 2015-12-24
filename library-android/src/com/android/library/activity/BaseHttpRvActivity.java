@@ -187,6 +187,16 @@ public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
         return mRecyclerView;
     }
 
+    protected int getHeaderViewsCount() {
+
+        return ((RecyclerAdapter) mRecyclerView.getAdapter()).getHeadersCount();
+    }
+
+    protected int getFooterViewsCount() {
+
+        return ((RecyclerAdapter) mRecyclerView.getAdapter()).getFootersCount();
+    }
+
     protected void addHeaderView(View v) {
 
         ((RecyclerAdapter) mRecyclerView.getAdapter()).addHeaderView(v);
@@ -195,6 +205,16 @@ public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
     protected void addFooterView(View v) {
 
         ((RecyclerAdapter) mRecyclerView.getAdapter()).addFooterView(v);
+    }
+
+    protected void removeHeaderView(View v) {
+
+        ((RecyclerAdapter) mRecyclerView.getAdapter()).removeHeader(v);
+    }
+
+    protected void removeFooterView(View v) {
+
+        ((RecyclerAdapter) mRecyclerView.getAdapter()).removeFooter(v);
     }
 
     protected void setOnItemClickListener(OnItemClickListener listener) {

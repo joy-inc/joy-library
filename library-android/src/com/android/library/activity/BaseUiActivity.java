@@ -1,5 +1,6 @@
 package com.android.library.activity;
 
+import android.annotation.TargetApi;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -110,6 +111,22 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
     protected FrameLayout getRootView() {
 
         return mFlRoot;
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    protected void setBackground(Drawable background) {
+
+        mFlRoot.setBackground(background);
+    }
+
+    protected void setBackgroundResource(@DrawableRes int resId) {
+
+        mFlRoot.setBackgroundResource(resId);
+    }
+
+    protected void setBackgroundColor(@ColorInt int color) {
+
+        mFlRoot.setBackgroundColor(color);
     }
 
     protected View getContentView() {
