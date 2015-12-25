@@ -214,7 +214,12 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
 
     protected void addTitleLeftBackView() {
 
-        addTitleLeftView(R.drawable.ic_back, new View.OnClickListener() {
+        addTitleLeftBackView(R.drawable.ic_back);
+    }
+
+    protected void addTitleLeftBackView(@DrawableRes int resId) {
+
+        addTitleLeftView(resId, new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
