@@ -198,6 +198,16 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
         return mRecyclerView;
     }
 
+    protected int getHeaderViewsCount() {
+
+        return ((RecyclerAdapter) mRecyclerView.getAdapter()).getHeadersCount();
+    }
+
+    protected int getFooterViewsCount() {
+
+        return ((RecyclerAdapter) mRecyclerView.getAdapter()).getFootersCount();
+    }
+
     protected void addHeaderView(View v) {
 
         ((RecyclerAdapter) mRecyclerView.getAdapter()).addHeaderView(v);
@@ -206,6 +216,16 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
     protected void addFooterView(View v) {
 
         ((RecyclerAdapter) mRecyclerView.getAdapter()).addFooterView(v);
+    }
+
+    protected void removeHeaderView(View v) {
+
+        ((RecyclerAdapter) mRecyclerView.getAdapter()).removeHeader(v);
+    }
+
+    protected void removeFooterView(View v) {
+
+        ((RecyclerAdapter) mRecyclerView.getAdapter()).removeFooter(v);
     }
 
     protected void setOnItemClickListener(OnItemClickListener listener) {
@@ -303,27 +323,27 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
     @Override
     protected final void showFailedTip() {
 
-        if (mRefreshMode == RefreshMode.FRAME || getItemCount() - 1 == 0)
+        if (mRefreshMode == RefreshMode.FRAME || getItemCount() == 0)
             super.showFailedTip();
     }
 
     @Override
     protected final void showNoContentTip() {
 
-        if (mRefreshMode == RefreshMode.FRAME || getItemCount() - 1 == 0)
+        if (mRefreshMode == RefreshMode.FRAME || getItemCount() == 0)
             super.showNoContentTip();
     }
 
     @Override
     protected final void hideContentView() {
 
-        if (mRefreshMode == RefreshMode.FRAME || getItemCount() - 1 == 0)
+        if (mRefreshMode == RefreshMode.FRAME || getItemCount() == 0)
             super.hideContentView();
     }
 
     private int getItemCount() {
 
-        return mRecyclerView.getAdapter().getItemCount();
+        return ((RecyclerAdapter) mRecyclerView.getAdapter()).getWrappedAdapter().getItemCount();
     }
 
 

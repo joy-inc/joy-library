@@ -54,7 +54,6 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
     private void addTipView(ViewGroup frame) {
 
         mIvTip = new ImageView(this);
-        mIvTip.setTranslationY(STATUS_BAR_HEIGHT);// 纵向正偏移，使其纵向居中
         mIvTip.setScaleType(ScaleType.CENTER_INSIDE);
         mIvTip.setOnClickListener(new OnClickListener() {
 
@@ -65,15 +64,20 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
             }
         });
         hideImageView(mIvTip);
-        frame.addView(mIvTip, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        int topMargin = getContentViewLp().topMargin;
+        lp.topMargin = topMargin > 0 ? topMargin : 0;
+        frame.addView(mIvTip, lp);
     }
 
     private void addLoadingView(ViewGroup frame) {
 
         mLoadingView = JLoadingView.get(this);
-        mLoadingView.setTranslationY(STATUS_BAR_HEIGHT);// 纵向正偏移，使其纵向居中
         mLoadingView.hide();// 默认隐藏
-        frame.addView(mLoadingView, JLoadingView.getLp());
+        LayoutParams lp = JLoadingView.getLp();
+        int topMargin = getContentViewLp().topMargin;
+        lp.topMargin = topMargin > 0 ? topMargin / 2 : 0;
+        frame.addView(mLoadingView, lp);
     }
 
     protected void onTipViewClick() {

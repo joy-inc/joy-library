@@ -135,6 +135,11 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
         return mContentView;
     }
 
+    protected LayoutParams getContentViewLp() {
+
+        return (LayoutParams) mContentView.getLayoutParams();
+    }
+
     protected Toolbar getToolbar() {
 
         return mToolbar;

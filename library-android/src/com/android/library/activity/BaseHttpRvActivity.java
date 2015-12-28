@@ -309,27 +309,27 @@ public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
     @Override
     protected final void showFailedTip() {
 
-        if (getItemCount() - 1 == 0)
+        if (getItemCount() == 0)
             super.showFailedTip();
     }
 
     @Override
     protected final void showNoContentTip() {
 
-        if (getItemCount() - 1 == 0)
+        if (getItemCount() == 0)
             super.showNoContentTip();
     }
 
     @Override
     protected final void hideContentView() {
 
-        if (getItemCount() - 1 == 0)
+        if (getItemCount() == 0)
             super.hideContentView();
     }
 
     private int getItemCount() {
 
-        return mRecyclerView.getAdapter().getItemCount();
+        return ((RecyclerAdapter) mRecyclerView.getAdapter()).getWrappedAdapter().getItemCount();
     }
 
 

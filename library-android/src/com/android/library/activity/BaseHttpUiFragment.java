@@ -1,5 +1,6 @@
 package com.android.library.activity;
 
+import android.app.Activity;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -65,6 +66,7 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
         });
         hideImageView(mIvTip);
         frame.addView(mIvTip, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        makeCenterIfNecessary(mIvTip);
     }
 
     private void addLoadingView(ViewGroup frame) {
@@ -72,6 +74,14 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
         mLoadingView = JLoadingView.get(getActivity());
         mLoadingView.hide();// 默认隐藏
         frame.addView(mLoadingView, JLoadingView.getLp());
+        makeCenterIfNecessary(mLoadingView);
+    }
+
+    private void makeCenterIfNecessary(View v) {
+
+        Activity act = getActivity();
+        if (act instanceof BaseTabActivity)
+            v.setTranslationY(-((BaseTabActivity) act).getToolbarLp().height / 2);
     }
 
     protected void onTipViewClick() {
@@ -274,6 +284,7 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
         LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         lp.gravity = Gravity.CENTER;
         getRootView().addView(v, lp);
+        makeCenterIfNecessary(v);
     }
 
     protected void removeCustomView(View v) {
