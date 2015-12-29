@@ -18,6 +18,7 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -217,20 +218,23 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
         return v;
     }
 
-    protected ImageView addTitleRightView(@DrawableRes int resId, View.OnClickListener lisn) {
+    protected ImageButton addTitleRightView(@DrawableRes int resId, View.OnClickListener lisn) {
 
-        ImageView iv = new ImageView(this);
-        iv.setImageResource(resId);
-        return (ImageView) addTitleRightView(iv, lisn);
+        ImageButton ib = new ImageButton(this, null, R.attr.toolbarNavigationButtonStyle);
+//        ib.setImageDrawable(mTintManager.getDrawable(resId));
+        ib.setImageResource(resId);
+        return (ImageButton) addTitleRightView(ib, lisn);
     }
 
     protected View addTitleRightView(View v, View.OnClickListener lisn) {
 
+        int size = getToolbarLp().height;
+        v.setMinimumWidth(size);
+        v.setMinimumHeight(size);
+
         v.setOnClickListener(lisn);
-        v.setPadding(DP_3_PX, DP_3_PX, DP_3_PX, DP_3_PX);
         Toolbar.LayoutParams lp = new Toolbar.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         lp.gravity = Gravity.RIGHT;
-        lp.rightMargin = getToolbar().getContentInsetLeft();
         mToolbar.addView(v, lp);
         return v;
     }

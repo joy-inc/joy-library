@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Toolbar -->
+    <!-- ========================================= -->
+    <dimen name="default_toolbar_height">56dp</dimen>
+    <!-- ========================================= -->
+
     <!-- About Pager Indicator -->
     <!-- ========================================= -->
     <color name="default_circle_indicator_fill_color">@color/white</color>
