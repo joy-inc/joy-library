@@ -36,9 +36,11 @@ import com.android.library.utils.ViewUtil;
  */
 public abstract class BaseUiActivity extends AppCompatActivity implements DimenCons {
 
-    private Toolbar mToolbar;
     private FrameLayout mFlRoot;
     private View mContentView;
+    private Toolbar mToolbar;
+    private int mTbHeight;
+    private boolean isNoTitle, isOverlay;
 
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
@@ -50,13 +52,25 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
     public void setContentView(View contentView) {
 
         mContentView = contentView;
+
+        resolveThemeAttribute();
+
         mFlRoot = new FrameLayout(this);
-        wrapContentView(mFlRoot, mContentView);
+        wrapContentView(mFlRoot, contentView);
         super.setContentView(mFlRoot);
 
         initData();
         initTitleView();
         initContentView();
+    }
+
+    private void resolveThemeAttribute() {
+
+        TypedArray a = obtainStyledAttributes(R.styleable.Toolbar);
+        isNoTitle = a.getBoolean(R.styleable.Toolbar_noTitle, false);
+        isOverlay = a.getBoolean(R.styleable.Toolbar_overlay, false);
+        mTbHeight = a.getDimensionPixelSize(R.styleable.Toolbar_android_minHeight, TITLE_BAR_HEIGHT);
+        a.recycle();
     }
 
     protected void wrapContentView(FrameLayout rootView, View contentView) {
@@ -66,32 +80,33 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
 //        lt.setDuration(100);
 //        rootView.setLayoutTransition(lt);
 
-        TypedArray a = obtainStyledAttributes(R.styleable.Toolbar);
-        boolean isNoTitle = a.getBoolean(R.styleable.Toolbar_noTitle, false);
-        boolean isOverlay = a.getBoolean(R.styleable.Toolbar_overlay, false);
-        int height = a.getDimensionPixelSize(R.styleable.Toolbar_android_minHeight, TITLE_BAR_HEIGHT);
-        a.recycle();
-
-        TypedValue typedValue = new TypedValue();
-        getTheme().resolveAttribute(android.R.style.Theme, typedValue, true);
-        int[] attrs = new int[]{android.R.attr.windowTranslucentStatus, android.R.attr.windowTranslucentNavigation};
-        TypedArray typedArray = obtainStyledAttributes(typedValue.resourceId, attrs);
-        boolean isStatusTrans = typedArray.getBoolean(0, false);
-        boolean isNavigationTrans = typedArray.getBoolean(1, false);
-        typedArray.recycle();
-
         // content view
-        contentView.setId(R.id.id_contentview);
         LayoutParams contentLp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        contentLp.topMargin = isNoTitle ? 0 : isOverlay ? -STATUS_BAR_HEIGHT : height;
         rootView.addView(contentView, contentLp);
 
+        boolean isStatusTrans = false, isNavigationTrans = false;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+
+            TypedValue typedValue = new TypedValue();
+            getTheme().resolveAttribute(android.R.style.Theme, typedValue, true);
+            int[] attrs = new int[]{android.R.attr.windowTranslucentStatus, android.R.attr.windowTranslucentNavigation};
+            TypedArray typedArray = obtainStyledAttributes(typedValue.resourceId, attrs);
+            isStatusTrans = typedArray.getBoolean(0, false);
+            isNavigationTrans = typedArray.getBoolean(1, false);
+            typedArray.recycle();
+        }
+
         // toolbar
-        if (!isNoTitle) {
+        if (isNoTitle) {
+
+            contentLp.topMargin = isStatusTrans || isNavigationTrans ? -STATUS_BAR_HEIGHT : 0;
+        } else {
+
+            contentLp.topMargin = isOverlay ? -STATUS_BAR_HEIGHT : mTbHeight;
 
             mToolbar = (Toolbar) inflateLayout(R.layout.lib_view_toolbar);
             setSupportActionBar(mToolbar);
-            LayoutParams toolbarLp = new LayoutParams(LayoutParams.MATCH_PARENT, height);
+            LayoutParams toolbarLp = new LayoutParams(LayoutParams.MATCH_PARENT, mTbHeight);
             toolbarLp.topMargin = isOverlay || isStatusTrans || isNavigationTrans ? STATUS_BAR_HEIGHT : 0;
             toolbarLp.gravity = Gravity.TOP;
             rootView.addView(mToolbar, toolbarLp);
@@ -131,7 +146,6 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
 
     protected View getContentView() {
 
-//        return mFlRoot.findViewById(R.id.id_contentview);
         return mContentView;
     }
 
@@ -148,6 +162,21 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
     protected LayoutParams getToolbarLp() {
 
         return (LayoutParams) mToolbar.getLayoutParams();
+    }
+
+    protected int getToolbarHeight() {
+
+        return mTbHeight;
+    }
+
+    protected boolean isNoTitle() {
+
+        return isNoTitle;
+    }
+
+    protected boolean isOverlay() {
+
+        return isOverlay;
     }
 
     protected void setStatusBarColorResId(@ColorRes int colorResId) {

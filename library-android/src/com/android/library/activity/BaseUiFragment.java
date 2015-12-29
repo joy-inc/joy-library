@@ -1,6 +1,5 @@
 package com.android.library.activity;
 
-import android.animation.LayoutTransition;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
@@ -16,7 +15,6 @@ import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 
 import com.android.library.BaseApplication;
-import com.android.library.R;
 import com.android.library.utils.DeviceUtil;
 import com.android.library.utils.DimenCons;
 import com.android.library.utils.ToastUtil;
@@ -60,7 +58,6 @@ public abstract class BaseUiFragment extends Fragment implements DimenCons {
 //        mFlRoot.setLayoutTransition(lt);
 
         // content view
-        contentView.setId(R.id.id_contentview);
         LayoutParams contentLp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         rootView.addView(contentView, contentLp);
     }
@@ -78,7 +75,6 @@ public abstract class BaseUiFragment extends Fragment implements DimenCons {
 
     protected View getContentView() {
 
-//        return mFlRoot.findViewById(R.id.id_contentview);
         return mContentView;
     }
 

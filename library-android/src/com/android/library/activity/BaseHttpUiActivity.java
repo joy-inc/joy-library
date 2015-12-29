@@ -34,11 +34,11 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
     @Override
     protected void wrapContentView(FrameLayout rootView, View contentView) {
 
-        super.wrapContentView(rootView, contentView);
         // tip view
         addTipView(rootView);
         // loading view
         addLoadingView(rootView);
+        super.wrapContentView(rootView, contentView);
     }
 
     @Override
@@ -65,8 +65,7 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
         });
         hideImageView(mIvTip);
         LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        int topMargin = getContentViewLp().topMargin;
-        lp.topMargin = topMargin > 0 ? topMargin : 0;
+        lp.topMargin = isNoTitle() ? 0 : getToolbarHeight();
         frame.addView(mIvTip, lp);
     }
 
@@ -75,8 +74,7 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
         mLoadingView = JLoadingView.get(this);
         mLoadingView.hide();// 默认隐藏
         LayoutParams lp = JLoadingView.getLp();
-        int topMargin = getContentViewLp().topMargin;
-        lp.topMargin = topMargin > 0 ? topMargin / 2 : 0;
+        lp.topMargin = isNoTitle() ? 0 : getToolbarHeight() / 2;
         frame.addView(mLoadingView, lp);
     }
 
