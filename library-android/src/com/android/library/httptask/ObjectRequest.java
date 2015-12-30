@@ -7,6 +7,7 @@ import com.android.library.BaseApplication;
 import com.android.library.httptask.TestCache.OnEntryListener;
 import com.android.library.utils.CollectionUtil;
 import com.android.library.utils.LogMgr;
+import com.android.library.utils.TextUtil;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Cache.Entry;
 import com.android.volley.DefaultRetryPolicy;
@@ -35,6 +36,7 @@ public class ObjectRequest<T> extends Request<T> {
     private CacheMode mCacheMode = CacheMode.NONE;
     private boolean mHasCache;
     private Response<T> mObjResp;
+    private String mCacheKey;
 
     /**
      * Creates a new request with the given method.
@@ -267,6 +269,7 @@ public class ObjectRequest<T> extends Request<T> {
 //        mCacheMode = CacheMode.NONE;
         mObjRespLis = null;
         mObjResp = null;
+        mCacheKey = null;
 
         removeEntryListener();
 
@@ -300,5 +303,16 @@ public class ObjectRequest<T> extends Request<T> {
 
         if (LogMgr.isDebug())
             LogMgr.d("ObjectRequest", "~~cancel tag: " + getTag());
+    }
+
+    public void setCacheKey(String cacheKey) {
+
+        mCacheKey = cacheKey;
+    }
+
+    @Override
+    public String getCacheKey() {
+
+        return TextUtil.isEmpty(mCacheKey) ? super.getCacheKey() : mCacheKey;
     }
 }
