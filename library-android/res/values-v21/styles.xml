@@ -18,9 +18,12 @@
         <item name="subtitleTextAppearance">@style/lib_style_toolbar_subtitle</item>
         <item name="android:background">?attr/colorPrimary</item>
         <item name="android:elevation">@dimen/design_appbar_elevation</item>
+        <item name="contentInsetStart">4dp</item><!-- according to the size of the icons, such as R.drawable.ic_back -->
+        <item name="contentInsetEnd">4dp</item>
     </style>
 
     <style name="lib_style_toolbar.collapse">
         <item name="android:elevation">0dp</item>
     </style>
+
 </resources>

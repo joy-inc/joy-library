@@ -173,7 +173,8 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
 
     protected void setTitleLogo(@DrawableRes int resId) {
 
-        mToolbar.setLogo(resId);
+//        mToolbar.setLogo(resId);
+        addTitleLeftView(resId, null);
     }
 
     protected void addTitleLeftBackView() {
@@ -190,8 +191,22 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
 
     protected void addTitleLeftView(@DrawableRes int resId, View.OnClickListener lisn) {
 
-        mToolbar.setNavigationIcon(resId);
-        mToolbar.setNavigationOnClickListener(lisn);
+//        mToolbar.setNavigationIcon(resId);
+//        mToolbar.setNavigationOnClickListener(lisn);
+
+        ImageButton ib = new ImageButton(this, null, R.attr.toolbarNavigationButtonStyle);
+//        ib.setImageDrawable(mTintManager.getDrawable(resId));
+        ib.setImageResource(resId);
+
+        int size = getToolbarLp().height;
+        ib.setMinimumWidth(size);
+        ib.setMinimumHeight(size);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            ib.setBackgroundResource(R.drawable.control_background_52dp_material);
+
+        if (lisn != null)
+            ib.setOnClickListener(lisn);
+        mToolbar.addView(ib);
     }
 
     protected TextView addTitleMiddleView(@StringRes int resId) {
@@ -231,6 +246,8 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
         int size = getToolbarLp().height;
         v.setMinimumWidth(size);
         v.setMinimumHeight(size);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            v.setBackgroundResource(R.drawable.control_background_52dp_material);
 
         v.setOnClickListener(lisn);
         Toolbar.LayoutParams lp = new Toolbar.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
