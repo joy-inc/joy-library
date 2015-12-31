@@ -42,7 +42,7 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
     private Toolbar mToolbar;
     private int mTbHeight;
     private boolean isNoTitle, isOverlay;
-    private boolean isStatusTrans, isNavigationTrans;
+    private boolean isSystemBarTrans;
 //    private TintManager mTintManager;
 
     @Override
@@ -85,8 +85,9 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
             getTheme().resolveAttribute(android.R.style.Theme, typedValue, true);
             int[] attrs = new int[]{android.R.attr.windowTranslucentStatus, android.R.attr.windowTranslucentNavigation};
             TypedArray typedArray = obtainStyledAttributes(typedValue.resourceId, attrs);
-            isStatusTrans = typedArray.getBoolean(0, false);
-            isNavigationTrans = typedArray.getBoolean(1, false);
+            boolean isStatusTrans = typedArray.getBoolean(0, false);
+            boolean isNavigationTrans = typedArray.getBoolean(1, false);
+            isSystemBarTrans = isStatusTrans || isNavigationTrans;
             typedArray.recycle();
         }
     }
@@ -102,20 +103,18 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
         LayoutParams contentLp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         rootView.addView(contentView, contentLp);
 
-        boolean isKitkat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-
         if (isNoTitle) {
 
-            contentLp.topMargin = isKitkat && (isStatusTrans || isNavigationTrans) ? -STATUS_BAR_HEIGHT : 0;
+            contentLp.topMargin = isSystemBarTrans ? -STATUS_BAR_HEIGHT : 0;
         } else {
 
-            contentLp.topMargin = isOverlay ? isKitkat ? -STATUS_BAR_HEIGHT : 0 : mTbHeight;
+            contentLp.topMargin = isOverlay ? isSystemBarTrans ? -STATUS_BAR_HEIGHT : 0 : isSystemBarTrans ? STATUS_BAR_HEIGHT + mTbHeight : mTbHeight;
 
             // toolbar
             mToolbar = (Toolbar) inflateLayout(R.layout.lib_view_toolbar);
             setSupportActionBar(mToolbar);
             LayoutParams toolbarLp = new LayoutParams(LayoutParams.MATCH_PARENT, mTbHeight);
-            toolbarLp.topMargin = isKitkat && (isStatusTrans || isNavigationTrans) ? STATUS_BAR_HEIGHT : 0;
+            toolbarLp.topMargin = isSystemBarTrans ? STATUS_BAR_HEIGHT : 0;
             toolbarLp.gravity = Gravity.TOP;
             rootView.addView(mToolbar, toolbarLp);
             setTitle(null);
