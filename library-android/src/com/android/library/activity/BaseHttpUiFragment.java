@@ -137,7 +137,7 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
         return mObjReq.hasCache();
     }
 
-    protected boolean isRespIntermediate() {
+    boolean isRespIntermediate() {
 
         if (mObjReq == null)
             return false;

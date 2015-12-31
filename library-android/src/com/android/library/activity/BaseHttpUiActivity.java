@@ -131,7 +131,7 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
         return mObjReq.hasCache();
     }
 
-    protected boolean isRespIntermediate() {
+    boolean isRespIntermediate() {
 
         if (mObjReq == null)
             return false;
