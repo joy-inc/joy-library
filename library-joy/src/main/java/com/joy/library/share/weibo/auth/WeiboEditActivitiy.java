@@ -1,14 +1,11 @@
 package com.joy.library.share.weibo.auth;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -19,34 +16,22 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.library.activity.BaseHttpUiActivity;
-import com.android.library.activity.BaseUiActivity;
 import com.android.library.httptask.ObjectRequest;
-import com.android.library.utils.ImageUtil;
 import com.android.library.utils.TextUtil;
 import com.android.library.utils.ToastUtil;
-import com.android.library.widget.JDialog;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.joy.library.R;
 import com.joy.library.dialog.DialogUtil;
 import com.joy.library.share.ShareConstant;
 import com.joy.library.share.weibo.openapi.StatusesAPI;
 import com.joy.library.share.weibo.openapi.UsersAPI;
-import com.joy.library.share.weibo.openapi.models.Status;
 import com.joy.library.share.weibo.openapi.models.StatusList;
 import com.joy.library.share.weibo.openapi.models.User;
-import com.sina.weibo.sdk.auth.Oauth2AccessToken;
-import com.sina.weibo.sdk.auth.WeiboAuthListener;
 import com.sina.weibo.sdk.exception.WeiboException;
 import com.sina.weibo.sdk.net.RequestListener;
-import com.sina.weibo.sdk.utils.LogUtil;
 
 import java.io.File;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
 /**
  * 微博分享编辑

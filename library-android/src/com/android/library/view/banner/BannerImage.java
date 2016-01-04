@@ -1,45 +1,47 @@
 package com.android.library.view.banner;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView.ScaleType;
 
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.android.library.widget.FrescoImageView;
 
 /**
  * Created by KEVIN.DAI on 15/12/17.
  */
 public class BannerImage<T> implements BannerHolder<T> {
 
-    private SimpleDraweeView sdvCover;
+    private FrescoImageView fivCover;
 
-    protected SimpleDraweeView onCreateView(Context context) {
+    protected FrescoImageView onCreateView(Context context) {
 
-        SimpleDraweeView sdvCover = new SimpleDraweeView(context);
-        sdvCover.setScaleType(ScaleType.CENTER_CROP);
-        return sdvCover;
+        FrescoImageView fivCover = new FrescoImageView(context);
+        fivCover.setScaleType(ScaleType.CENTER_CROP);
+        return fivCover;
     }
 
     @Override
     public final View createView(Context context) {
 
-        sdvCover = onCreateView(context);
-        return sdvCover;
+        fivCover = onCreateView(context);
+        return fivCover;
     }
 
     @Override
     public final void invalidate(int position, T t) {
 
+        if (t == null)
+            return;
+
         if (t instanceof Integer) {
 
-            sdvCover.setImageResource((Integer) t);
+            fivCover.setImageResource((Integer) t);
         } else if (t instanceof String) {
 
-            sdvCover.setImageURI(Uri.parse((String) t));
+            fivCover.setImageURI((String) t);
         } else {
 
-            sdvCover.setImageURI(Uri.parse(t.toString()));
+            fivCover.setImageURI(t.toString());
         }
     }
 }
