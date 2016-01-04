@@ -156,7 +156,7 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
 
         mPageIndex = PAGE_START_INDEX;
         showSwipeRefresh();
-        onRetryCallback();
+        onRetry();
     }
 
     /**
@@ -170,7 +170,7 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
         hideSwipeRefresh();
 //        stopLoadMore();
         hideLoadMore();
-        onRetryCallback();
+        onRetry();
     }
 
     /**

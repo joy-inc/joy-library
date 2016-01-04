@@ -78,7 +78,7 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
         frame.addView(mLoadingView, lp);
     }
 
-    protected void onTipViewClick() {
+    private void onTipViewClick() {
 
         if (mIvTip.getDrawable() == null || mTipResId == DISABLED_RES_ID)
             return;
@@ -88,11 +88,11 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
             showToast(R.string.toast_common_no_network);
         } else {
 
-            onRetryCallback();
+            onRetry();
         }
     }
 
-    protected void onRetryCallback() {
+    protected void onRetry() {
 
         switch (getReqCacheMode()) {
 
