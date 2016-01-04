@@ -181,11 +181,13 @@ public class WeiboEditActivitiy extends BaseHttpUiActivity<String> {
                         StatusList statuses = StatusList.parse(response);
                         if (statuses != null && statuses.total_number > 0) {
                             ToastUtil.showToast(R.string.share_success);
+                            finish();
                             return;
                         }
                     } else if (response.startsWith("{\"created_at\"")) {
                         // 调用 Status#parse 解析字符串成微博对象
                         ToastUtil.showToast(R.string.share_success);
+                        finish();
                         return;
 
                     }
@@ -236,6 +238,7 @@ public class WeiboEditActivitiy extends BaseHttpUiActivity<String> {
                         AccessTokenKeeper.clear(WeiboEditActivitiy.this);
                         WeiboEditActivitiy.this.finish();
                     }
+                    mExitDialog.dismiss();
                 }
             });
         }
