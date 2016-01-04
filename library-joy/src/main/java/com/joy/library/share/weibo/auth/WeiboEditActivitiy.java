@@ -232,8 +232,10 @@ public class WeiboEditActivitiy extends BaseHttpUiActivity<String> {
             mExitDialog = DialogUtil.getOkCancelDialog(this, R.string.ok, R.string.cancel, getString(R.string.dialog_logout_share_account), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    AccessTokenKeeper.clear(WeiboEditActivitiy.this);
-                    WeiboEditActivitiy.this.finish();
+                    if(which==DialogInterface.BUTTON_POSITIVE) {
+                        AccessTokenKeeper.clear(WeiboEditActivitiy.this);
+                        WeiboEditActivitiy.this.finish();
+                    }
                 }
             });
         }

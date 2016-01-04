@@ -2,6 +2,7 @@ package com.joy.library.share;
 
 import android.app.Activity;
 
+import com.android.library.utils.ToastUtil;
 import com.joy.library.share.weibo.auth.WeiBoAuthActivity;
 
 /**
