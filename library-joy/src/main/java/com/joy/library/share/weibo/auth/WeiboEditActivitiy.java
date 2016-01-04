@@ -63,6 +63,7 @@ public class WeiboEditActivitiy extends BaseHttpUiActivity<String> {
 
         } else {
             ToastUtil.showToast(R.string.weibo_auth_error);
+            finish();
             AccessTokenKeeper.clear(this);
         }
         String path = getIntent().getStringExtra("imagePath");
@@ -82,7 +83,7 @@ public class WeiboEditActivitiy extends BaseHttpUiActivity<String> {
                 sendShareContent();
             }
         });
-        setTitle(R.string.share_to_weibo);
+        addTitleMiddleView(R.string.share_to_weibo);
 
     }
 

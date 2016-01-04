@@ -93,12 +93,13 @@ public class WeiBoAuthActivity extends Activity {
         @Override
         public void onCancel() {
             ToastUtil.showToast(R.string.weibo_auth_cancle);
+            finish();
         }
 
         @Override
         public void onWeiboException(WeiboException e) {
             ToastUtil.showToast(R.string.weibo_auth_error);
-
+            finish();
         }
     }
 
