@@ -22,7 +22,7 @@
     </declare-styleable>
 
     <!-- 自动换行ViewGroup -->
-    <declare-styleable name="NewlineLayout">
+    <declare-styleable name="NewLineLayout">
         <attr name="horSpacing" format="dimension" />
         <attr name="verSpacing" format="dimension" />
         <attr name="showLines" format="integer" />
