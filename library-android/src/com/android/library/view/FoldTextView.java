@@ -18,6 +18,7 @@ import android.view.animation.Transformation;
 import android.widget.TextView;
 
 import com.android.library.R;
+import com.android.library.utils.CollectionUtil;
 import com.android.library.utils.DensityUtil;
 import com.android.library.utils.MathUtil;
 import com.android.library.utils.TextUtil;
@@ -141,7 +142,7 @@ public class FoldTextView extends TextView {
 
         String content = text.toString().trim();
 
-        if (!TextUtil.isEmpty(content)) {
+        if (TextUtil.isNotEmpty(content)) {
 
             mInitialized = false;
 
@@ -415,10 +416,11 @@ public class FoldTextView extends TextView {
 
     private void initTextInfo(ArrayList<String> container, Paint paint) {
 
-        if (container == null || !container.isEmpty())// 如果已经填充过数据，则return
+        if (CollectionUtil.isNotEmpty(container))// 如果已经填充过数据，则return
             return;
-
-        if (TextUtil.isEmpty(getText()) || paint == null)
+        if (TextUtil.isEmpty(getText()))
+            return;
+        if (paint == null)
             return;
 
         final String str = getText().toString().trim();
