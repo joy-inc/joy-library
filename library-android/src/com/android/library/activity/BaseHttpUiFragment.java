@@ -84,7 +84,7 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
             v.setTranslationY(-((BaseTabActivity) act).getToolbarLp().height / 2);
     }
 
-    protected void onTipViewClick() {
+    private void onTipViewClick() {
 
         if (mIvTip.getDrawable() == null || mTipResId == DISABLED_RES_ID)
             return;
@@ -94,11 +94,11 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
             showToast(R.string.toast_common_no_network);
         } else {
 
-            onRetryCallback();
+            onRetry();
         }
     }
 
-    protected void onRetryCallback() {
+    protected void onRetry() {
 
         switch (getReqCacheMode()) {
 

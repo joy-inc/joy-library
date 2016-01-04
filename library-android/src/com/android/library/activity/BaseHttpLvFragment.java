@@ -134,7 +134,7 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
 
         showSwipeRefresh();
         mPageIndex = PAGE_START_INDEX;
-        onRetryCallback();
+        onRetry();
     }
 
     /**
@@ -143,7 +143,7 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
     protected void executeFrameRefresh() {
 
         mPageIndex = PAGE_START_INDEX;
-        onRetryCallback();
+        onRetry();
     }
 
     /**

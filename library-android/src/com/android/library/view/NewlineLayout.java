@@ -11,21 +11,21 @@ import com.android.library.R;
 /**
  * Created by Daisw on 15/4/8.
  */
-public class NewlineLayout extends ViewGroup {
+public class NewLineLayout extends ViewGroup {
 
     public int horizontalSpacing;
     public int verticalSpacing;
     public int lines = Integer.MAX_VALUE;
     private int lineIndex;
 
-    public NewlineLayout(Context context, AttributeSet attrs) {
+    public NewLineLayout(Context context, AttributeSet attrs) {
 
         super(context, attrs);
 
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.NewlineLayout);
-        horizontalSpacing = a.getDimensionPixelSize(R.styleable.NewlineLayout_horSpacing, 0);
-        verticalSpacing = a.getDimensionPixelSize(R.styleable.NewlineLayout_verSpacing, 0);
-        lines = a.getInteger(R.styleable.NewlineLayout_showLines, Integer.MAX_VALUE);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.NewLineLayout);
+        horizontalSpacing = a.getDimensionPixelSize(R.styleable.NewLineLayout_horSpacing, 0);
+        verticalSpacing = a.getDimensionPixelSize(R.styleable.NewLineLayout_verSpacing, 0);
+        lines = a.getInteger(R.styleable.NewLineLayout_showLines, Integer.MAX_VALUE);
         a.recycle();
     }
 
