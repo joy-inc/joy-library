@@ -29,10 +29,11 @@ import java.util.List;
  */
 public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
 
+    private static final int PAGE_UPPER_LIMIT = 20;// 默认分页大小
+    private static final int PAGE_START_INDEX = 1;// 默认起始页码
     private SwipeRefreshLayout mSwipeRefreshWidget;
     private RecyclerView mRecyclerView;
-    private int mPageLimit = 20;
-    private static final int PAGE_START_INDEX = 1;// 默认从第一页开始
+    private int mPageLimit = PAGE_UPPER_LIMIT;
     private int mPageIndex = PAGE_START_INDEX;
     private int mSortIndex = mPageIndex;
     private RefreshMode mRefreshMode;
@@ -135,8 +136,7 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
     private void startRefresh() {
 
         mRefreshMode = RefreshMode.NONE;
-
-        executeRefreshOnly();
+        execute(CacheMode.NONE);// refresh only, don't cache
     }
 
     @Override
@@ -147,10 +147,38 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
 
     protected abstract ObjectRequest<T> getObjectRequest(int pageIndex, int pageLimit);
 
+    @Override
+    protected final void executeRefreshOnly() {
+
+        setPageIndex(PAGE_START_INDEX);
+        super.executeRefreshOnly();
+    }
+
+    @Override
+    protected final void executeCacheOnly() {
+
+        setPageIndex(PAGE_START_INDEX);
+        super.executeCacheOnly();
+    }
+
+    @Override
+    protected final void executeRefreshAndCache() {
+
+        setPageIndex(PAGE_START_INDEX);
+        super.executeRefreshAndCache();
+    }
+
+    @Override
+    protected final void executeCacheAndRefresh() {
+
+        setPageIndex(PAGE_START_INDEX);
+        super.executeCacheAndRefresh();
+    }
+
     /**
      * show swipe refresh view {@link SwipeRefreshLayout}
      */
-    protected void executeSwipeRefresh() {
+    protected final void executeSwipeRefresh() {
 
         mRefreshMode = RefreshMode.SWIPE;
 
@@ -162,7 +190,7 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
     /**
      * show frame refresh view {@link JLoadingView}
      */
-    protected void executeFrameRefresh() {
+    protected final void executeFrameRefresh() {
 
         mRefreshMode = RefreshMode.FRAME;
 

@@ -100,25 +100,7 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
 
     protected void onRetry() {
 
-        switch (getReqCacheMode()) {
-
-            case CACHE_ONLY:
-
-                executeCacheOnly();
-                break;
-            case REFRESH_AND_CACHE:
-
-                executeRefreshAndCache();
-                break;
-            case CACHE_AND_REFRESH:
-
-                executeCacheAndRefresh();
-                break;
-            default:
-
-                executeRefreshOnly();
-                break;
-        }
+        execute(getReqCacheMode());
     }
 
     protected CacheMode getReqCacheMode() {
@@ -157,49 +139,42 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
     /**
      * fetch net-->response.
      */
-    protected final void executeRefreshOnly() {
+    protected void executeRefreshOnly() {
 
-        cancelRequest();
-        mObjReq = getObjectRequest();
-        mObjReq.setCacheMode(CacheMode.NONE);
-        mObjReq.setResponseListener(getObjRespLis());
-        addRequestNoCache(mObjReq);
+        execute(CacheMode.NONE);
     }
 
     /**
      * fetch cache-->response.
      */
-    protected final void executeCacheOnly() {
+    protected void executeCacheOnly() {
 
-        cancelRequest();
-        mObjReq = getObjectRequest();
-        mObjReq.setCacheMode(CacheMode.CACHE_ONLY);
-        mObjReq.setResponseListener(getObjRespLis());
-        addRequestHasCache(mObjReq);
+        execute(CacheMode.CACHE_ONLY);
     }
 
     /**
      * cache expired: fetch net, update cache-->response.
      */
-    protected final void executeRefreshAndCache() {
+    protected void executeRefreshAndCache() {
 
-        cancelRequest();
-        mObjReq = getObjectRequest();
-        mObjReq.setCacheMode(CacheMode.REFRESH_AND_CACHE);
-        mObjReq.setResponseListener(getObjRespLis());
-        addRequestHasCache(mObjReq);
+        execute(CacheMode.REFRESH_AND_CACHE);
     }
 
     /**
      * cache update needed: fetch cache-->response, fetch net, update cache-->response.
      */
-    protected final void executeCacheAndRefresh() {
+    protected void executeCacheAndRefresh() {
+
+        execute(CacheMode.CACHE_AND_REFRESH);
+    }
+
+    final void execute(CacheMode cacheMode) {
 
         cancelRequest();
         mObjReq = getObjectRequest();
-        mObjReq.setCacheMode(CacheMode.CACHE_AND_REFRESH);
+        mObjReq.setCacheMode(cacheMode);
         mObjReq.setResponseListener(getObjRespLis());
-        addRequestHasCache(mObjReq);
+        addRequest(mObjReq, cacheMode != CacheMode.NONE);
     }
 
     private ObjectResponseListener<T> getObjRespLis() {
