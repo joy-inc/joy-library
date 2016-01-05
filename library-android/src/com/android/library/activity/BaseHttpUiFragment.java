@@ -227,7 +227,8 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
                 } else {
 
                     hideContentView();
-                    showNoContentTip();
+                    if (!isRespIntermediate())
+                        showNoContentTip();
                 }
                 if (!isRespIntermediate())
                     hideLoading();
