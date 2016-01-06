@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.util.AttributeSet;
 
-import com.android.library.utils.TextUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 /**
@@ -30,8 +29,8 @@ public class FrescoImageView extends SimpleDraweeView {
      */
     public void setImageURI(String uri) {
 
-        if (TextUtil.isEmpty(uri))
-            return;
+        if (uri == null)
+            uri = "";
 
         setImageURI(Uri.parse(uri));
     }
