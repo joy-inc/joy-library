@@ -12,6 +12,7 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout.LayoutParams;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 
 import com.android.library.R;
 import com.android.library.adapter.ExFragmentPagerAdapter;
+import com.android.library.utils.CollectionUtil;
 import com.android.library.utils.DeviceUtil;
 import com.android.library.utils.DimenCons;
 import com.android.library.utils.ToastUtil;
@@ -41,12 +43,36 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
     private Toolbar mToolbar;
     private TabLayout mTabLayout;
     private FloatingActionButton mFloatActionBtn;
+    private List<? extends BaseUiFragment> mFragments;
+    private int mCurrentPosition;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lib_act_tab);
+    }
+
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+        if (CollectionUtil.isNotEmpty(mFragments))
+            mFragments.get(mCurrentPosition).onVisible();
+    }
+
+    @Override
+    protected void onPause() {
+
+        super.onPause();
+        if (isFinishing()) {
+
+            if (mFragments != null) {
+
+                mFragments.clear();
+                mFragments = null;
+            }
+        }
     }
 
     @Override
@@ -78,11 +104,14 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
 
     protected void initContentView() {
 
+        mFragments = getFragments();
+
         // view pager
-        ExViewPager viewPager = (ExViewPager) findViewById(R.id.viewpager);
         ExFragmentPagerAdapter pagerAdapter = new ExFragmentPagerAdapter(getSupportFragmentManager());
         pagerAdapter.setFragmentItemDestoryEnable(isPagerItemDestoryEnable());
-        pagerAdapter.setFragments(getFragments());
+        pagerAdapter.setFragments(mFragments);
+        ExViewPager viewPager = (ExViewPager) findViewById(R.id.viewpager);
+        viewPager.addOnPageChangeListener(getPageChangeListener());
         viewPager.setAdapter(pagerAdapter);
         // tab layout
         mTabLayout = (TabLayout) findViewById(R.id.tab);
@@ -90,6 +119,27 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
         // float action bar
         mFloatActionBtn = (FloatingActionButton) findViewById(R.id.fab);
         setFloatActionBtnDisable();
+    }
+
+    private OnPageChangeListener getPageChangeListener() {
+
+        return new OnPageChangeListener() {
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+                mCurrentPosition = position;
+                mFragments.get(position).onVisible();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        };
     }
 
     protected boolean isPagerItemDestoryEnable() {
@@ -120,7 +170,7 @@ public abstract class BaseTabActivity extends AppCompatActivity implements Dimen
             getWindow().setStatusBarColor(color);
     }
 
-    protected void setNavigationBarColorResId(@ColorRes int colorResId) {
+    protected final void setNavigationBarColorResId(@ColorRes int colorResId) {
 
         setNavigationBarColor(getResources().getColor(colorResId));
     }

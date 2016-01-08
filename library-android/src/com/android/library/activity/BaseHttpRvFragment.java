@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 
 import com.android.library.R;
 import com.android.library.adapter.ExRvAdapter;
@@ -78,7 +79,7 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
         mSwipeRefreshWidget = new SwipeRefreshLayout(getActivity());
         mSwipeRefreshWidget.setColorSchemeResources(R.color.color_accent);
         mSwipeRefreshWidget.setOnRefreshListener(getDefaultRefreshLisn());
-        mSwipeRefreshWidget.addView(contentView);
+        mSwipeRefreshWidget.addView(contentView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         return mSwipeRefreshWidget;
     }
 

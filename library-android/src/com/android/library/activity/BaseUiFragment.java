@@ -58,8 +58,7 @@ public abstract class BaseUiFragment extends Fragment implements DimenCons {
 //        mFlRoot.setLayoutTransition(lt);
 
         // content view
-        LayoutParams contentLp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        rootView.addView(contentView, contentLp);
+        rootView.addView(contentView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
     }
 
     protected void initData() {
@@ -93,6 +92,10 @@ public abstract class BaseUiFragment extends Fragment implements DimenCons {
     public CharSequence getLableText() {
 
         return mLableText;
+    }
+
+    public void onVisible() {
+
     }
 
     protected boolean isFinishing() {
