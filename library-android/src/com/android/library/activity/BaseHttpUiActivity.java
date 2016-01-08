@@ -30,15 +30,16 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
     private final int FAILED_RES_ID = R.drawable.ic_net_error;
     private final int DISABLED_RES_ID = R.drawable.ic_tip_null;
     private ObjectRequest<T> mObjReq;
+    private boolean mContentHasDisplayed;
 
     @Override
     protected void wrapContentView(FrameLayout rootView, View contentView) {
 
         // tip view
         addTipView(rootView);
+        super.wrapContentView(rootView, contentView);
         // loading view
         addLoadingView(rootView);
-        super.wrapContentView(rootView, contentView);
     }
 
     @Override
@@ -203,7 +204,8 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
             @Override
             public void onPre() {
 
-                hideContentView();
+                if (!mContentHasDisplayed)
+                    hideContentView();
                 hideTipView();
                 showLoading();
             }
@@ -214,9 +216,11 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
                 if (isFinishing())
                     return;
 
-                if (invalidateContent(t))
+                if (invalidateContent(t)) {
+
                     showContentView();
-                else
+                    mContentHasDisplayed = true;
+                } else
                     showNoContentTip();
                 if (!isRespIntermediate())
                     hideLoading();
