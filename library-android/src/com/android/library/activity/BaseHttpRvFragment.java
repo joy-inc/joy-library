@@ -97,7 +97,7 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
                 } else {
 
                     mSortIndex = mPageIndex;
-                    mPageIndex = PAGE_START_INDEX;
+                    setPageIndex(PAGE_START_INDEX);
                     stopLoadMore();
                     BaseHttpRvFragment.super.hideLoading();
                     startRefresh();
@@ -183,7 +183,7 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
 
         mRefreshMode = RefreshMode.SWIPE;
 
-        mPageIndex = PAGE_START_INDEX;
+        setPageIndex(PAGE_START_INDEX);
         showSwipeRefresh();
         onRetry();
     }
@@ -195,7 +195,7 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
 
         mRefreshMode = RefreshMode.FRAME;
 
-        mPageIndex = PAGE_START_INDEX;
+        setPageIndex(PAGE_START_INDEX);
         hideSwipeRefresh();
 //        stopLoadMore();
         hideLoadMore();
@@ -269,8 +269,7 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
 
     protected void setAdapter(ExRvAdapter adapter) {
 
-        RecyclerAdapter ra = new RecyclerAdapter(adapter, getDefaultLayoutManager());
-        getRecyclerView().setAdapter(ra);
+        mRecyclerView.setAdapter(new RecyclerAdapter(adapter, getDefaultLayoutManager()));
     }
 
     protected ExRvAdapter getAdapter() {
@@ -352,27 +351,22 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
     @Override
     protected final void showFailedTip() {
 
-        if (mRefreshMode == RefreshMode.FRAME || getItemCount() == 0)
+        if (mRefreshMode == RefreshMode.FRAME || getAdapter().getItemCount() == 0)
             super.showFailedTip();
     }
 
     @Override
     protected final void showNoContentTip() {
 
-        if (mRefreshMode == RefreshMode.FRAME || getItemCount() == 0)
+        if (mRefreshMode == RefreshMode.FRAME || getAdapter().getItemCount() == 0)
             super.showNoContentTip();
     }
 
     @Override
     protected final void hideContentView() {
 
-        if (mRefreshMode == RefreshMode.FRAME || getItemCount() == 0)
+        if (mRefreshMode == RefreshMode.FRAME || getAdapter().getItemCount() == 0)
             super.hideContentView();
-    }
-
-    private int getItemCount() {
-
-        return ((RecyclerAdapter) mRecyclerView.getAdapter()).getWrappedAdapter().getItemCount();
     }
 
 
