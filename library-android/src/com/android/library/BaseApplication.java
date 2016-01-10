@@ -14,6 +14,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.RequestQueue.RequestFilter;
 import com.android.volley.RequestQueue.RequestFinishedListener;
 import com.android.volley.VolleyLog;
+import com.facebook.drawee.backends.pipeline.Fresco;
 
 /**
  * Created by KEVIN.DAI on 15/7/8.
@@ -30,13 +31,24 @@ public class BaseApplication extends Application {
     public void onCreate() {
 
         super.onCreate();
-        mContext = getApplicationContext();
+        initContext();
         initVolley();
+        initFresco();
+    }
+
+    private void initContext() {
+
+        mContext = getApplicationContext();
     }
 
     public static Context getContext() {
 
         return mContext;
+    }
+
+    private static void releaseContext() {
+
+        mContext = null;
     }
 
     public static Resources getAppResources() {
@@ -59,11 +71,6 @@ public class BaseApplication extends Application {
         return getAppResources().getStringArray(resId);
     }
 
-//    private static void releaseContext() {
-//
-//        mContext = null;
-//    }
-
     /**
      * the queue will be created if it is null.
      */
@@ -75,6 +82,11 @@ public class BaseApplication extends Application {
             mReqQueue.addRequestFinishedListener(mReqFinishLis);
         }
         VolleyLog.DEBUG = true;
+    }
+
+    private void initFresco() {
+
+        Fresco.initialize(this);
     }
 
     /**
@@ -113,12 +125,19 @@ public class BaseApplication extends Application {
                     return true;
                 }
             });
+//            mReqQueue.stop();
 //            mReqQueue = null;
         }
     }
 
+    private static void releaseFresco() {
+
+        Fresco.shutDown();
+    }
+
     protected static void release() {
 
+//        releaseFresco();
         releaseVolley();
 //        releaseContext();
     }
