@@ -181,6 +181,16 @@ public abstract class BaseUiActivity extends AppCompatActivity implements DimenC
         return isNoTitle;
     }
 
+    boolean isOverlay() {
+
+        return isOverlay;
+    }
+
+    boolean isSystemBarTrans() {
+
+        return isSystemBarTrans;
+    }
+
     protected void setStatusBarColorResId(@ColorRes int colorResId) {
 
         setStatusBarColor(getResources().getColor(colorResId));

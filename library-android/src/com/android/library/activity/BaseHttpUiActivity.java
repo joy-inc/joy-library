@@ -66,7 +66,8 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
         });
         hideImageView(mIvTip);
         LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        lp.topMargin = isNoTitle() ? 0 : getToolbarHeight();
+        if (!isNoTitle() && !isOverlay())
+            lp.topMargin = isSystemBarTrans() ? STATUS_BAR_HEIGHT + getToolbarHeight() : getToolbarHeight();
         frame.addView(mIvTip, lp);
     }
 
@@ -75,7 +76,8 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
         mLoadingView = JLoadingView.get(this);
         mLoadingView.hide();// 默认隐藏
         LayoutParams lp = JLoadingView.getLp();
-        lp.topMargin = isNoTitle() ? 0 : getToolbarHeight() / 2;
+        if (!isNoTitle() && !isOverlay())
+            lp.topMargin = isSystemBarTrans() ? (STATUS_BAR_HEIGHT + getToolbarHeight()) / 2 : getToolbarHeight() / 2;
         frame.addView(mLoadingView, lp);
     }
 
