@@ -2,88 +2,64 @@ package com.android.library.utils;
 
 import android.util.Log;
 
+import com.android.library.BuildConfig;
+
 public class LogMgr {
 
-    private static String mMainTag = "JoyLogMgr";
-    private static boolean mIsDebug = true;
-
-    public static boolean isDebug() {
-
-        return mIsDebug;
-    }
-
-    public static void turnOn() {
-
-        mIsDebug = true;
-    }
-
-    public static void turnOff() {
-
-        mIsDebug = false;
-    }
-
-    public static void setMainTag(String tagName) {
-
-        mMainTag = tagName;
-    }
-
-    public static String getMainTag() {
-
-        return mMainTag;
-    }
+    private static final String TAG = "LogMgr";
 
     public static void v(String log) {
 
-        v(mMainTag, log);
+        v(TAG, log);
     }
 
     public static void v(String tag, String log) {
 
-        if (mIsDebug)
+        if (!BuildConfig.RELEASE)
             Log.v(tag, log);
     }
 
     public static void d(String log) {
 
-        d(mMainTag, log);
+        d(TAG, log);
     }
 
     public static void d(String tag, String log) {
 
-        if (mIsDebug)
+        if (!BuildConfig.RELEASE)
             Log.d(tag, log);
     }
 
     public static void i(String log) {
 
-        i(mMainTag, log);
+        i(TAG, log);
     }
 
     public static void i(String tag, String log) {
 
-        if (mIsDebug)
+        if (!BuildConfig.RELEASE)
             Log.i(tag, log);
     }
 
     public static void w(String log) {
 
-        w(mMainTag, log);
+        w(TAG, log);
     }
 
     public static void w(String tag, String log) {
 
-        if (mIsDebug)
+        if (!BuildConfig.RELEASE)
             Log.w(tag, log);
     }
 
     public static void e(String log) {
 
-        e(mMainTag, log);
+        e(TAG, log);
     }
 
     public static void e(String tag, String log) {
 
-        if (mIsDebug)
+        if (!BuildConfig.RELEASE)
             Log.e(tag, log);
     }
 }

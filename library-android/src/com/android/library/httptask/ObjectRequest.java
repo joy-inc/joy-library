@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.android.library.BaseApplication;
+import com.android.library.BuildConfig;
 import com.android.library.httptask.TestCache.OnEntryListener;
 import com.android.library.utils.CollectionUtil;
 import com.android.library.utils.LogMgr;
@@ -209,7 +210,7 @@ public class ObjectRequest<T> extends Request<T> {
 
     private QyerResponse<T> onResponse(String json) {
 
-        if (LogMgr.isDebug())
+        if (!BuildConfig.RELEASE)
             LogMgr.d("ObjectRequest", "~~json: " + json);
 
         QyerResponse<T> resp = new QyerResponse();
@@ -301,7 +302,7 @@ public class ObjectRequest<T> extends Request<T> {
 
         super.cancel();
 
-        if (LogMgr.isDebug())
+        if (!BuildConfig.RELEASE)
             LogMgr.d("ObjectRequest", "~~cancel tag: " + getTag());
     }
 

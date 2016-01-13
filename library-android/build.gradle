@@ -59,3 +59,20 @@ android {
         androidTest.setRoot('tests')
     }
 }
+
+// Trigger BuildConfig creation
+project.afterEvaluate {
+    tasks.all { task ->
+        if (task.name =~ /generate.*BuildConfig/) {
+            task.dependsOn(propagateBuildConfig)
+        }
+    }
+}
+task propagateBuildConfig << {
+    project.android.buildTypes.all { type ->
+        type.buildConfigField "boolean", "RELEASE", isVariantRelease().toString()
+    }
+}
+def isVariantRelease() {
+    return rootProject.ext.variantRelease
+}
