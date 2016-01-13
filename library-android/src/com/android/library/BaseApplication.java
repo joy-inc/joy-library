@@ -81,7 +81,7 @@ public class BaseApplication extends Application {
             mReqQueue = TestVolley.newRequestQueue(mContext);
             mReqQueue.addRequestFinishedListener(mReqFinishLis);
         }
-        VolleyLog.DEBUG = true;
+        VolleyLog.DEBUG = !BuildConfig.RELEASE;
     }
 
     private void initFresco() {
@@ -107,7 +107,7 @@ public class BaseApplication extends Application {
         @Override
         public void onRequestFinished(Request request) {
 
-            if (LogMgr.isDebug())
+            if (!BuildConfig.RELEASE)
                 LogMgr.d("BaseApplication", "~~request finished. tag: " + request.getTag() + ", sequence number: " + request.getSequence());
         }
     };

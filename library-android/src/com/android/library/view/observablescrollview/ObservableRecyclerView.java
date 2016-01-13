@@ -27,6 +27,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.library.BuildConfig;
 import com.android.library.utils.LogMgr;
 
 import java.util.ArrayList;
@@ -122,7 +123,7 @@ public class ObservableRecyclerView extends RecyclerView implements Scrollable {
                 View firstVisibleChild = getChildAt(0);
                 if (firstVisibleChild != null) {
                     if (firstVisiblePosition > mPrevFirstVisiblePosition) {
-                        if (LogMgr.isDebug())
+                        if (!BuildConfig.RELEASE)
                             LogMgr.e("daisw","~~> to down");
                         // scroll down
                         int skippedChildrenHeight = 0;
@@ -146,7 +147,7 @@ public class ObservableRecyclerView extends RecyclerView implements Scrollable {
                         mPreBottomMargin = bottomMargin;
                     } else if (firstVisiblePosition < mPrevFirstVisiblePosition) {
                         mPreBottomMargin = 0;
-                        if (LogMgr.isDebug())
+                        if (!BuildConfig.RELEASE)
                             LogMgr.e("daisw","~~< to up");
                         // scroll up
                         int skippedChildrenHeight = 0;
