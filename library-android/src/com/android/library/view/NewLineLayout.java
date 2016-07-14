@@ -15,8 +15,6 @@ public class NewLineLayout extends ViewGroup {
 
     public int horizontalSpacing;
     public int verticalSpacing;
-    public int lines = Integer.MAX_VALUE;
-    private int lineIndex;
 
     public NewLineLayout(Context context, AttributeSet attrs) {
 
@@ -25,7 +23,6 @@ public class NewLineLayout extends ViewGroup {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.NewLineLayout);
         horizontalSpacing = a.getDimensionPixelSize(R.styleable.NewLineLayout_horSpacing, 0);
         verticalSpacing = a.getDimensionPixelSize(R.styleable.NewLineLayout_verSpacing, 0);
-        lines = a.getInteger(R.styleable.NewLineLayout_showLines, Integer.MAX_VALUE);
         a.recycle();
     }
 
@@ -33,54 +30,60 @@ public class NewLineLayout extends ViewGroup {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
         measureChildren(widthMeasureSpec, heightMeasureSpec);
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        int viewGroupWidth = getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec);
+
+        int startPosX = getPaddingLeft();
+        int startPosY = getPaddingTop();
+
+        int childWidth;
+        int childHeight = 0;
+
+        int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+
+            View child = getChildAt(i);
+
+            childWidth = child.getMeasuredWidth();
+            childHeight = child.getMeasuredHeight();
+
+            // 如果剩余的空间不够，则移到下一行开始位置
+            if (startPosX + childWidth > viewGroupWidth - getPaddingRight()) {
+
+                startPosX = getPaddingLeft();
+                startPosY += childHeight + verticalSpacing;
+            }
+            child.setTag(R.id.tag_newlinelayout_params_id, new LayoutPosParams(startPosX, startPosY, startPosX + childWidth, startPosY + childHeight));
+
+            startPosX += childWidth + horizontalSpacing;
+        }
+
+        int viewGroupHeight = childCount == 0 ? 0 : startPosY + childHeight + getPaddingBottom();
+        setMeasuredDimension(viewGroupWidth, viewGroupHeight);
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
 
-        final int viewGroupWidth = getMeasuredWidth();
-
-        int startPosX = left + getPaddingLeft();
-        int startPosY = getPaddingTop();
-
-        final int childCount = getChildCount();
-        //        int childIndex = 0;
+        int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
 
-            //            childIndex = i;
-
             View child = getChildAt(i);
-
-            int childWidth = child.getMeasuredWidth();
-            int childHeight = child.getMeasuredHeight();
-
-            // 如果剩余的空间不够，则移到下一行开始位置
-            if (startPosX + childWidth > viewGroupWidth - getPaddingRight()) {
-
-                startPosX = left + getPaddingLeft();
-                startPosY += childHeight + verticalSpacing;
-
-                lineIndex++;
-            }
-            if (lines > lineIndex) {
-
-                // 执行childView的绘制
-                child.layout(startPosX, startPosY, startPosX + childWidth, startPosY + childHeight);
-            } else {
-
-                //                removeView(child);
-                //                return;
-                break;
-            }
-
-            startPosX += childWidth + horizontalSpacing;
-
-            LayoutParams lp = getLayoutParams();
-            lp.height = startPosY + childHeight + getPaddingBottom();
+            LayoutPosParams posParams = (LayoutPosParams) child.getTag(R.id.tag_newlinelayout_params_id);
+            child.layout(posParams.startPosX, posParams.startPosY, posParams.endPosX, posParams.endPosY);
         }
-        //        for (int i = childIndex; i < childCount; i++)
-        //            removeViewAt(i);
-        lineIndex = 0;
+    }
+
+    private static class LayoutPosParams {
+
+        public int startPosX, startPosY, endPosX, endPosY;
+
+        public LayoutPosParams(int startPosX, int startPosY, int endPosX, int endPosY) {
+
+            this.startPosX = startPosX;
+            this.startPosY = startPosY;
+            this.endPosX = endPosX;
+            this.endPosY = endPosY;
+        }
     }
 }

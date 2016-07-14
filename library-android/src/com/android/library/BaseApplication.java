@@ -6,15 +6,18 @@ import android.content.res.Resources;
 import android.support.annotation.ArrayRes;
 import android.support.annotation.StringRes;
 
-import com.android.library.httptask.TestVolley;
+import com.android.library.httptask.RetroRequestQueue;
+import com.android.library.httptask.RetroVolley;
+import com.android.library.injection.component.AppComponent;
+import com.android.library.injection.component.DaggerAppComponent;
+import com.android.library.injection.module.AppModule;
 import com.android.library.utils.LogMgr;
 import com.android.volley.Cache;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.RequestQueue.RequestFilter;
 import com.android.volley.RequestQueue.RequestFinishedListener;
 import com.android.volley.VolleyLog;
 import com.facebook.drawee.backends.pipeline.Fresco;
+
+import butterknife.ButterKnife;
 
 /**
  * Created by KEVIN.DAI on 15/7/8.
@@ -25,15 +28,30 @@ public class BaseApplication extends Application {
     /**
      * Global request queue for Volley.
      */
-    private static RequestQueue mReqQueue;
+    private static RetroRequestQueue mReqQueue;
+    private AppComponent mComponent;
 
     @Override
     public void onCreate() {
 
         super.onCreate();
+        initAppComponent();
         initContext();
         initVolley();
         initFresco();
+        ButterKnife.setDebug(!BuildConfig.RELEASE);
+    }
+
+    private void initAppComponent() {
+
+        mComponent = DaggerAppComponent.builder()
+                .appModule(new AppModule(this))
+                .build();
+    }
+
+    public AppComponent component() {
+
+        return mComponent;
     }
 
     private void initContext() {
@@ -78,7 +96,7 @@ public class BaseApplication extends Application {
 
         if (mReqQueue == null) {
 
-            mReqQueue = TestVolley.newRequestQueue(mContext);
+            mReqQueue = RetroVolley.newRequestQueue(mContext);
             mReqQueue.addRequestFinishedListener(mReqFinishLis);
         }
         VolleyLog.DEBUG = !BuildConfig.RELEASE;
@@ -92,7 +110,7 @@ public class BaseApplication extends Application {
     /**
      * @return The Volley Request queue.
      */
-    public static RequestQueue getRequestQueue() {
+    public static RetroRequestQueue getRequestQueue() {
 
         return mReqQueue;
     }
@@ -102,14 +120,10 @@ public class BaseApplication extends Application {
         return mReqQueue == null ? null : mReqQueue.getCache();
     }
 
-    private static RequestFinishedListener mReqFinishLis = new RequestFinishedListener() {
+    private static RequestFinishedListener mReqFinishLis = request -> {
 
-        @Override
-        public void onRequestFinished(Request request) {
-
-            if (!BuildConfig.RELEASE)
-                LogMgr.d("BaseApplication", "~~request finished. tag: " + request.getTag() + ", sequence number: " + request.getSequence());
-        }
+        if (!BuildConfig.RELEASE)
+            LogMgr.d("BaseApplication", "~~request finished. tag: " + request.getTag() + ", sequence number: " + request.getSequence());
     };
 
     private static void releaseVolley() {
@@ -117,14 +131,7 @@ public class BaseApplication extends Application {
         if (mReqQueue != null) {
 
             mReqQueue.removeRequestFinishedListener(mReqFinishLis);
-            mReqQueue.cancelAll(new RequestFilter() {
-
-                @Override
-                public boolean apply(Request<?> request) {
-
-                    return true;
-                }
-            });
+            mReqQueue.cancelAll(request -> true);
 //            mReqQueue.stop();
 //            mReqQueue = null;
         }

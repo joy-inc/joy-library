@@ -66,6 +66,11 @@ public abstract class ExRvAdapter<K extends ExRvViewHolder<T>, T> extends Recycl
         return getItemCount() == 0;
     }
 
+    public boolean isNotEmpty() {
+
+        return !isEmpty();
+    }
+
     public void setData(List<T> data) {
 
         mData = data;

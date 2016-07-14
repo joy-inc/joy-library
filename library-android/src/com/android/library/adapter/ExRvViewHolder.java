@@ -1,23 +1,44 @@
 package com.android.library.adapter;
 
+import android.graphics.drawable.Drawable;
+import android.support.annotation.ArrayRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.android.library.BaseApplication;
+import com.android.library.utils.ToastUtil;
 import com.android.library.utils.ViewUtil;
 
 /**
  * Created by KEVIN.DAI on 15/11/10.
+ * Modified by KEVIN.DAI on 16/7/6.(add some methods)
  */
 public abstract class ExRvViewHolder<T> extends RecyclerView.ViewHolder {
 
-    public ExRvViewHolder(View itemView) {
+    public ExRvViewHolder(View v) {
 
-        super(itemView);
+        super(v);
     }
 
     protected abstract void invalidateItemView(int position, T t);
+
+    protected final void showToast(String text) {
+
+        ToastUtil.showToast(text);
+    }
+
+    protected final void showToast(@StringRes int resId) {
+
+        showToast(getString(resId));
+    }
+
+    protected final void showToast(@StringRes int resId, Object... formatArgs) {
+
+        showToast(getString(resId, formatArgs));
+    }
 
     protected final void showView(View v) {
 
@@ -34,6 +55,26 @@ public abstract class ExRvViewHolder<T> extends RecyclerView.ViewHolder {
         ViewUtil.goneView(v);
     }
 
+    protected final void showImageView(ImageView v, @DrawableRes int resId) {
+
+        ViewUtil.showImageView(v, resId);
+    }
+
+    protected final void showImageView(ImageView v, Drawable drawable) {
+
+        ViewUtil.showImageView(v, drawable);
+    }
+
+    protected final void hideImageView(ImageView v) {
+
+        ViewUtil.hideImageView(v);
+    }
+
+    protected final void goneImageView(ImageView v) {
+
+        ViewUtil.goneImageView(v);
+    }
+
     protected final String getString(@StringRes int resId) {
 
         return BaseApplication.getAppString(resId);
@@ -42,5 +83,10 @@ public abstract class ExRvViewHolder<T> extends RecyclerView.ViewHolder {
     protected final String getString(@StringRes int resId, Object... formatArgs) {
 
         return BaseApplication.getAppString(resId, formatArgs);
+    }
+
+    protected final String[] getStringArray(@ArrayRes int resId) {
+
+        return BaseApplication.getAppStringArray(resId);
     }
 }

@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.library.activity.BaseUiFragment;
+import com.android.library.ui.fragment.BaseUiFragment;
 
 import java.util.List;
 

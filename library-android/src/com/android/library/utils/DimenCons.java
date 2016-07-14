@@ -1,6 +1,5 @@
 package com.android.library.utils;
 
-import com.android.library.BaseApplication;
 import com.android.library.R;
 
 /**
@@ -15,5 +14,6 @@ public interface DimenCons {
     int STATUS_BAR_HEIGHT = DeviceUtil.getStatusBarHeight();
     int NAVIGATION_BAR_HEIGHT = DeviceUtil.getNavigationBarHeight();
 
-    int TITLE_BAR_HEIGHT = BaseApplication.getAppResources().getDimensionPixelSize(R.dimen.default_toolbar_height);
+    int TITLE_BAR_HEIGHT = DensityUtil.getDimensionPixelSize(R.dimen.default_toolbar_height);
+    int HORIZONTAL_MARGINS = DensityUtil.getDimensionPixelSize(R.dimen.default_horizontal_margins);
 }

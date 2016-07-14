@@ -43,14 +43,7 @@ public class JRecyclerView extends RecyclerView {
         addOnScrollListener(new RvOnScrollListener());
 
         mFooterView = new JFooter(context);
-        mFooterView.setOnRetryListener(new JFooter.OnRetryListener() {
-
-            @Override
-            public void onRetry() {
-
-                startLoadMore(false);
-            }
-        });
+        mFooterView.setOnRetryListener(() -> startLoadMore(false));
     }
 
     @Override
@@ -64,14 +57,14 @@ public class JRecyclerView extends RecyclerView {
         }
     }
 
-    private int getHeaderViewsCount() {
+    public int getHeaderViewsCount() {
 
         if (getAdapter() instanceof RecyclerAdapter)
             return ((RecyclerAdapter) getAdapter()).getHeadersCount();
         return 0;
     }
 
-    private int getFooterViewsCount() {
+    public int getFooterViewsCount() {
 
         if (getAdapter() instanceof RecyclerAdapter)
             return ((RecyclerAdapter) getAdapter()).getFootersCount();
@@ -160,13 +153,12 @@ public class JRecyclerView extends RecyclerView {
         }
     }
 
-    public void stopLoadMoreFailed() {
+    public void setLoadMoreFailed() {
 
-        if (mIsLoadingMore) {
-
+        if (mIsLoadingMore)
             mIsLoadingMore = false;
-            mFooterView.failed();
-        }
+
+        mFooterView.failed();
     }
 
     public boolean isLoadingMore() {
@@ -197,6 +189,8 @@ public class JRecyclerView extends RecyclerView {
         } else {
 
             mFooterView.done();
+            if (mIsLoadingMore)
+                mIsLoadingMore = false;
         }
     }
 

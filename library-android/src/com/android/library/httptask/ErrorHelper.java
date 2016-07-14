@@ -8,7 +8,6 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.ParseError;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
-import com.android.volley.VolleyError;
 
 /**
  * Created by KEVIN.DAI on 15/11/7.
@@ -27,7 +26,7 @@ public class ErrorHelper {
      * @param error
      * @return Return generic message for errors
      */
-    public static String getErrorType(VolleyError error) {
+    public static String getErrorType(Throwable error) {
 
         if (error == null)
             return null;
@@ -62,7 +61,7 @@ public class ErrorHelper {
      * @param error
      * @return
      */
-    private static boolean isNetworkProblem(VolleyError error) {
+    private static boolean isNetworkProblem(Throwable error) {
 
         return (error instanceof NetworkError) || (error instanceof NoConnectionError);
     }
@@ -73,7 +72,7 @@ public class ErrorHelper {
      * @param error
      * @return
      */
-    private static boolean isServerProblem(VolleyError error) {
+    private static boolean isServerProblem(Throwable error) {
 
         return (error instanceof ServerError) || (error instanceof AuthFailureError);
     }

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="base_cardview_light" parent="CardView.Light">
+        <item name="cardCornerRadius">3dp</item>
+        <item name="cardPreventCornerOverlap">false</item>
+        <item name="android:foreground">?selectableItemBackground</item>
+    </style>
+
+    <style name="base_cardview_dark" parent="CardView.Dark">
+        <item name="cardCornerRadius">3dp</item>
+        <item name="cardPreventCornerOverlap">false</item>
+        <item name="android:foreground">?selectableItemBackground</item>
+    </style>
+
+    <style name="CardView.Trans">
+        <item name="cardBackgroundColor">@color/transparent</item>
+    </style>
+
+    <style name="base_cardview_trans" parent="CardView.Trans">
+        <item name="cardCornerRadius">3dp</item>
+        <item name="cardPreventCornerOverlap">false</item>
+        <item name="android:foreground">?selectableItemBackground</item>
+    </style>
+
+    <style name="base_ratingbar" parent="Widget.AppCompat.RatingBar"/>
+
+    <style name="base_progressbar_horizontal" parent="Base.Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:indeterminateDrawable">@drawable/layer_progressbar_horizontal</item>
+        <item name="android:progressDrawable">@drawable/layer_progressbar_horizontal</item>
+        <item name="android:maxHeight">5dp</item>
+        <item name="android:minHeight">5dp</item>
+    </style>
+
+</resources>

@@ -4,6 +4,7 @@
     <!-- Toolbar -->
     <!-- ========================================= -->
     <dimen name="default_toolbar_height">56dp</dimen>
+    <dimen name="default_horizontal_margins">16dp</dimen>
     <!-- ========================================= -->
 
     <!-- About Pager Indicator -->

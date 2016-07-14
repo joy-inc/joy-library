@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.view.View;
 import android.widget.RelativeLayout.LayoutParams;
 
-import com.ToxicBakery.viewpager.transforms.ABaseTransformer;
+//import com.ToxicBakery.viewpager.transforms.ABaseTransformer;
 import com.android.library.R;
 import com.android.library.utils.DimenCons;
 import com.android.library.view.ExLayoutWidget;
@@ -60,10 +60,10 @@ public class BannerWidget<T> extends ExLayoutWidget implements DimenCons, Banner
         mBannerView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, DP_1_PX * dp));
     }
 
-    public void setPageTransformer(ABaseTransformer transformer) {
-
-        mBannerView.setPageTransformer(true, transformer);
-    }
+//    public void setPageTransformer(ABaseTransformer transformer) {
+//
+//        mBannerView.setPageTransformer(true, transformer);
+//    }
 
     public void setInterval(long interval) {
 

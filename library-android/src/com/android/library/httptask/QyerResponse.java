@@ -25,12 +25,6 @@ public class QyerResponse<T> {
 
     }
 
-    public QyerResponse(int status, String msg) {
-
-        setStatus(status);
-        setMsg(msg);
-    }
-
     public void setMsg(String msg) {
 
         if (msg == null) {

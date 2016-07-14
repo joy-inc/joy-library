@@ -1,6 +1,7 @@
 package com.android.library.utils;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -31,5 +32,11 @@ public class CollectionUtil {
     public static int size(Collection<?> collection) {
 
         return collection == null ? 0 : collection.size();
+    }
+
+    public static void filterNull(Collection<?> collection) {
+
+        if (isNotEmpty(collection))
+            collection.removeAll(Collections.singleton(null));
     }
 }

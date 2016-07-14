@@ -4,8 +4,7 @@ import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.android.library.BaseApplication;
-import com.android.library.BuildConfig;
-import com.android.library.httptask.TestCache.OnEntryListener;
+import com.android.library.httptask.RetroCache.OnEntryListener;
 import com.android.library.utils.CollectionUtil;
 import com.android.library.utils.LogMgr;
 import com.android.library.utils.TextUtil;
@@ -16,11 +15,20 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
+
+import rx.Observable;
+import rx.subjects.PublishSubject;
+import rx.subjects.SerializedSubject;
+
+import static com.android.library.BuildConfig.RELEASE;
+import static com.android.volley.DefaultRetryPolicy.DEFAULT_BACKOFF_MULT;
+import static com.android.volley.DefaultRetryPolicy.DEFAULT_MAX_RETRIES;
 
 /**
  * Created by KEVIN.DAI on 15/7/10.
@@ -32,12 +40,15 @@ public class ObjectRequest<T> extends Request<T> {
      */
     private static final int DEFAULT_TIMEOUT_MS = 10 * 1000;
     private Class mClazz;
+    @Deprecated
     private ObjectResponseListener<T> mObjRespLis;
     private Map<String, String> mHeaders, mParams;
-    private CacheMode mCacheMode = CacheMode.NONE;
+    private RequestMode mReqMode = RequestMode.REFRESH_ONLY;
     private boolean mHasCache;
     private Response<T> mObjResp;
     private String mCacheKey;
+
+    private SerializedSubject<T, T> mSubject;
 
     /**
      * Creates a new request with the given method.
@@ -53,31 +64,34 @@ public class ObjectRequest<T> extends Request<T> {
         mHasCache = BaseApplication.getVolleyCache().get(getCacheKey()) != null;
         setShouldCache(false);
         addEntryListener();
-        setRetryPolicy(new DefaultRetryPolicy(DEFAULT_TIMEOUT_MS, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        setRetryPolicy(new DefaultRetryPolicy(DEFAULT_TIMEOUT_MS, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT));
+
+        mSubject = new SerializedSubject<>(PublishSubject.create());
+    }
+
+    Observable<T> observable() {
+
+        return mSubject;
     }
 
     private void addEntryListener() {
 
-        TestCache cache = (TestCache) BaseApplication.getVolleyCache();
+        RetroCache cache = (RetroCache) BaseApplication.getVolleyCache();
         if (cache != null)
             cache.addEntryListener(mOnEntryListener);
     }
 
     private void removeEntryListener() {
 
-        TestCache cache = (TestCache) BaseApplication.getVolleyCache();
+        RetroCache cache = (RetroCache) BaseApplication.getVolleyCache();
         if (cache != null)
             cache.removeEntryListener(mOnEntryListener);
     }
 
-    private OnEntryListener mOnEntryListener = new OnEntryListener() {
+    private OnEntryListener mOnEntryListener = entry -> {
 
-        @Override
-        public void onEntry(TestEntry entry) {
-
-            if (entry != null)
-                entry.setCacheMode(mCacheMode);
-        }
+        if (entry != null)
+            entry.setRequestMode(mReqMode);
     };
 
     /**
@@ -86,9 +100,9 @@ public class ObjectRequest<T> extends Request<T> {
      * @param url   URL to fetch the Object
      * @param clazz the Object class to return
      */
-    public static ObjectRequest get(String url, Class clazz) {
+    public static <T> ObjectRequest<T> get(String url, Class clazz) {
 
-        return new ObjectRequest(Method.GET, url, clazz);
+        return new <T>ObjectRequest<T>(Method.GET, url, clazz);
     }
 
     /**
@@ -97,9 +111,9 @@ public class ObjectRequest<T> extends Request<T> {
      * @param url   URL to fetch the Object
      * @param clazz the Object class to return
      */
-    public static ObjectRequest post(String url, Class clazz) {
+    public static <T> ObjectRequest<T> post(String url, Class clazz) {
 
-        return new ObjectRequest(Method.POST, url, clazz);
+        return new <T>ObjectRequest<T>(Method.POST, url, clazz);
     }
 
     public void setHeaders(Map<String, String> headers) {
@@ -128,14 +142,14 @@ public class ObjectRequest<T> extends Request<T> {
         return super.getParams();
     }
 
-    public void setCacheMode(CacheMode mode) {
+    public void setRequestMode(RequestMode mode) {
 
-        mCacheMode = mode;
+        mReqMode = mode;
     }
 
-    public CacheMode getCacheMode() {
+    public RequestMode getRequestMode() {
 
-        return mCacheMode;
+        return mReqMode;
     }
 
     public boolean hasCache() {
@@ -146,19 +160,18 @@ public class ObjectRequest<T> extends Request<T> {
     /**
      * @return True if this response was a soft-expired one and a second one MAY be coming.
      */
-    public boolean isRespIntermediate() {
+    public boolean isFinalResponse() {
 
-        return mObjResp == null ? false : mObjResp.intermediate;
+        return mObjResp != null && !mObjResp.intermediate;
     }
 
     /**
      * @param lisn Listener to receive the Object response
      */
+    @Deprecated
     public void setResponseListener(ObjectResponseListener<T> lisn) {
 
         mObjRespLis = lisn;
-        if (mObjRespLis != null)// TODO 暂时先放在这儿
-            mObjRespLis.onPre();
     }
 
     @Override
@@ -166,19 +179,22 @@ public class ObjectRequest<T> extends Request<T> {
 
         if (mObjRespLis != null)
             mObjRespLis.onSuccess(getTag(), isTestMode() ? this.t : t);
+
+        mSubject.onNext(t);
     }
 
     @Override
     public void deliverError(VolleyError error) {
 
-//        super.deliverError(error);
         if (isTestMode()) {
 
             deliverResponse(t);
         } else {
 
             if (mObjRespLis != null)
-                mObjRespLis.onError(getTag(), ErrorHelper.getErrorType(error));
+                mObjRespLis.onError(getTag(), error);
+
+            mSubject.onError(error);
         }
     }
 
@@ -188,7 +204,7 @@ public class ObjectRequest<T> extends Request<T> {
         String parsed;
         try {
 
-            String charsetName = HeaderParser.parseCharset(response.headers);
+            String charsetName = HttpHeaderParser.parseCharset(response.headers);
             parsed = new String(response.data, charsetName);
         } catch (UnsupportedEncodingException e) {
 
@@ -199,7 +215,7 @@ public class ObjectRequest<T> extends Request<T> {
         QyerResponse<T> resp = onResponse(parsed);
         if (resp.isSuccess()) {
 
-            Entry entry = HeaderParser.parseCacheHeaders(response);
+            Entry entry = HttpHeaderParser.parseCacheHeaders(response);
             mObjResp = Response.success(resp.getData(), entry);
             return mObjResp;
         } else {
@@ -210,10 +226,10 @@ public class ObjectRequest<T> extends Request<T> {
 
     private QyerResponse<T> onResponse(String json) {
 
-        if (!BuildConfig.RELEASE)
+        if (!RELEASE)
             LogMgr.d("ObjectRequest", "~~json: " + json);
 
-        QyerResponse<T> resp = new QyerResponse();
+        QyerResponse<T> resp = new <T>QyerResponse<T>();
 
         if (TextUtils.isEmpty(json)) {
 
@@ -263,11 +279,11 @@ public class ObjectRequest<T> extends Request<T> {
     @Override
     protected void onFinish() {
 
-//        super.onFinish();
+        mSubject.onCompleted();
+
         t = null;
         mClazz = null;
         mHasCache = false;
-//        mCacheMode = CacheMode.NONE;
         mObjRespLis = null;
         mObjResp = null;
         mCacheKey = null;
@@ -297,14 +313,14 @@ public class ObjectRequest<T> extends Request<T> {
         return t != null;
     }
 
-    @Override
-    public void cancel() {
-
-        super.cancel();
-
-        if (!BuildConfig.RELEASE)
-            LogMgr.d("ObjectRequest", "~~cancel tag: " + getTag());
-    }
+//    @Override
+//    public void cancel() {
+//
+//        super.cancel();
+//
+//        if (!RELEASE)
+//            LogMgr.d("ObjectRequest", "~~cancel tag: " + getTag());
+//    }
 
     public void setCacheKey(String cacheKey) {
 

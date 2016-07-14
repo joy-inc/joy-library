@@ -25,6 +25,9 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.ColorInt;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.FloatRange;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -38,9 +41,9 @@ import android.widget.FrameLayout.LayoutParams;
 import java.lang.reflect.Method;
 
 /**
- * Class to manage status and navigation bar tint effects when using KitKat 
+ * Class to manage status and navigation bar tint effects when using KitKat
  * translucent system UI modes.
- *
+ * Modified by KEVIN.DAI on 16/7/9.(annotations)
  */
 public class SystemBarTintManager {
 
@@ -165,7 +168,7 @@ public class SystemBarTintManager {
      *
      * @param color The color of the background tint.
      */
-    public void setTintColor(int color) {
+    public void setTintColor(@ColorInt int color) {
         setStatusBarTintColor(color);
         setNavigationBarTintColor(color);
     }
@@ -175,7 +178,7 @@ public class SystemBarTintManager {
      *
      * @param res The identifier of the resource.
      */
-    public void setTintResource(int res) {
+    public void setTintResource(@DrawableRes int res) {
         setStatusBarTintResource(res);
         setNavigationBarTintResource(res);
     }
@@ -195,7 +198,7 @@ public class SystemBarTintManager {
      *
      * @param alpha The alpha to use
      */
-    public void setTintAlpha(float alpha) {
+    public void setTintAlpha(@FloatRange(from=0.0, to=1.0) float alpha) {
         setStatusBarAlpha(alpha);
         setNavigationBarAlpha(alpha);
     }
@@ -205,7 +208,7 @@ public class SystemBarTintManager {
      *
      * @param color The color of the background tint.
      */
-    public void setStatusBarTintColor(int color) {
+    public void setStatusBarTintColor(@ColorInt int color) {
         if (mStatusBarAvailable) {
             mStatusBarTintView.setBackgroundColor(color);
         }
@@ -216,7 +219,7 @@ public class SystemBarTintManager {
      *
      * @param res The identifier of the resource.
      */
-    public void setStatusBarTintResource(int res) {
+    public void setStatusBarTintResource(@DrawableRes int res) {
         if (mStatusBarAvailable) {
             mStatusBarTintView.setBackgroundResource(res);
         }
@@ -240,7 +243,7 @@ public class SystemBarTintManager {
      * @param alpha The alpha to use
      */
     @TargetApi(11)
-    public void setStatusBarAlpha(float alpha) {
+    public void setStatusBarAlpha(@FloatRange(from=0.0, to=1.0) float alpha) {
         if (mStatusBarAvailable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             mStatusBarTintView.setAlpha(alpha);
         }
@@ -251,7 +254,7 @@ public class SystemBarTintManager {
      *
      * @param color The color of the background tint.
      */
-    public void setNavigationBarTintColor(int color) {
+    public void setNavigationBarTintColor(@ColorInt int color) {
         if (mNavBarAvailable) {
             mNavBarTintView.setBackgroundColor(color);
         }
@@ -262,7 +265,7 @@ public class SystemBarTintManager {
      *
      * @param res The identifier of the resource.
      */
-    public void setNavigationBarTintResource(int res) {
+    public void setNavigationBarTintResource(@DrawableRes int res) {
         if (mNavBarAvailable) {
             mNavBarTintView.setBackgroundResource(res);
         }
@@ -286,7 +289,7 @@ public class SystemBarTintManager {
      * @param alpha The alpha to use
      */
     @TargetApi(11)
-    public void setNavigationBarAlpha(float alpha) {
+    public void setNavigationBarAlpha(@FloatRange(from=0.0, to=1.0) float alpha) {
         if (mNavBarAvailable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             mNavBarTintView.setAlpha(alpha);
         }

@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.Toolbar xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/lib_style_toolbar"
+<com.android.library.view.MagicToolbar xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/base_style_toolbar"
     app:layout_collapseMode="pin" />

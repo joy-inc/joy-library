@@ -7,19 +7,19 @@
     <com.android.library.widget.JTextView
         android:id="@+id/jtvRetry"
         android:layout_width="match_parent"
-        android:layout_height="69dp"
+        android:layout_height="70dp"
         android:gravity="center"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:text="@string/footer_load_failed"
-        android:textColor="@color/white_trans87"
+        android:textColor="?android:textColorSecondary"
         android:textSize="14dp"
         android:visibility="invisible" />
 
     <LinearLayout
         android:id="@+id/llLoadingDiv"
         android:layout_width="match_parent"
-        android:layout_height="69dp"
+        android:layout_height="70dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:visibility="invisible">
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
             android:text="@string/footer_loading_hint"
-            android:textColor="@color/white_trans87"
+            android:textColor="?android:textColorSecondary"
             android:textSize="14dp" />
     </LinearLayout>
 </FrameLayout>

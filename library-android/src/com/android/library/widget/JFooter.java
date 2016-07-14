@@ -45,14 +45,10 @@ public class JFooter extends LinearLayout {
         mJtvHint = (JTextView) findViewById(R.id.jtvHint);
         mJtvRetry = (JTextView) findViewById(R.id.jtvRetry);
 
-        setOnClickListener(new OnClickListener() {
+        setOnClickListener(v -> {
 
-            @Override
-            public void onClick(View v) {
-
-                if (isFailed() && mOnRetryLisn != null)
-                    mOnRetryLisn.onRetry();
-            }
+            if (isFailed() && mOnRetryLisn != null)
+                mOnRetryLisn.onRetry();
         });
     }
 
