@@ -12,7 +12,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:text="@string/footer_load_failed"
-        android:textColor="?android:textColorSecondary"
+        android:textColor="?textColorSubMain"
         android:textSize="14dp"
         android:visibility="invisible" />
 
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
             android:text="@string/footer_loading_hint"
-            android:textColor="?android:textColorSecondary"
+            android:textColor="?textColorSubMain"
             android:textSize="14dp" />
     </LinearLayout>
 </FrameLayout>

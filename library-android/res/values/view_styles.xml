@@ -26,7 +26,7 @@
     <style name="base_ratingbar" parent="Widget.AppCompat.RatingBar"/>
 
     <style name="base_progressbar_horizontal" parent="Base.Widget.AppCompat.ProgressBar.Horizontal">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:indeterminateDrawable">@drawable/layer_progressbar_horizontal</item>
         <item name="android:progressDrawable">@drawable/layer_progressbar_horizontal</item>
