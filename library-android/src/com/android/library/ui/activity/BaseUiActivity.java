@@ -8,8 +8,10 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
@@ -25,6 +27,7 @@ import android.widget.TextView;
 import com.android.library.R;
 import com.android.library.ui.activity.interfaces.BaseView;
 import com.android.library.utils.DimenCons;
+import com.android.library.utils.SnackbarUtil;
 import com.android.library.utils.ToastUtil;
 import com.android.library.utils.ViewUtil;
 import com.android.library.view.MagicToolbar;
@@ -374,6 +377,26 @@ public abstract class BaseUiActivity extends RxAppCompatActivity implements Base
     public final void showToast(@StringRes int resId) {
 
         showToast(getString(resId));
+    }
+
+    @Override
+    public final void showSnackbar(@NonNull CharSequence text, @Snackbar.Duration int duration) {
+
+        showSnackbar(text, duration, -1);
+    }
+
+    @Override
+    public final void showSnackbar(@NonNull CharSequence text, @Snackbar.Duration int duration, @ColorInt int textColor) {
+
+        showSnackbar(text, duration, -1, textColor);
+    }
+
+    @Override
+    public final void showSnackbar(@NonNull CharSequence text, @Snackbar.Duration int duration, @ColorInt int bgColor, @ColorInt int textColor) {
+
+        if (textColor == -1)
+            textColor = getColor(R.color.color_text_primary);
+        SnackbarUtil.showSnackbar(getContentView(), text, duration, bgColor, textColor);
     }
 
     @Override

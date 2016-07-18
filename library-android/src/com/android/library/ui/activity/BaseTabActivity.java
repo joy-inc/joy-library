@@ -7,14 +7,17 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout.LayoutParams;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,6 +28,7 @@ import com.android.library.ui.activity.interfaces.BaseView;
 import com.android.library.ui.fragment.BaseUiFragment;
 import com.android.library.utils.CollectionUtil;
 import com.android.library.utils.DimenCons;
+import com.android.library.utils.SnackbarUtil;
 import com.android.library.utils.ToastUtil;
 import com.android.library.utils.ViewUtil;
 import com.android.library.view.ExViewPager;
@@ -39,6 +43,7 @@ import java.util.List;
  */
 public abstract class BaseTabActivity extends RxAppCompatActivity implements BaseView, DimenCons {
 
+    private View mContentView;
     private MagicToolbar mToolbar;
     private TabLayout mTabLayout;
     private FloatingActionButton mFloatActionBtn;
@@ -75,19 +80,31 @@ public abstract class BaseTabActivity extends RxAppCompatActivity implements Bas
     }
 
     @Override
-    public void setContentView(@LayoutRes int layoutResID) {
+    public final void setContentView(@LayoutRes int layoutResID) {
 
         setContentView(inflateLayout(layoutResID));
     }
 
     @Override
-    public void setContentView(View contentView) {
+    public final void setContentView(View contentView) {
+
+        mContentView = contentView;
 
         super.setContentView(contentView);
 
         initData();
         initTitleView();
         initContentView();
+    }
+
+    protected final View getContentView() {
+
+        return mContentView;
+    }
+
+    protected final FrameLayout.LayoutParams getContentViewLp() {
+
+        return (FrameLayout.LayoutParams) mContentView.getLayoutParams();
     }
 
     protected void initData() {
@@ -120,7 +137,7 @@ public abstract class BaseTabActivity extends RxAppCompatActivity implements Bas
         setFloatActionBtnDisable();
     }
 
-    protected BaseUiFragment getFragment(int location) {
+    protected final BaseUiFragment getFragment(int location) {
 
         return CollectionUtil.isEmpty(mFragments) ? null : mFragments.get(location);
     }
@@ -153,22 +170,22 @@ public abstract class BaseTabActivity extends RxAppCompatActivity implements Bas
 
     protected abstract List<? extends BaseUiFragment> getFragments();
 
-    protected MagicToolbar getToolbar() {
+    protected final MagicToolbar getToolbar() {
 
         return mToolbar;
     }
 
-    public LayoutParams getToolbarLp() {
+    public final LayoutParams getToolbarLp() {
 
         return (LayoutParams) mToolbar.getLayoutParams();
     }
 
-    protected void setStatusBarColorResId(@ColorRes int colorResId) {
+    protected final void setStatusBarColorResId(@ColorRes int colorResId) {
 
         setStatusBarColor(getResources().getColor(colorResId));
     }
 
-    protected void setStatusBarColor(@ColorInt int color) {
+    protected final void setStatusBarColor(@ColorInt int color) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             getWindow().setStatusBarColor(color);
@@ -185,97 +202,97 @@ public abstract class BaseTabActivity extends RxAppCompatActivity implements Bas
             getWindow().setNavigationBarColor(color);
     }
 
-    protected void setTitleBgColorResId(@ColorRes int colorResId) {
+    protected final void setTitleBgColorResId(@ColorRes int colorResId) {
 
         setTitleBgColor(getResources().getColor(colorResId));
     }
 
-    protected void setTitleBgColor(@ColorInt int color) {
+    protected final void setTitleBgColor(@ColorInt int color) {
 
         mToolbar.setBackgroundColor(color);
     }
 
-    protected void setTitleText(@StringRes int resId) {
+    protected final void setTitleText(@StringRes int resId) {
 
         setTitleText(getString(resId));
     }
 
-    protected void setTitleText(String text) {
+    protected final void setTitleText(String text) {
 
         mToolbar.setTitle(text);
     }
 
-    protected void setSubTitle(@StringRes int resId) {
+    protected final void setSubTitle(@StringRes int resId) {
 
         setSubtitle(getString(resId));
     }
 
-    protected void setSubtitle(String text) {
+    protected final void setSubtitle(String text) {
 
         mToolbar.setSubtitle(text);
     }
 
-    protected void setTitleTextColor(@ColorInt int color) {
+    protected final void setTitleTextColor(@ColorInt int color) {
 
         mToolbar.setTitleTextColor(color);
     }
 
-    protected void setSubtitleTextColor(@ColorInt int color) {
+    protected final void setSubtitleTextColor(@ColorInt int color) {
 
         mToolbar.setSubtitleTextColor(color);
     }
 
-    protected ImageButton setTitleLogo(@DrawableRes int resId) {
+    protected final ImageButton setTitleLogo(@DrawableRes int resId) {
 
         return mToolbar.setTitleLogo(resId);
     }
 
-    protected ImageButton addTitleLeftBackView() {
+    protected final ImageButton addTitleLeftBackView() {
 
         return addTitleLeftBackView(R.drawable.ic_back);
     }
 
-    protected ImageButton addTitleLeftBackView(@DrawableRes int resId) {
+    protected final ImageButton addTitleLeftBackView(@DrawableRes int resId) {
 
         return addTitleLeftView(resId, v -> finish());
     }
 
-    protected ImageButton addTitleLeftView(@DrawableRes int resId, View.OnClickListener lisn) {
+    protected final ImageButton addTitleLeftView(@DrawableRes int resId, View.OnClickListener lisn) {
 
         return mToolbar.addTitleLeftView(resId, lisn);
     }
 
-    protected TextView addTitleMiddleView(@StringRes int resId) {
+    protected final TextView addTitleMiddleView(@StringRes int resId) {
 
         return addTitleMiddleView(getResources().getString(resId));
     }
 
-    protected TextView addTitleMiddleView(String str) {
+    protected final TextView addTitleMiddleView(String str) {
 
         return mToolbar.addTitleMiddleView(str);
     }
 
-    protected View addTitleMiddleView(View v, View.OnClickListener lisn) {
+    protected final View addTitleMiddleView(View v, View.OnClickListener lisn) {
 
         return mToolbar.addTitleMiddleView(v, lisn);
     }
 
-    protected ImageButton addTitleRightView(@DrawableRes int resId) {
+    protected final ImageButton addTitleRightView(@DrawableRes int resId) {
 
         return mToolbar.addTitleRightView(resId);
     }
 
-    protected ImageButton addTitleRightView(@DrawableRes int resId, View.OnClickListener lisn) {
+    protected final ImageButton addTitleRightView(@DrawableRes int resId, View.OnClickListener lisn) {
 
         return mToolbar.addTitleRightView(resId, lisn);
     }
 
-    protected View addTitleRightView(View v, View.OnClickListener lisn) {
+    protected final View addTitleRightView(View v, View.OnClickListener lisn) {
 
         return mToolbar.addTitleRightView(v, lisn);
     }
 
-    protected TabLayout getTabLayout() {
+    protected final TabLayout getTabLayout() {
 
         return mTabLayout;
     }
@@ -285,7 +302,7 @@ public abstract class BaseTabActivity extends RxAppCompatActivity implements Bas
      *
      * @param color color to use for the indicator
      */
-    protected void setTabIndicatorColor(@ColorInt int color) {
+    protected final void setTabIndicatorColor(@ColorInt int color) {
 
         mTabLayout.setSelectedTabIndicatorColor(color);
     }
@@ -295,7 +312,7 @@ public abstract class BaseTabActivity extends RxAppCompatActivity implements Bas
      *
      * @param height height to use for the indicator in pixels
      */
-    protected void setTabIndicatorHeight(int height) {
+    protected final void setTabIndicatorHeight(int height) {
 
         mTabLayout.setSelectedTabIndicatorHeight(height);
     }
@@ -303,100 +320,120 @@ public abstract class BaseTabActivity extends RxAppCompatActivity implements Bas
     /**
      * Sets the text colors for the different states (normal, selected) used for the tabs.
      */
-    protected void setTabTextColors(@ColorInt int normalColor, @ColorInt int selectedColor) {
+    protected final void setTabTextColors(@ColorInt int normalColor, @ColorInt int selectedColor) {
 
         mTabLayout.setTabTextColors(normalColor, selectedColor);
     }
 
-    protected FloatingActionButton getFloatActionBtn() {
+    protected final FloatingActionButton getFloatActionBtn() {
 
         return mFloatActionBtn;
     }
 
-    protected void setFloatActionBtnEnable(@DrawableRes int resId, View.OnClickListener lisn) {
+    protected final void setFloatActionBtnEnable(@DrawableRes int resId, View.OnClickListener lisn) {
 
         setFloatActionBtnEnable(getResources().getDrawable(resId), lisn);
     }
 
-    protected void setFloatActionBtnEnable(Drawable drawable, View.OnClickListener lisn) {
+    protected final void setFloatActionBtnEnable(Drawable drawable, View.OnClickListener lisn) {
 
         mFloatActionBtn.setEnabled(true);
         showImageView(mFloatActionBtn, drawable);
         mFloatActionBtn.setOnClickListener(lisn);
     }
 
-    protected void setFloatActionBtnDisable() {
+    protected final void setFloatActionBtnDisable() {
 
         mFloatActionBtn.setEnabled(false);
         hideImageView(mFloatActionBtn);
     }
 
     @Override
-    public void showToast(String text) {
+    public final void showToast(String text) {
 
         ToastUtil.showToast(text);
     }
 
     @Override
-    public void showToast(@StringRes int resId) {
+    public final void showToast(@StringRes int resId) {
 
         showToast(getString(resId));
     }
 
     @Override
-    public void showToast(@StringRes int resId, Object... formatArgs) {
+    public final void showToast(@StringRes int resId, Object... formatArgs) {
 
         showToast(getString(resId, formatArgs));
     }
 
     @Override
-    public void showView(View v) {
+    public final void showSnackbar(@NonNull CharSequence text, @Snackbar.Duration int duration) {
+
+        showSnackbar(text, duration, -1);
+    }
+
+    @Override
+    public final void showSnackbar(@NonNull CharSequence text, @Snackbar.Duration int duration, @ColorInt int textColor) {
+
+        showSnackbar(text, duration, -1, textColor);
+    }
+
+    @Override
+    public final void showSnackbar(@NonNull CharSequence text, @Snackbar.Duration int duration, @ColorInt int bgColor, @ColorInt int textColor) {
+
+        if (textColor == -1)
+            textColor = getColor(R.color.color_text_primary);
+        SnackbarUtil.showSnackbar(getContentView(), text, duration, bgColor, textColor);
+    }
+
+    @Override
+    public final void showView(View v) {
 
         ViewUtil.showView(v);
     }
 
     @Override
-    public void hideView(View v) {
+    public final void hideView(View v) {
 
         ViewUtil.hideView(v);
     }
 
     @Override
-    public void goneView(View v) {
+    public final void goneView(View v) {
 
         ViewUtil.goneView(v);
     }
 
     @Override
-    public void showImageView(ImageView v, @DrawableRes int resId) {
+    public final void showImageView(ImageView v, @DrawableRes int resId) {
 
         ViewUtil.showImageView(v, resId);
     }
 
     @Override
-    public void showImageView(ImageView v, Drawable drawable) {
+    public final void showImageView(ImageView v, Drawable drawable) {
 
         ViewUtil.showImageView(v, drawable);
     }
 
     @Override
-    public void hideImageView(ImageView v) {
+    public final void hideImageView(ImageView v) {
 
         ViewUtil.hideImageView(v);
     }
 
     @Override
-    public void goneImageView(ImageView v) {
+    public final void goneImageView(ImageView v) {
 
         ViewUtil.goneImageView(v);
     }
 
-    protected View inflateLayout(@LayoutRes int layoutResId) {
+    protected final View inflateLayout(@LayoutRes int layoutResId) {
 
         return inflateLayout(layoutResId, null);
     }
 
-    protected View inflateLayout(@LayoutRes int layoutResId, @Nullable ViewGroup root) {
+    protected final View inflateLayout(@LayoutRes int layoutResId, @Nullable ViewGroup root) {
 
         return getLayoutInflater().inflate(layoutResId, root);
     }

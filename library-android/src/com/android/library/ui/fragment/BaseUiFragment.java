@@ -2,10 +2,13 @@ package com.android.library.ui.fragment;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +17,10 @@ import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 
 import com.android.library.BaseApplication;
+import com.android.library.R;
 import com.android.library.ui.fragment.interfaces.BaseView;
 import com.android.library.utils.DimenCons;
+import com.android.library.utils.SnackbarUtil;
 import com.android.library.utils.ToastUtil;
 import com.android.library.utils.ViewUtil;
 import com.trello.rxlifecycle.components.support.RxFragment;
@@ -125,6 +130,26 @@ public abstract class BaseUiFragment extends RxFragment implements BaseView, Dim
     public void showToast(@StringRes int resId, Object... formatArgs) {
 
         showToast(getString(resId, formatArgs));
+    }
+
+    @Override
+    public final void showSnackbar(@NonNull CharSequence text, @Snackbar.Duration int duration) {
+
+        showSnackbar(text, duration, -1);
+    }
+
+    @Override
+    public final void showSnackbar(@NonNull CharSequence text, @Snackbar.Duration int duration, @ColorInt int textColor) {
+
+        showSnackbar(text, duration, -1, textColor);
+    }
+
+    @Override
+    public final void showSnackbar(@NonNull CharSequence text, @Snackbar.Duration int duration, @ColorInt int bgColor, @ColorInt int textColor) {
+
+        if (textColor == -1)
+            textColor = getResources().getColor(R.color.color_text_primary);
+        SnackbarUtil.showSnackbar(getContentView(), text, duration, bgColor, textColor);
     }
 
     @Override

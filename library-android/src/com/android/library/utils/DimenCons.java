@@ -13,6 +13,7 @@ public interface DimenCons {
     int SCREEN_HEIGHT = DeviceUtil.getScreenHeight();
     int STATUS_BAR_HEIGHT = DeviceUtil.getStatusBarHeight();
     int NAVIGATION_BAR_HEIGHT = DeviceUtil.getNavigationBarHeight();
+    int SCREEN_HEIGHT_ABSOLUTE = SCREEN_HEIGHT + NAVIGATION_BAR_HEIGHT;
 
     int TITLE_BAR_HEIGHT = DensityUtil.getDimensionPixelSize(R.dimen.default_toolbar_height);
     int HORIZONTAL_MARGINS = DensityUtil.getDimensionPixelSize(R.dimen.default_horizontal_margins);
