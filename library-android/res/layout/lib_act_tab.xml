@@ -32,5 +32,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"
+        app:rippleColor="@color/color_accent_dark"
         app:layout_behavior="com.android.library.view.FloatingActionButtonBehavior" />
 </android.support.design.widget.CoordinatorLayout>

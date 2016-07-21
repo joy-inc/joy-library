@@ -46,14 +46,13 @@ public class JRecyclerView extends RecyclerView {
         mFooterView.setOnRetryListener(() -> startLoadMore(false));
     }
 
-    @Override
-    public void setAdapter(Adapter adapter) {
+    public void addLoadMoreIfNotExist() {
 
-        super.setAdapter(adapter);
+        if (getAdapter() instanceof RecyclerAdapter) {
 
-        if (adapter instanceof RecyclerAdapter) {
-
-            ((RecyclerAdapter) adapter).addFooterView(mFooterView);
+            RecyclerAdapter ra = (RecyclerAdapter) getAdapter();
+            if (ra.getFootersCount() == 0)
+                ra.addFooterView(mFooterView);
         }
     }
 

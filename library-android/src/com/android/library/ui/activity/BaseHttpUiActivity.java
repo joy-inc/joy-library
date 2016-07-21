@@ -19,6 +19,8 @@ import com.android.library.utils.DeviceUtil;
 import com.android.library.widget.JLoadingView;
 import com.android.volley.RequestQueue;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static com.android.library.httptask.RequestMode.CACHE_AND_REFRESH;
 import static com.android.library.httptask.RequestMode.CACHE_ONLY;
 import static com.android.library.httptask.RequestMode.REFRESH_AND_CACHE;
@@ -57,18 +59,20 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
         }
     }
 
+    @SuppressWarnings("ResourceType")
     private void addTipView(ViewGroup frame) {
 
         mIvTip = new ImageView(this);
         mIvTip.setScaleType(ScaleType.CENTER_INSIDE);
         mIvTip.setOnClickListener(v -> onTipViewClick());
         hideImageView(mIvTip);
-        LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        LayoutParams lp = new LayoutParams(MATCH_PARENT, MATCH_PARENT);
         if (!isNoTitle() && !isOverlay())
             lp.topMargin = isSystemBarTrans() ? STATUS_BAR_HEIGHT + getToolbarHeight() : getToolbarHeight();
         frame.addView(mIvTip, lp);
     }
 
+    @SuppressWarnings("ResourceType")
     private void addLoadingView(ViewGroup frame) {
 
         mLoadingView = JLoadingView.get(this);
@@ -95,25 +99,7 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
 
     protected void onRetry() {
 
-        switch (getRequestMode()) {
-
-            case CACHE_ONLY:
-
-                executeCacheOnly();
-                break;
-            case REFRESH_AND_CACHE:
-
-                executeRefreshAndCache();
-                break;
-            case CACHE_AND_REFRESH:
-
-                executeCacheAndRefresh();
-                break;
-            default:
-
-                executeRefreshOnly();
-                break;
-        }
+        execute(getRequestMode());
     }
 
     protected final RequestMode getRequestMode() {
@@ -143,55 +129,48 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
     /**
      * fetch net-->response.
      */
-    protected final void executeRefreshOnly() {
+    protected void executeRefreshOnly() {
 
-        cancelRequest();
-        mObjReq = getObjectRequest();
-        mObjReq.setRequestMode(REFRESH_ONLY);
-        mObjReq.setResponseListener(getObjRespLis());
-        addRequestNoCache(mObjReq);
+        execute(REFRESH_ONLY);
     }
 
     /**
      * fetch cache-->response.
      */
-    protected final void executeCacheOnly() {
+    protected void executeCacheOnly() {
 
-        cancelRequest();
-        mObjReq = getObjectRequest();
-        mObjReq.setRequestMode(CACHE_ONLY);
-        mObjReq.setResponseListener(getObjRespLis());
-        addRequestHasCache(mObjReq);
+        execute(CACHE_ONLY);
     }
 
     /**
      * cache expired: fetch net, update cache-->response.
      */
-    protected final void executeRefreshAndCache() {
+    protected void executeRefreshAndCache() {
 
-        cancelRequest();
-        mObjReq = getObjectRequest();
-        mObjReq.setRequestMode(REFRESH_AND_CACHE);
-        mObjReq.setResponseListener(getObjRespLis());
-        addRequestHasCache(mObjReq);
+        execute(REFRESH_AND_CACHE);
     }
 
     /**
      * cache update needed: fetch cache-->response, fetch net, update cache-->response.
      */
-    protected final void executeCacheAndRefresh() {
+    protected void executeCacheAndRefresh() {
+
+        execute(CACHE_AND_REFRESH);
+    }
+
+    final void execute(RequestMode mode) {
 
         cancelRequest();
         mObjReq = getObjectRequest();
-        mObjReq.setRequestMode(CACHE_AND_REFRESH);
+        mObjReq.setRequestMode(mode);
         mObjReq.setResponseListener(getObjRespLis());
-        addRequestHasCache(mObjReq);
+        addRequest(mObjReq, mode != REFRESH_ONLY);
     }
 
     private ObjectResponseListener<T> getObjRespLis() {
 
         if (!mContentHasDisplayed)
-            hideContentView();
+            hideContent();
         hideTipView();
         showLoading();
 
@@ -203,14 +182,21 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
                 if (isFinishing())
                     return;
 
-                if (invalidateContent(t)) {
-
-                    showContentView();
-                    mContentHasDisplayed = true;
-                } else
-                    showNoContentTip();
                 if (isFinalResponse())
                     hideLoading();
+
+                if (invalidateContent(t)) {
+
+                    hideTipView();
+                    showContent();
+                    mContentHasDisplayed = true;
+                } else {
+
+                    if (isFinalResponse()) {
+                        hideContent();
+                        showEmptyTip();
+                    }
+                }
             }
 
             @Override
@@ -223,23 +209,23 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
                 onHttpFailed(tag, msg);
 
                 hideLoading();
-                hideContentView();
-                showFailedTip();
+                hideContent();
+                showErrorTip();
             }
         };
     }
 
-    protected void showContentView() {
+    protected void showContent() {
 
         showView(getContentView());
     }
 
-    protected void hideContentView() {
+    protected void hideContent() {
 
         hideView(getContentView());
     }
 
-    protected void showFailedTip() {
+    protected void showErrorTip() {
 
         mTipResId = FAILED_RES_ID;
         showImageView(mIvTip, mTipResId);
@@ -250,7 +236,7 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
         hideImageView(mIvTip);
     }
 
-    protected void showNoContentTip() {
+    protected void showEmptyTip() {
 
         mTipResId = DISABLED_RES_ID;
         showImageView(mIvTip, mTipResId);
@@ -258,10 +244,9 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
 
     protected void addCustomView(View v) {
 
-        hideContentView();
+        hideContent();
         hideTipView();
-        hideLoading();
-        LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        LayoutParams lp = new LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
         lp.gravity = Gravity.CENTER;
         getRootView().addView(v, lp);
     }

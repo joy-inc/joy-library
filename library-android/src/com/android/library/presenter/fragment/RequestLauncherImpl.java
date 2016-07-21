@@ -3,9 +3,9 @@ package com.android.library.presenter.fragment;
 import com.android.library.BaseApplication;
 import com.android.library.httptask.ObjectRequest;
 import com.android.library.httptask.RequestMode;
-import com.android.library.ui.fragment.interfaces.BaseViewNet;
 import com.android.library.presenter.PresenterImpl;
 import com.android.library.presenter.RequestLauncher;
+import com.android.library.ui.fragment.interfaces.BaseViewNet;
 
 import rx.Observable;
 
@@ -66,10 +66,20 @@ public class RequestLauncherImpl<T, V extends BaseViewNet> extends PresenterImpl
         return t != null;
     }
 
+    public void onEmpty() {
+
+        if (isFinalResponse()) {
+            getBaseView().hideLoading();
+            getBaseView().hideContent();
+            getBaseView().showEmptyTip();
+        }
+    }
+
     public void onNext(T t) {
 
         if (isFinalResponse())
             getBaseView().hideLoading();
+        getBaseView().hideTipView();
         getBaseView().showContent();
     }
 
@@ -78,15 +88,6 @@ public class RequestLauncherImpl<T, V extends BaseViewNet> extends PresenterImpl
         getBaseView().hideLoading();
         getBaseView().hideContent();
         getBaseView().showErrorTip();
-    }
-
-    public void onEmpty() {
-
-        getBaseView().hideContent();
-        if (isFinalResponse()) {
-            getBaseView().hideLoading();
-            getBaseView().showEmptyTip();
-        }
     }
 
     @Override

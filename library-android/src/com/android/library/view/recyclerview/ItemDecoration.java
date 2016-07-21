@@ -20,7 +20,7 @@ import static android.support.v7.widget.LinearLayoutManager.VERTICAL;
  *
  * @blog: http://daishiwen.github.io
  * @email: daishiwen1212@gmail.com
- * @tel: 15652039978
+ * @see RecyclerView#addItemDecoration(RecyclerView.ItemDecoration)
  */
 public class ItemDecoration extends RecyclerView.ItemDecoration {
 
@@ -72,7 +72,7 @@ public class ItemDecoration extends RecyclerView.ItemDecoration {
             final int childPosition = parent.getChildAdapterPosition(child);
 
             if (!headerDividerEnabled && !footerDividerEnabled && childPosition >= itemCount - footerDividerOffset) {
-                // Don't draw divider for last line if mFooterDividerEnabled = false
+                // Don't draw divider for last line if footerDividerEnabled = false
                 continue;
             }
 
@@ -88,6 +88,7 @@ public class ItemDecoration extends RecyclerView.ItemDecoration {
 
                 top = child.getTop() - dividerSize - marginBottom;
                 if (child instanceof JFooter) {
+
                     if (((JRecyclerView) parent).isLoadMoreEnable()) {
 
                         top = child.getTop() - dividerSize;

@@ -30,6 +30,7 @@ public interface BaseView extends ActivityLifecycleProvider {
     void showToast(@StringRes int resId);
     void showToast(@StringRes int resId, Object... formatArgs);
 
+    void showSnackbar(@NonNull CharSequence text);
     void showSnackbar(@NonNull CharSequence text, @Snackbar.Duration int duration);
     void showSnackbar(@NonNull CharSequence text, @Snackbar.Duration int duration, @ColorInt int textColor);
     void showSnackbar(@NonNull CharSequence text, @Snackbar.Duration int duration, @ColorInt int bgColor, @ColorInt int textColor);

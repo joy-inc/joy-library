@@ -37,6 +37,8 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import java.util.List;
 
+import static android.support.design.widget.Snackbar.LENGTH_SHORT;
+
 /**
  * 基本的UI框架
  * Created by KEVIN.DAI on 15/7/16.
@@ -364,6 +366,13 @@ public abstract class BaseTabActivity extends RxAppCompatActivity implements Bas
     public final void showToast(@StringRes int resId, Object... formatArgs) {
 
         showToast(getString(resId, formatArgs));
+    }
+
+    @Override
+    @SuppressWarnings("ResourceType")
+    public void showSnackbar(@NonNull CharSequence text) {
+
+        showSnackbar(text, LENGTH_SHORT);
     }
 
     @Override

@@ -263,24 +263,24 @@ public abstract class BaseHttpLvActivity<T> extends BaseHttpUiActivity<T> {
     }
 
     @Override
-    protected final void showFailedTip() {
+    protected final void showErrorTip() {
 
         if (getItemCount() - 1 == 0)
-            super.showFailedTip();
+            super.showErrorTip();
     }
 
     @Override
-    protected final void showNoContentTip() {
+    protected final void showEmptyTip() {
 
         if (getItemCount() - 1 == 0)
-            super.showNoContentTip();
+            super.showEmptyTip();
     }
 
     @Override
-    protected final void hideContentView() {
+    protected final void hideContent() {
 
         if (getItemCount() - 1 == 0)
-            super.hideContentView();
+            super.hideContent();
     }
 
     private int getItemCount() {

@@ -25,6 +25,8 @@ import com.android.library.utils.ToastUtil;
 import com.android.library.utils.ViewUtil;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
+import static android.support.design.widget.Snackbar.LENGTH_SHORT;
+
 /**
  * 基本的UI框架
  * Created by KEVIN.DAI on 15/7/16.
@@ -130,6 +132,13 @@ public abstract class BaseUiFragment extends RxFragment implements BaseView, Dim
     public void showToast(@StringRes int resId, Object... formatArgs) {
 
         showToast(getString(resId, formatArgs));
+    }
+
+    @Override
+    @SuppressWarnings("ResourceType")
+    public void showSnackbar(@NonNull CharSequence text) {
+
+        showSnackbar(text, LENGTH_SHORT);
     }
 
     @Override

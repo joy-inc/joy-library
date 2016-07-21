@@ -123,29 +123,51 @@ public class BaseHttpRvPresenter<T, V extends BaseViewNetRv> extends RequestLaun
     public void onEmpty() {
 
         ExRvAdapter adapter = getBaseView().getAdapter();
-        if (adapter != null && adapter.isNotEmpty()) {
-            adapter.clear();
-            adapter.notifyDataSetChanged();
+        if (adapter != null) {
+
+            if (mPageIndex == PAGE_START_INDEX) {
+
+                final int adapterItemCount = adapter.getItemCount();
+                if (adapterItemCount > 0) {
+
+                    adapter.clear();
+                    adapter.notifyItemRangeRemoved(0, adapterItemCount);
+                }
+            } else {
+
+                getBaseView().setLoadMoreEnable(false);
+                return;
+            }
         }
         super.onEmpty();
     }
 
     public void onNext(List<?> ts) {
 
-        getBaseView().setLoadMoreEnable(ts.size() >= mPageLimit);
+        final int currentItemCount = ts.size();
+        getBaseView().setLoadMoreEnable(currentItemCount >= mPageLimit);
 
         ExRvAdapter adapter = getBaseView().getAdapter();
         if (adapter != null) {
 
+            final int adapterItemCount = adapter.getItemCount();
             if (mPageIndex == PAGE_START_INDEX) {
 
                 adapter.setData(ts);
-                adapter.notifyDataSetChanged();
-                getBaseView().getLayoutManager().scrollToPosition(0);
+                if (adapterItemCount == 0) {
+
+                    adapter.notifyItemRangeInserted(0, currentItemCount);
+                    ((JRecyclerView) getBaseView().getRecyclerView()).addLoadMoreIfNotExist();
+                } else {
+
+                    adapter.notifyItemRangeRemoved(0, adapterItemCount);
+                    adapter.notifyItemRangeInserted(0, currentItemCount);
+                    getBaseView().getLayoutManager().scrollToPosition(0);
+                }
             } else {
 
                 adapter.addAll(ts);
-                adapter.notifyDataSetChanged();
+                adapter.notifyItemRangeInserted(adapterItemCount, currentItemCount);
             }
             if (isFinalResponse())
                 mPageIndex++;

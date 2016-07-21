@@ -27,7 +27,7 @@ public class RecyclerAdapter extends Adapter<ViewHolder> {
     private OnItemClickListener mOnItemClickListener;
     private OnItemLongClickListener mOnItemLongClickListener;
 
-    public RecyclerAdapter(Adapter adapter, LayoutManager lm) {
+    public RecyclerAdapter(Adapter<ViewHolder> adapter, LayoutManager lm) {
 
         mHeaderArrays = new SparseArray<>();
         mFooterArrays = new SparseArray<>();
@@ -42,31 +42,36 @@ public class RecyclerAdapter extends Adapter<ViewHolder> {
         }
     }
 
-    public void setWrappedAdapter(Adapter<ViewHolder> adapter) {
+    private void setWrappedAdapter(Adapter<ViewHolder> adapter) {
 
         if (adapter == null)
             return;
 
         if (mAdapter != null) {
 
-            notifyItemRangeRemoved(getHeadersCount(), mAdapter.getItemCount());
+            notifyItemRangeRemoved(getHeadersCount(), getWrappedItemCount());
             mAdapter.unregisterAdapterDataObserver(mDataObserver);
         }
 
         mAdapter = adapter;
         mAdapter.registerAdapterDataObserver(mDataObserver);
-        notifyItemRangeInserted(getHeadersCount(), mAdapter.getItemCount());
+        notifyItemRangeInserted(getHeadersCount(), getWrappedItemCount());
     }
 
-    public Adapter getWrappedAdapter() {
+    public Adapter<ViewHolder> getWrappedAdapter() {
 
         return mAdapter;
+    }
+
+    private int getWrappedItemCount() {
+
+        return mAdapter.getItemCount();
     }
 
     @Override
     public int getItemCount() {
 
-        return getHeadersCount() + getFootersCount() + mAdapter.getItemCount();
+        return getHeadersCount() + getFootersCount() + getWrappedItemCount();
     }
 
     @Override
@@ -86,7 +91,7 @@ public class RecyclerAdapter extends Adapter<ViewHolder> {
             return mHeaderArrays.keyAt(position);
         } else if (isFooter(position)) {
 
-            return mFooterArrays.keyAt(position - getHeadersCount() - mAdapter.getItemCount());
+            return mFooterArrays.keyAt(position - getHeadersCount() - getWrappedItemCount());
         } else {
 
             return mAdapter.getItemViewType(position - getHeadersCount());
@@ -117,25 +122,11 @@ public class RecyclerAdapter extends Adapter<ViewHolder> {
 
             if (mOnItemClickListener != null) {
 
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-
-                        mOnItemClickListener.onItemClick(holder, position - getHeadersCount());
-                    }
-                });
+                holder.itemView.setOnClickListener(v -> mOnItemClickListener.onItemClick(holder, position - getHeadersCount()));
             }
             if (mOnItemLongClickListener != null) {
 
-                holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-
-                    @Override
-                    public boolean onLongClick(View v) {
-
-                        return mOnItemLongClickListener.onItemLongCLick(holder, position - getHeadersCount());
-                    }
-                });
+                holder.itemView.setOnLongClickListener(v -> mOnItemLongClickListener.onItemLongCLick(holder, position - getHeadersCount()));
             }
         } else {
 
@@ -150,13 +141,13 @@ public class RecyclerAdapter extends Adapter<ViewHolder> {
 
     private class RvViewHolder extends ViewHolder {
 
-        public RvViewHolder(View itemView) {
+        RvViewHolder(View itemView) {
 
             super(itemView);
         }
     }
 
-    public Integer getHeadersCount() {
+    public int getHeadersCount() {
 
         return mHeaderArrays.size();
     }
@@ -166,7 +157,7 @@ public class RecyclerAdapter extends Adapter<ViewHolder> {
         return mHeaderArrays.valueAt(index);
     }
 
-    public Integer getFootersCount() {
+    public int getFootersCount() {
 
         return mFooterArrays.size();
     }
@@ -181,13 +172,15 @@ public class RecyclerAdapter extends Adapter<ViewHolder> {
         if (v == null)
             return;
 
-        if (mHeaderArrays.size() == 0)
+        if (mHeaderArrays.size() == 0) {
+
             mHeaderArrays.put(Integer.MIN_VALUE, v);
-        else if (mHeaderArrays.indexOfValue(v) < 0)
+            notifyItemInserted(getHeadersCount() - 1);
+        } else if (mHeaderArrays.indexOfValue(v) < 0) {
+
             mHeaderArrays.put(mHeaderArrays.keyAt(mHeaderArrays.size() - 1) + 1, v);
-        else
-            return;
-        notifyDataSetChanged();
+            notifyItemInserted(getHeadersCount() - 1);
+        }
     }
 
     public void addFooterView(View v) {
@@ -195,13 +188,15 @@ public class RecyclerAdapter extends Adapter<ViewHolder> {
         if (v == null)
             return;
 
-        if (mFooterArrays.size() == 0)
+        if (mFooterArrays.size() == 0) {
+
             mFooterArrays.put(Integer.MAX_VALUE, v);
-        else if (mFooterArrays.indexOfValue(v) < 0)
+            notifyItemInserted(getItemCount() - 1);
+        } else if (mFooterArrays.indexOfValue(v) < 0) {
+
             mFooterArrays.put(mFooterArrays.keyAt(mFooterArrays.size() - 1) - 1, v);
-        else
-            return;
-        notifyDataSetChanged();
+            notifyItemInserted(getItemCount() - 1);
+        }
     }
 
     public boolean removeHeader(View v) {
@@ -210,7 +205,7 @@ public class RecyclerAdapter extends Adapter<ViewHolder> {
         if (index >= 0) {
 
             mHeaderArrays.removeAt(index);
-            notifyDataSetChanged();
+            notifyItemRemoved(index);
             return true;
         }
         return false;
@@ -222,62 +217,45 @@ public class RecyclerAdapter extends Adapter<ViewHolder> {
         if (index >= 0) {
 
             mFooterArrays.removeAt(index);
-            notifyDataSetChanged();
+            notifyItemRemoved(getHeadersCount() + getWrappedItemCount() + index);
             return true;
         }
         return false;
     }
 
-    public boolean isHeader(int position) {
+    boolean isHeader(int position) {
 
         return getHeadersCount() > 0 && position < getHeadersCount();
     }
 
-    public boolean isItem(int position) {
+    private boolean isItem(int position) {
 
-        return position >= getHeadersCount() && position < getHeadersCount() + mAdapter.getItemCount();
+        return position >= getHeadersCount() && position < getHeadersCount() + getWrappedItemCount();
     }
 
-    public boolean isFooter(int position) {
+    boolean isFooter(int position) {
 
-        return getFootersCount() > 0 && position >= getHeadersCount() + mAdapter.getItemCount();
+        return getFootersCount() > 0 && position >= getHeadersCount() + getWrappedItemCount();
     }
 
     private AdapterDataObserver mDataObserver = new AdapterDataObserver() {
 
         @Override
-        public void onChanged() {
-
-            super.onChanged();
-            notifyDataSetChanged();
-        }
-
-        @Override
         public void onItemRangeChanged(int positionStart, int itemCount) {
 
-            super.onItemRangeChanged(positionStart, itemCount);
             notifyItemRangeChanged(positionStart + getHeadersCount(), itemCount);
         }
 
         @Override
         public void onItemRangeInserted(int positionStart, int itemCount) {
 
-            super.onItemRangeInserted(positionStart, itemCount);
             notifyItemRangeInserted(positionStart + getHeadersCount(), itemCount);
         }
 
         @Override
         public void onItemRangeRemoved(int positionStart, int itemCount) {
 
-            super.onItemRangeRemoved(positionStart, itemCount);
             notifyItemRangeRemoved(positionStart + getHeadersCount(), itemCount);
-        }
-
-        @Override
-        public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
-
-            super.onItemRangeMoved(fromPosition, toPosition, itemCount);
-            notifyItemRangeChanged(fromPosition + getHeadersCount(), toPosition + getHeadersCount() + itemCount);
         }
     };
 

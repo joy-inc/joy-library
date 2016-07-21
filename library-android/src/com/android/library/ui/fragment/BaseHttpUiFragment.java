@@ -12,15 +12,17 @@ import android.widget.ImageView.ScaleType;
 import com.android.library.BaseApplication;
 import com.android.library.BuildConfig;
 import com.android.library.R;
-import com.android.library.ui.activity.BaseTabActivity;
 import com.android.library.httptask.ObjectRequest;
 import com.android.library.httptask.ObjectResponse;
 import com.android.library.httptask.ObjectResponseListener;
 import com.android.library.httptask.RequestMode;
+import com.android.library.ui.activity.BaseTabActivity;
 import com.android.library.utils.DeviceUtil;
 import com.android.library.widget.JLoadingView;
 import com.android.volley.RequestQueue;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static com.android.library.httptask.RequestMode.CACHE_AND_REFRESH;
 import static com.android.library.httptask.RequestMode.CACHE_ONLY;
 import static com.android.library.httptask.RequestMode.REFRESH_AND_CACHE;
@@ -65,7 +67,7 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
         mIvTip.setScaleType(ScaleType.CENTER_INSIDE);
         mIvTip.setOnClickListener(v -> onTipViewClick());
         hideImageView(mIvTip);
-        frame.addView(mIvTip, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        frame.addView(mIvTip, new LayoutParams(MATCH_PARENT, MATCH_PARENT));
         makeCenterIfNecessary(mIvTip);
     }
 
@@ -94,8 +96,13 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
             showToast(R.string.toast_common_no_network);
         } else {
 
-            execute(getRequestMode());
+            onRetry();
         }
+    }
+
+    protected void onRetry() {
+
+        execute(getRequestMode());
     }
 
     protected final RequestMode getRequestMode() {
@@ -166,7 +173,7 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
     private ObjectResponseListener<T> getObjRespLis() {
 
         if (!mContentHasDisplayed)
-            hideContentView();
+            hideContent();
         hideTipView();
         showLoading();
 
@@ -178,18 +185,21 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
                 if (isFinishing())
                     return;
 
+                if (isFinalResponse())
+                    hideLoading();
+
                 if (invalidateContent(t)) {
 
-                    showContentView();
+                    hideTipView();
+                    showContent();
                     mContentHasDisplayed = true;
                 } else {
 
-                    hideContentView();
-                    if (isFinalResponse())
-                        showNoContentTip();
+                    if (isFinalResponse()) {
+                        hideContent();
+                        showEmptyTip();
+                    }
                 }
-                if (isFinalResponse())
-                    hideLoading();
             }
 
             @Override
@@ -202,23 +212,23 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
                 onHttpFailed(tag, msg);
 
                 hideLoading();
-                hideContentView();
-                showFailedTip();
+                hideContent();
+                showErrorTip();
             }
         };
     }
 
-    protected void showContentView() {
+    protected void showContent() {
 
         showView(getContentView());
     }
 
-    protected void hideContentView() {
+    protected void hideContent() {
 
         hideView(getContentView());
     }
 
-    protected void showFailedTip() {
+    protected void showErrorTip() {
 
         mTipResId = FAILED_RES_ID;
         showImageView(mIvTip, mTipResId);
@@ -229,7 +239,7 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
         hideImageView(mIvTip);
     }
 
-    protected void showNoContentTip() {
+    protected void showEmptyTip() {
 
         mTipResId = DISABLED_RES_ID;
         showImageView(mIvTip, mTipResId);
@@ -237,10 +247,9 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
 
     protected void addCustomView(View v) {
 
-        hideContentView();
+        hideContent();
         hideTipView();
-//        hideLoading();
-        LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        LayoutParams lp = new LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
         lp.gravity = Gravity.CENTER;
         getRootView().addView(v, lp);
         makeCenterIfNecessary(v);

@@ -33,6 +33,8 @@ import com.android.library.utils.ViewUtil;
 import com.android.library.view.MagicToolbar;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
+import static android.support.design.widget.Snackbar.LENGTH_SHORT;
+
 /**
  * 基本的UI框架
  * Created by KEVIN.DAI on 15/7/16.
@@ -95,6 +97,7 @@ public abstract class BaseUiActivity extends RxAppCompatActivity implements Base
         }
     }
 
+    @SuppressWarnings("ResourceType")
     protected void wrapContentView(FrameLayout rootView, View contentView) {
 
         // add transition animation
@@ -377,6 +380,13 @@ public abstract class BaseUiActivity extends RxAppCompatActivity implements Base
     public final void showToast(@StringRes int resId) {
 
         showToast(getString(resId));
+    }
+
+    @Override
+    @SuppressWarnings("ResourceType")
+    public void showSnackbar(@NonNull CharSequence text) {
+
+        showSnackbar(text, LENGTH_SHORT);
     }
 
     @Override
