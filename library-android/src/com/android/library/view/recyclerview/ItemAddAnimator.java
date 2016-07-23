@@ -15,8 +15,7 @@ public class ItemAddAnimator extends FadeInUpAnimator {
     private static final int PAGE_UPPER_LIMIT = 20;// 默认分页大小
     private int mPageLimit = PAGE_UPPER_LIMIT;
 
-    private static final long DEFAULT_ADD_DURATION = 120;
-    private static final long FIRST_PAGE_ADD_DURATION = 300;
+    private static final long DEFAULT_ADD_DURATION = 300;
     private static final float DEFAULT_INTERPOLATOR_FACTOR = 3.f;
 
     public ItemAddAnimator() {
@@ -32,7 +31,7 @@ public class ItemAddAnimator extends FadeInUpAnimator {
 
     private void init() {
 
-        setAddDuration(FIRST_PAGE_ADD_DURATION);
+        setAddDuration(DEFAULT_ADD_DURATION);
         setInterpolator(new DecelerateInterpolator(DEFAULT_INTERPOLATOR_FACTOR));
     }
 
@@ -52,11 +51,9 @@ public class ItemAddAnimator extends FadeInUpAnimator {
         long delay;
         if (holder.getLayoutPosition() >= mPageLimit) {
 
-            setAddDuration(DEFAULT_ADD_DURATION);
             delay = 0;
         } else {
 
-            setAddDuration(FIRST_PAGE_ADD_DURATION);
             delay = super.getAddDelay(holder);
         }
         return delay;

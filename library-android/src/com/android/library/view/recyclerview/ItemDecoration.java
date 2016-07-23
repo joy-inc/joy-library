@@ -13,6 +13,7 @@ import com.android.library.widget.JRecyclerView;
 
 import static android.support.v7.widget.LinearLayoutManager.HORIZONTAL;
 import static android.support.v7.widget.LinearLayoutManager.VERTICAL;
+import static android.support.v7.widget.RecyclerView.NO_POSITION;
 
 /**
  * Created by KEVIN.DAI on 15/11/25.
@@ -25,6 +26,7 @@ import static android.support.v7.widget.LinearLayoutManager.VERTICAL;
 public class ItemDecoration extends RecyclerView.ItemDecoration {
 
     private Builder builder;
+    private int prevItemCount;
 
     private ItemDecoration(Builder builder) {
 
@@ -32,7 +34,7 @@ public class ItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     @Override
-    public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+    public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
 
         if (builder.orientationParams.orientation == HORIZONTAL) {
 
@@ -69,7 +71,10 @@ public class ItemDecoration extends RecyclerView.ItemDecoration {
         for (int i = 0; i < childCount; i++) {
 
             final View child = parent.getChildAt(i);
-            final int childPosition = parent.getChildAdapterPosition(child);
+            final int childPosition = parent.getChildLayoutPosition(child);
+
+            if (childPosition == NO_POSITION)
+                continue;
 
             if (!headerDividerEnabled && !footerDividerEnabled && childPosition >= itemCount - footerDividerOffset) {
                 // Don't draw divider for last line if footerDividerEnabled = false
@@ -131,7 +136,7 @@ public class ItemDecoration extends RecyclerView.ItemDecoration {
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
 
-        final int position = parent.getChildAdapterPosition(view);
+        final int position = parent.getChildLayoutPosition(view);
         final int itemCount = state.getItemCount();
 
         final boolean headerDividerEnabled = builder.dividerStyle.headerDividerEnabled;
@@ -154,10 +159,10 @@ public class ItemDecoration extends RecyclerView.ItemDecoration {
 
                     if (headerDividerEnabled) {
 
-                        outRect.set(paddingLeft, marginBottom + dividerSize + paddingTop, paddingRight, dividerSize + marginTop + marginBottom);
+                        outRect.set(paddingLeft, marginBottom + dividerSize + paddingTop, paddingRight, dividerSize + marginBottom);
                     } else {
 
-                        outRect.set(paddingLeft, paddingTop, paddingRight, dividerSize + marginTop + marginBottom);
+                        outRect.set(paddingLeft, paddingTop, paddingRight, dividerSize + marginTop);
                     }
                 } else {
 
@@ -168,17 +173,24 @@ public class ItemDecoration extends RecyclerView.ItemDecoration {
 
                         if (footerDividerEnabled) {
 
-                            outRect.set(paddingLeft, 0, paddingRight, dividerSize + marginBottom + paddingBottom);
+                            outRect.set(paddingLeft, marginTop, paddingRight, dividerSize + marginBottom + paddingBottom);
                         } else {
 
-                            outRect.set(paddingLeft, 0, paddingRight, paddingBottom);
+                            outRect.set(paddingLeft, marginTop, paddingRight, paddingBottom);
                         }
                     } else {
 
-                        outRect.set(paddingLeft, 0, paddingRight, dividerSize + marginTop + marginBottom);
+                        if (footerDividerEnabled) {
+
+                            outRect.set(paddingLeft, marginTop, paddingRight, dividerSize + marginBottom);
+                        } else {
+
+                            outRect.set(paddingLeft, itemCount > prevItemCount ? marginTop + marginBottom + dividerSize : marginTop, paddingRight, dividerSize + marginBottom);
+                        }
                     }
                 }
             }
+            prevItemCount = itemCount;
         } else {
 
             outRect.set(0, 0, dividerSize + marginLeft + marginRight, 0);
