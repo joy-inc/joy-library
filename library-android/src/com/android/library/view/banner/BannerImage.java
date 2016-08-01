@@ -4,18 +4,18 @@ import android.content.Context;
 import android.view.View;
 import android.widget.ImageView.ScaleType;
 
-import com.android.library.widget.FrescoImageView;
+import com.android.library.view.fresco.FrescoIv;
 
 /**
  * Created by KEVIN.DAI on 15/12/17.
  */
 public class BannerImage<T> implements BannerHolder<T> {
 
-    private FrescoImageView fivCover;
+    private FrescoIv fivCover;
 
-    protected FrescoImageView onCreateView(Context context) {
+    protected FrescoIv onCreateView(Context context) {
 
-        FrescoImageView fivCover = new FrescoImageView(context);
+        FrescoIv fivCover = new FrescoIv(context);
         fivCover.setScaleType(ScaleType.CENTER_CROP);
         return fivCover;
     }
