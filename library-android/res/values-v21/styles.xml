@@ -6,7 +6,7 @@
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorAccent">@color/color_accent</item>
         <item name="android:windowBackground">@color/color_window_bg</item>
-        <item name="android:navigationBarColor">?colorPrimaryDark</item>
+        <!--<item name="android:navigationBarColor">?colorPrimaryDark</item>-->
         <item name="android:textColorPrimary">@color/color_text_primary</item>
         <item name="android:textColorSecondary">@color/color_text_secondary</item>
         <item name="android:textColor">@color/color_text_main</item>
@@ -15,7 +15,7 @@
         <item name="textColorDisable">@color/color_text_disable</item>
         <item name="android:textColorHint">@color/color_text_hint</item>
         <item name="android:divider">@color/color_divider</item>
-        <item name="android:dividerHeight">2dp</item>
+        <item name="android:dividerHeight">1dp</item>
         <item name="android:headerDividersEnabled">false</item>
         <item name="android:footerDividersEnabled">false</item>
         <item name="android:colorEdgeEffect">?colorPrimary</item>
