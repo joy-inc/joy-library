@@ -320,7 +320,8 @@ public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
             if (adapterItemCount == 0) {
 
                 adapter.notifyItemRangeInserted(0, currentItemCount);
-                ((JRecyclerView) mRecyclerView).addLoadMoreIfNotExist();
+                if (isLoadMoreEnable())
+                    ((JRecyclerView) mRecyclerView).addLoadMoreIfNotExist();
             } else {
 
                 adapter.notifyItemRangeRemoved(0, adapterItemCount);
@@ -488,7 +489,7 @@ public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
 
     protected final boolean isLoadMoreFailed() {
 
-        return mRecyclerView instanceof JRecyclerView && ((JRecyclerView) mRecyclerView).isLoadMoreFailed();
+        return isLoadMoreEnable() && ((JRecyclerView) mRecyclerView).isLoadMoreFailed();
     }
 
     protected final void setLoadMoreEnable(boolean enable) {

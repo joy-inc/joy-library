@@ -157,7 +157,8 @@ public class BaseHttpRvPresenter<T, V extends BaseViewNetRv> extends RequestLaun
                 if (adapterItemCount == 0) {
 
                     adapter.notifyItemRangeInserted(0, currentItemCount);
-                    ((JRecyclerView) getBaseView().getRecyclerView()).addLoadMoreIfNotExist();
+                    if (getBaseView().isLoadMoreEnable())
+                        ((JRecyclerView) getBaseView().getRecyclerView()).addLoadMoreIfNotExist();
                 } else {
 
                     adapter.notifyItemRangeRemoved(0, adapterItemCount);
