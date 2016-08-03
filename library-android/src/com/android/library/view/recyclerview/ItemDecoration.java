@@ -282,6 +282,37 @@ public class ItemDecoration extends RecyclerView.ItemDecoration {
             return this;
         }
 
+        public Builder divider(Drawable d) {
+
+            dividerStyle.divider = d;
+            return this;
+        }
+
+        public Builder dividerSize(int size) {
+
+            dividerStyle.dividerSize = size;
+            return this;
+        }
+
+        public Builder dividerHeaderEnable(boolean enable) {
+
+            dividerStyle.headerDividerEnabled = enable;
+            return this;
+        }
+
+        public Builder dividerFooterEnable(boolean enable) {
+
+            dividerStyle.footerDividerEnabled = enable;
+            return this;
+        }
+
+        public Builder verticalSpace(int space) {
+
+            marginTop(space / 2);
+            marginBottom(space / 2);
+            return this;
+        }
+
         public Builder marginLeft(int left) {
 
             marginParams.left = left;
