@@ -133,6 +133,7 @@ public abstract class BaseTabActivity extends RxAppCompatActivity implements Bas
         viewPager.setAdapter(pagerAdapter);
         // tab layout
         mTabLayout = (TabLayout) findViewById(R.id.tab);
+        mTabLayout.setSelectedTabIndicatorHeight(DP_1_PX * 3);
         mTabLayout.setupWithViewPager(viewPager);
         // float action bar
         mFloatActionBtn = (FloatingActionButton) findViewById(R.id.fab);
