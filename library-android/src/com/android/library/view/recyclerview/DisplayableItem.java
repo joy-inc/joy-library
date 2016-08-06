@@ -18,6 +18,7 @@ package com.android.library.view.recyclerview;
 
 /**
  * @author Hannes Dorfmann
+ *         Modified by Daisw on 16/8/5.
  */
 public interface DisplayableItem {
 
