@@ -10,8 +10,8 @@ import java.util.List;
 public abstract class ExAdapter<T> extends BaseAdapter {
 
     private List<T> mData;
-    private OnItemViewClickListener mOnItemViewClickLisn;
-    private OnItemViewLongClickListener mOnItemViewLongClickLisn;
+    private OnItemViewClickListener<T> mOnItemViewClickLisn;
+    private OnItemViewLongClickListener<T> mOnItemViewLongClickLisn;
 
     protected ExAdapter() {
 

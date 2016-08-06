@@ -23,7 +23,7 @@ public abstract class ExRvViewHolder<T> extends RecyclerView.ViewHolder {
         super(v);
     }
 
-    protected abstract void invalidateItemView(int position, T t);
+    public abstract void invalidateItemView(int position, T t);
 
     protected final void showToast(String text) {
 

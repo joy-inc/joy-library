@@ -15,8 +15,8 @@ import java.util.List;
 public abstract class ExRvAdapter<K extends ExRvViewHolder<T>, T> extends RecyclerView.Adapter<K> {
 
     private List<T> mData;
-    private OnItemViewClickListener mOnItemViewClickLisn;
-    private OnItemViewLongClickListener mOnItemViewLongClickLisn;
+    private OnItemViewClickListener<T> mOnItemViewClickLisn;
+    private OnItemViewLongClickListener<T> mOnItemViewLongClickLisn;
 
     protected ExRvAdapter() {
 

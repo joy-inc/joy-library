@@ -120,14 +120,10 @@ public class RecyclerAdapter extends Adapter<ViewHolder> {
 
             mAdapter.onBindViewHolder(holder, position - getHeadersCount());
 
-            if (mOnItemClickListener != null) {
-
+            if (mOnItemClickListener != null)
                 holder.itemView.setOnClickListener(v -> mOnItemClickListener.onItemClick(holder, position - getHeadersCount()));
-            }
-            if (mOnItemLongClickListener != null) {
-
+            if (mOnItemLongClickListener != null)
                 holder.itemView.setOnLongClickListener(v -> mOnItemLongClickListener.onItemLongCLick(holder, position - getHeadersCount()));
-            }
         } else {
 
             if (mLayoutManager != null && mLayoutManager instanceof StaggeredGridLayoutManager) {

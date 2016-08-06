@@ -9,7 +9,7 @@ import java.util.List;
 public abstract class ExPagerAdapter<T> extends PagerAdapter {
 
     private List<T> mData;
-    private OnItemViewClickListener mOnItemViewClickLisn;
+    private OnItemViewClickListener<T> mOnItemViewClickLisn;
 
     public ExPagerAdapter() {
     }
@@ -77,7 +77,7 @@ public abstract class ExPagerAdapter<T> extends PagerAdapter {
         return view == object;
     }
 
-    public void setOnItemViewClickListener(OnItemViewClickListener lisn) {
+    public void setOnItemViewClickListener(OnItemViewClickListener<T> lisn) {
 
         mOnItemViewClickLisn = lisn;
     }
