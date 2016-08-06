@@ -20,4 +20,6 @@ package com.android.library.view.recyclerview;
  * @author Hannes Dorfmann
  */
 public interface DisplayableItem {
+
+    int getType();
 }
