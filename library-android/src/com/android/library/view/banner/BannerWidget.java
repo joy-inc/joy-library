@@ -52,7 +52,7 @@ public class BannerWidget<T> extends ExLayoutWidget implements DimenCons, Banner
     public void onItemClick(int position) {
 
         BannerAdapter<T> adapter = (BannerAdapter<T>) mBannerView.getAdapter();
-        adapter.callbackItemViewClick(position % adapter.getIndicatorCount(), mBannerView);
+        adapter.callbackOnItemClickListener(position % adapter.getIndicatorCount(), mBannerView);
     }
 
     public void setHeight(int dp) {

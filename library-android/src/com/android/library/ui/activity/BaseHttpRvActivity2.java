@@ -15,8 +15,6 @@ import com.android.library.adapter.ExRvAdapter;
 import com.android.library.ui.RefreshMode;
 import com.android.library.ui.activity.interfaces.BaseViewNetRv;
 import com.android.library.view.recyclerview.RecyclerAdapter;
-import com.android.library.view.recyclerview.RecyclerAdapter.OnItemClickListener;
-import com.android.library.view.recyclerview.RecyclerAdapter.OnItemLongClickListener;
 import com.android.library.widget.JLoadingView;
 import com.android.library.widget.JRecyclerView;
 
@@ -125,18 +123,6 @@ public abstract class BaseHttpRvActivity2 extends BaseHttpUiActivity2 implements
     public final void removeFooterView(View v) {
 
         ((RecyclerAdapter) mRecyclerView.getAdapter()).removeFooter(v);
-    }
-
-    @Override
-    public final void setOnItemClickListener(OnItemClickListener lisn) {
-
-        ((RecyclerAdapter) mRecyclerView.getAdapter()).setOnItemClickListener(lisn);
-    }
-
-    @Override
-    public final void setOnItemLongClickListener(OnItemLongClickListener lisn) {
-
-        ((RecyclerAdapter) mRecyclerView.getAdapter()).setOnItemLongClickListener(lisn);
     }
 
     @Override

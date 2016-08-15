@@ -22,10 +22,7 @@ public class RecyclerAdapter extends Adapter<ViewHolder> {
      */
     private Adapter<ViewHolder> mAdapter;
     private LayoutManager mLayoutManager;
-
     private SparseArray<View> mHeaderArrays, mFooterArrays;
-    private OnItemClickListener mOnItemClickListener;
-    private OnItemLongClickListener mOnItemLongClickListener;
 
     public RecyclerAdapter(Adapter<ViewHolder> adapter, LayoutManager lm) {
 
@@ -119,11 +116,6 @@ public class RecyclerAdapter extends Adapter<ViewHolder> {
         if (isItem(position)) {
 
             mAdapter.onBindViewHolder(holder, position - getHeadersCount());
-
-            if (mOnItemClickListener != null)
-                holder.itemView.setOnClickListener(v -> mOnItemClickListener.onItemClick(holder, position - getHeadersCount()));
-            if (mOnItemLongClickListener != null)
-                holder.itemView.setOnLongClickListener(v -> mOnItemLongClickListener.onItemLongCLick(holder, position - getHeadersCount()));
         } else {
 
             if (mLayoutManager != null && mLayoutManager instanceof StaggeredGridLayoutManager) {
@@ -254,24 +246,4 @@ public class RecyclerAdapter extends Adapter<ViewHolder> {
             notifyItemRangeRemoved(positionStart + getHeadersCount(), itemCount);
         }
     };
-
-    public interface OnItemClickListener {
-
-        void onItemClick(ViewHolder holder, int position);
-    }
-
-    public void setOnItemClickListener(OnItemClickListener l) {
-
-        mOnItemClickListener = l;
-    }
-
-    public interface OnItemLongClickListener {
-
-        boolean onItemLongCLick(ViewHolder holder, int position);
-    }
-
-    public void setOnItemLongClickListener(OnItemLongClickListener l) {
-
-        mOnItemLongClickListener = l;
-    }
 }

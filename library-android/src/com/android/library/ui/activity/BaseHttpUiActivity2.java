@@ -36,6 +36,7 @@ public abstract class BaseHttpUiActivity2 extends BaseUiActivity implements Base
         addLoadingView(rootView);
     }
 
+    @SuppressWarnings("ResourceType")
     private void addTipView(ViewGroup frame) {
 
         mIvTip = new ImageView(this);
@@ -48,6 +49,7 @@ public abstract class BaseHttpUiActivity2 extends BaseUiActivity implements Base
         frame.addView(mIvTip, lp);
     }
 
+    @SuppressWarnings("ResourceType")
     private void addLoadingView(ViewGroup frame) {
 
         mLoadingView = JLoadingView.get(this);

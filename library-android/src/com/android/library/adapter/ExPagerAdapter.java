@@ -4,12 +4,14 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.library.listener.OnItemClickListener;
+
 import java.util.List;
 
 public abstract class ExPagerAdapter<T> extends PagerAdapter {
 
     private List<T> mData;
-    private OnItemViewClickListener<T> mOnItemViewClickLisn;
+    private OnItemClickListener<T> mOnItemClickListener;
 
     public ExPagerAdapter() {
     }
@@ -77,14 +79,14 @@ public abstract class ExPagerAdapter<T> extends PagerAdapter {
         return view == object;
     }
 
-    public void setOnItemViewClickListener(OnItemViewClickListener<T> lisn) {
+    public void setOnItemClickListener(OnItemClickListener<T> lisn) {
 
-        mOnItemViewClickLisn = lisn;
+        mOnItemClickListener = lisn;
     }
 
-    public void callbackItemViewClick(int position, View view) {
+    public void callbackOnItemClickListener(int position, View view) {
 
-        if (mOnItemViewClickLisn != null)
-            mOnItemViewClickLisn.onItemViewClick(position, view, getItem(position));
+        if (mOnItemClickListener != null)
+            mOnItemClickListener.onItemClick(position, view, getItem(position));
     }
 }

@@ -8,8 +8,6 @@ import android.view.View;
 
 import com.android.library.ui.RefreshMode;
 import com.android.library.adapter.ExRvAdapter;
-import com.android.library.view.recyclerview.RecyclerAdapter.OnItemClickListener;
-import com.android.library.view.recyclerview.RecyclerAdapter.OnItemLongClickListener;
 
 /**
  * Created by Daisw on 16/6/7.
@@ -31,9 +29,6 @@ public interface BaseViewNetRv extends BaseViewNet {
     void addFooterView(View v);
     void removeHeaderView(View v);
     void removeFooterView(View v);
-
-    void setOnItemClickListener(OnItemClickListener lisn);
-    void setOnItemLongClickListener(OnItemLongClickListener lisn);
 
     SwipeRefreshLayout getSwipeRefreshLayout();
     void setSwipeRefreshEnable(boolean enable);

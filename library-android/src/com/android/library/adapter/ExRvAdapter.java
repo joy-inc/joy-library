@@ -7,6 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.library.listener.OnItemClickListener;
+import com.android.library.listener.OnItemLongClickListener;
+
 import java.util.List;
 
 /**
@@ -15,8 +18,8 @@ import java.util.List;
 public abstract class ExRvAdapter<K extends ExRvViewHolder<T>, T> extends RecyclerView.Adapter<K> {
 
     private List<T> mData;
-    private OnItemViewClickListener<T> mOnItemViewClickLisn;
-    private OnItemViewLongClickListener<T> mOnItemViewLongClickLisn;
+    private OnItemClickListener<T> mOnItemClickListener;
+    private OnItemLongClickListener<T> mOnItemLongClickListener;
 
     protected ExRvAdapter() {
 
@@ -145,25 +148,25 @@ public abstract class ExRvAdapter<K extends ExRvViewHolder<T>, T> extends Recycl
     /*
      * click listener part
 	 */
-    public void setOnItemViewClickListener(OnItemViewClickListener<T> lisn) {
+    public void setOnItemClickListener(OnItemClickListener<T> lisn) {
 
-        mOnItemViewClickLisn = lisn;
+        mOnItemClickListener = lisn;
     }
 
-    public void setOnItemViewLongClickListener(OnItemViewLongClickListener<T> lisn) {
+    public void setOnItemLongClickListener(OnItemLongClickListener<T> lisn) {
 
-        mOnItemViewLongClickLisn = lisn;
+        mOnItemLongClickListener = lisn;
     }
 
-    protected void callbackOnItemViewClickListener(int position, View view) {
+    protected void callbackOnItemClickListener(int position, View view) {
 
-        if (mOnItemViewClickLisn != null)
-            mOnItemViewClickLisn.onItemViewClick(position, view, getItem(position));
+        if (mOnItemClickListener != null)
+            mOnItemClickListener.onItemClick(position, view, getItem(position));
     }
 
-    protected void callbackOnItemViewLongClickListener(int position, View view) {
+    protected void callbackOnItemLongClickListener(int position, View view) {
 
-        if (mOnItemViewLongClickLisn != null)
-            mOnItemViewLongClickLisn.onItemViewLongClick(position, view, getItem(position));
+        if (mOnItemLongClickListener != null)
+            mOnItemLongClickListener.onItemLongClick(position, view, getItem(position));
     }
 }
