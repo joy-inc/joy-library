@@ -25,6 +25,9 @@ import java.util.List;
 
 /**
  * Created by KEVIN.DAI on 15/7/16.
+ *
+ * @param <T>
+ * @deprecated See {@link BaseHttpRvActivity<T>}.
  */
 public abstract class BaseHttpLvActivity<T> extends BaseHttpUiActivity<T> {
 

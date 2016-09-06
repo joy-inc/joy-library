@@ -27,6 +27,9 @@ import java.util.List;
 
 /**
  * Created by KEVIN.DAI on 15/7/16.
+ *
+ * @param <T>
+ * @deprecated See {@link BaseHttpRvFragment<T>}.
  */
 public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
 

@@ -14,6 +14,9 @@ import java.util.List;
 
 /**
  * Created by KEVIN.DAI on 15/11/10.
+ *
+ * @param <K>
+ * @param <T>
  */
 public abstract class ExRvAdapter<K extends ExRvViewHolder<T>, T> extends RecyclerView.Adapter<K> {
 

@@ -28,6 +28,8 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 /**
  * Created by KEVIN.DAI on 15/7/16.
+ *
+ * @param <T>
  */
 public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
 

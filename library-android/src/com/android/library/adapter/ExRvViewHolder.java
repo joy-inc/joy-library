@@ -15,6 +15,8 @@ import com.android.library.utils.ViewUtil;
 /**
  * Created by KEVIN.DAI on 15/11/10.
  * Modified by KEVIN.DAI on 16/7/6.(add some methods)
+ *
+ * @param <T>
  */
 public abstract class ExRvViewHolder<T> extends RecyclerView.ViewHolder {
 

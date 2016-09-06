@@ -10,6 +10,12 @@ import com.android.library.listener.OnItemLongClickListener;
 
 import java.util.List;
 
+/**
+ * Created by KEVIN.DAI on 15/7/16.
+ *
+ * @param <T>
+ * @deprecated see {@link ExRvAdapter}
+ */
 public abstract class ExAdapter<T> extends BaseAdapter {
 
     private List<T> mData;
