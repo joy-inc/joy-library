@@ -358,7 +358,7 @@ public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
 
             case SWIPE:
 
-                postSwipeRefresh();
+                showSwipeRefresh();
                 stopLoadMore();
                 super.hideLoading();
                 break;
@@ -433,11 +433,6 @@ public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
     protected boolean isSwipeRefreshing() {
 
         return mSwipeRefreshWidget.isRefreshing();
-    }
-
-    protected void postSwipeRefresh() {
-
-        mSwipeRefreshWidget.post(this::showSwipeRefresh);
     }
 
     protected void showSwipeRefresh() {

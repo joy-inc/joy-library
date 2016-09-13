@@ -251,7 +251,7 @@ public abstract class BaseHttpLvActivity<T> extends BaseHttpUiActivity<T> {
     protected final void showLoading() {
 
         if (getRequestMode() == RequestMode.CACHE_AND_REFRESH && isReqHasCache())
-            postSwipeRefresh();
+            showSwipeRefresh();
         else if (!isSwipeRefreshing() && !isLoadingMore())
             super.showLoading();
     }
@@ -312,11 +312,6 @@ public abstract class BaseHttpLvActivity<T> extends BaseHttpUiActivity<T> {
     protected boolean isSwipeRefreshing() {
 
         return mSwipeRefreshWidget.isRefreshing();
-    }
-
-    protected void postSwipeRefresh() {
-
-        mSwipeRefreshWidget.post(this::showSwipeRefresh);
     }
 
     protected void showSwipeRefresh() {

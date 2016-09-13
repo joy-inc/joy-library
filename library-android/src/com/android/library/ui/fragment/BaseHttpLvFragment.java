@@ -254,7 +254,7 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
     protected final void showLoading() {
 
         if (getRequestMode() == RequestMode.CACHE_AND_REFRESH && isReqHasCache())
-            postSwipeRefresh();
+            showSwipeRefresh();
         else if (!isSwipeRefreshing() && !isLoadingMore())
             super.showLoading();
     }
@@ -315,11 +315,6 @@ public abstract class BaseHttpLvFragment<T> extends BaseHttpUiFragment<T> {
     protected boolean isSwipeRefreshing() {
 
         return mSwipeRefreshWidget.isRefreshing();
-    }
-
-    protected void postSwipeRefresh() {
-
-        mSwipeRefreshWidget.post(this::showSwipeRefresh);
     }
 
     protected void showSwipeRefresh() {

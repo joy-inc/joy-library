@@ -240,7 +240,7 @@ public abstract class BaseHttpRvActivity2 extends BaseHttpUiActivity2 implements
     public final void showSwipeRefresh() {
 
         if (!isSwipeRefreshing())
-            mSwipeRl.post(() -> mSwipeRl.setRefreshing(true));
+            mSwipeRl.setRefreshing(true);
     }
 
     @Override

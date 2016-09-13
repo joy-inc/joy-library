@@ -361,7 +361,7 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
 
             case SWIPE:
 
-                postSwipeRefresh();
+                showSwipeRefresh();
                 stopLoadMore();
                 super.hideLoading();
                 break;
@@ -436,11 +436,6 @@ public abstract class BaseHttpRvFragment<T> extends BaseHttpUiFragment<T> {
     protected boolean isSwipeRefreshing() {
 
         return mSwipeRefreshWidget.isRefreshing();
-    }
-
-    protected void postSwipeRefresh() {
-
-        mSwipeRefreshWidget.post(this::showSwipeRefresh);
     }
 
     protected void showSwipeRefresh() {

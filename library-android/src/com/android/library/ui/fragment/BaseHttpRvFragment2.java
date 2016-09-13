@@ -243,7 +243,7 @@ public abstract class BaseHttpRvFragment2 extends BaseHttpUiFragment2 implements
     public final void showSwipeRefresh() {
 
         if (!isSwipeRefreshing())
-            mSwipeRl.post(() -> mSwipeRl.setRefreshing(true));
+            mSwipeRl.setRefreshing(true);
     }
 
     @Override
