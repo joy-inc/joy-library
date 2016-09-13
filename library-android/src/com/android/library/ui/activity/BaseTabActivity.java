@@ -252,7 +252,7 @@ public abstract class BaseTabActivity extends RxAppCompatActivity implements Bas
 
     protected final ImageButton addTitleLeftBackView() {
 
-        return addTitleLeftBackView(R.drawable.ic_back);
+        return addTitleLeftBackView(R.drawable.ic_arrow_back_white_24dp);
     }
 
     protected final ImageButton addTitleLeftBackView(@DrawableRes int resId) {

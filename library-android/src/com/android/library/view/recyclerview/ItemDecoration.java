@@ -5,7 +5,10 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
 import com.android.library.widget.JFooter;
@@ -151,50 +154,92 @@ public class ItemDecoration extends RecyclerView.ItemDecoration {
         final int paddingRight = builder.paddingParams.right;
         int paddingBottom = builder.paddingParams.bottom;
 
-        if (builder.orientationParams.orientation == HORIZONTAL) {
+        final RecyclerView.LayoutManager lm = parent.getLayoutManager();
+        if (lm instanceof GridLayoutManager) {
 
-            if (!(view instanceof JFooter)) {
+            int spanCount = getSpanCount(parent);
+            if (isFirstRow(position, spanCount)) {
 
-                if (position == 0) {
+                outRect.set(0, paddingTop, 0, marginBottom);
+            } else if (isLastRow(position, spanCount, itemCount)) {
 
-                    if (headerDividerEnabled) {
+                outRect.set(0, marginTop, 0, paddingBottom);
+            }
+        } else if (lm instanceof LinearLayoutManager) {
 
-                        outRect.set(paddingLeft, marginBottom + dividerSize + paddingTop, paddingRight, dividerSize + marginBottom);
-                    } else {
+            if (builder.orientationParams.orientation == HORIZONTAL) {
 
-                        outRect.set(paddingLeft, paddingTop, paddingRight, dividerSize + marginTop);
-                    }
-                } else {
+                if (!(view instanceof JFooter)) {
 
-                    if (itemCount - position == 2) {
+                    if (position == 0) {
 
-                        if (((JRecyclerView) parent).isLoadMoreEnable())
-                            paddingBottom = 0;
+                        if (headerDividerEnabled) {
 
-                        if (footerDividerEnabled) {
-
-                            outRect.set(paddingLeft, marginTop, paddingRight, dividerSize + marginBottom + paddingBottom);
+                            outRect.set(paddingLeft, marginBottom + dividerSize + paddingTop, paddingRight, dividerSize + marginBottom);
                         } else {
 
-                            outRect.set(paddingLeft, marginTop, paddingRight, paddingBottom);
+                            outRect.set(paddingLeft, paddingTop, paddingRight, dividerSize + marginTop);
                         }
                     } else {
 
-                        if (footerDividerEnabled) {
+                        if (itemCount - position == 2) {
 
-                            outRect.set(paddingLeft, marginTop, paddingRight, dividerSize + marginBottom);
+                            if (((JRecyclerView) parent).isLoadMoreEnable())
+                                paddingBottom = 0;
+
+                            if (footerDividerEnabled) {
+
+                                outRect.set(paddingLeft, marginTop, paddingRight, dividerSize + marginBottom + paddingBottom);
+                            } else {
+
+                                outRect.set(paddingLeft, marginTop, paddingRight, paddingBottom);
+                            }
                         } else {
 
-                            outRect.set(paddingLeft, itemCount > prevItemCount ? marginTop + marginBottom + dividerSize : marginTop, paddingRight, dividerSize + marginBottom);
+                            if (footerDividerEnabled) {
+
+                                outRect.set(paddingLeft, marginTop, paddingRight, dividerSize + marginBottom);
+                            } else {
+
+                                outRect.set(paddingLeft, itemCount > prevItemCount ? marginTop + marginBottom + dividerSize : marginTop, paddingRight, dividerSize + marginBottom);
+                            }
                         }
                     }
                 }
+                prevItemCount = itemCount;
+            } else {
+
+                outRect.set(0, 0, dividerSize + marginLeft + marginRight, 0);
             }
-            prevItemCount = itemCount;
+        }
+    }
+
+    private int getSpanCount(RecyclerView parent) {
+
+        RecyclerView.LayoutManager lm = parent.getLayoutManager();
+
+        if (lm instanceof GridLayoutManager) {
+
+            return ((GridLayoutManager) lm).getSpanCount();
+        } else if (lm instanceof StaggeredGridLayoutManager) {
+
+            return ((StaggeredGridLayoutManager) lm).getSpanCount();
         } else {
 
-            outRect.set(0, 0, dividerSize + marginLeft + marginRight, 0);
+            throw new UnsupportedOperationException("the GridDividerItemDecoration can only be used in " +
+                    "the RecyclerView which use a GridLayoutManager or StaggeredGridLayoutManager");
         }
+    }
+
+    private boolean isFirstRow(int position, int spanCount) {
+
+        return position < spanCount;
+    }
+
+    private boolean isLastRow(int position, int spanCount, int childCount) {
+
+        int totalRow = childCount / spanCount + childCount % spanCount > 0 ? 1 : 0;
+        return position >= (totalRow - 1) * spanCount;
     }
 
     private int getHeaderDividerOffset(RecyclerView parent) {
