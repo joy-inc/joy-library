@@ -6,12 +6,12 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion '24.0.1'
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 24
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
         versionCode 1
         versionName "1.0"
 
@@ -30,13 +30,5 @@ android {
     }
     lintOptions {
         abortOnError false
-    }
-    sourceSets {
-        main {
-        }
-        debug {
-        }
-        // moves the whole sourceSet (and its sub folders) to a new folder. This moves src/androidTest/* to tests/*
-        androidTest.setRoot('tests')
     }
 }

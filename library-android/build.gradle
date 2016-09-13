@@ -3,62 +3,50 @@ apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'me.tatarka.retrolambda'
 
 dependencies {
-
-    final SUPPORT_LIBRARY_VERSION = '24.1.1'
-    final VOLLEY_VERSION = '1.0.19'
-    final FRESCO_VERSION = '0.10.0'
-    final FASTJSON_VERSION = '1.2.12'
-    final EVENTBUS_VERSION = '2.4.1'// 3.0.0
-    final BUTTERKNIFE_VERSION = '8.1.0'
-    final DAGGER_VERSION = '2.4'
-    final RXJAVA_VERSION = '1.1.6'
-    final RXANDROID_VERSION = '1.2.1'
-    final RXLIFECYCLE_VERSION = '0.6.1';
-
     compile fileTree(include: ['*.jar'], dir: 'libs')
 //    compile "com.android.support:support-v4:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:cardview-v7:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:palette-v7:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
-    compile "com.mcxiaoke.volley:library:$VOLLEY_VERSION"
-    //    compile 'com.github.bumptech.glide:glide:3.6.1'
-    compile "com.facebook.fresco:fresco:$FRESCO_VERSION"
-    compile "com.alibaba:fastjson:$FASTJSON_VERSION"
-    compile "de.greenrobot:eventbus:$EVENTBUS_VERSION"
+    compile rootProject.ext.dependencies.support_v7_compat
+    compile rootProject.ext.dependencies.support_v7_cardview
+    compile rootProject.ext.dependencies.support_v7_palette
+    compile rootProject.ext.dependencies.support_design
+    compile rootProject.ext.dependencies.volley
+//    compile 'com.github.bumptech.glide:glide:3.6.1'
+    compile rootProject.ext.dependencies.fresco
+    compile rootProject.ext.dependencies.fastjson
+    compile rootProject.ext.dependencies.eventbus
 //    compile "com.ToxicBakery.viewpager.transforms:view-pager-transforms:1.2.32@aar"
 
     // butterknife
-    compile "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION"
-    apt "com.jakewharton:butterknife-compiler:$BUTTERKNIFE_VERSION"
+    compile rootProject.ext.dependencies.butterknife
+    apt rootProject.ext.dependencies.butterknife_compiler
 
     // dagger2
-    compile "com.google.dagger:dagger:$DAGGER_VERSION"// Dagger2
-    apt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"// APT dependencies
-    provided 'org.glassfish:javax.annotation:10.0-b28'// Required by Dagger2
+    compile rootProject.ext.dependencies.dagger
+    apt rootProject.ext.dependencies.dagger_compiler
+    provided rootProject.ext.dependencies.javax_annotation
 
     // rxjava & rxandroid
-    compile "io.reactivex:rxjava:$RXJAVA_VERSION"
-    compile "io.reactivex:rxandroid:$RXANDROID_VERSION"
+    compile rootProject.ext.dependencies.rxjava
+    compile rootProject.ext.dependencies.rxandroid
 
     // rxlifecycle
-    compile "com.trello:rxlifecycle:$RXLIFECYCLE_VERSION"
-    compile "com.trello:rxlifecycle-components:$RXLIFECYCLE_VERSION"
+    compile rootProject.ext.dependencies.rxlifecycle
+    compile rootProject.ext.dependencies.rxlifecycle_components
 
     // rxpermissions
-    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.7.0@aar'
+    compile rootProject.ext.dependencies.rxpermissions
 
     // recyclerview item animator
-    compile 'jp.wasabeef:recyclerview-animators:2.2.3'
+    compile rootProject.ext.dependencies.recyclerview_animators
 }
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion '24.0.1'
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 24
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
         versionCode 1
         versionName "1.0"
 
