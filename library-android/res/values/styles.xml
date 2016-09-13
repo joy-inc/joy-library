@@ -69,9 +69,13 @@
         <item name="android:minWidth">0dp</item>
     </style>
 
-    <style name="base_style_toolbar_title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title"/>
+    <style name="base_style_toolbar_title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">18dp</item>
+    </style>
 
-    <style name="base_style_toolbar_subtitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle"/>
+    <style name="base_style_toolbar_subtitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
+        <item name="android:textSize">14dp</item>
+    </style>
 
     <style name="base_style_appbar" parent="Widget.Design.AppBarLayout"/>
 

@@ -94,7 +94,8 @@ public class MagicToolbar extends Toolbar implements DimenCons {
 
     public View addTitleMiddleViewWithLp(View v, LayoutParams lp) {
 
-        lp.gravity = Gravity.CENTER;
+//        lp.gravity = Gravity.CENTER;
+        lp.leftMargin = HORIZONTAL_MARGINS;
         addView(v, lp);
         return v;
     }
