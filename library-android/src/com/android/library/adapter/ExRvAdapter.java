@@ -23,6 +23,7 @@ public abstract class ExRvAdapter<K extends ExRvViewHolder<T>, T> extends Recycl
     private List<T> mData;
     private OnItemClickListener<T> mOnItemClickListener;
     private OnItemLongClickListener<T> mOnItemLongClickListener;
+    private int mHeadersCount;
 
     protected ExRvAdapter() {
 
@@ -163,13 +164,25 @@ public abstract class ExRvAdapter<K extends ExRvViewHolder<T>, T> extends Recycl
 
     protected void callbackOnItemClickListener(int position, View view) {
 
+        position -= mHeadersCount;
         if (mOnItemClickListener != null)
             mOnItemClickListener.onItemClick(position, view, getItem(position));
     }
 
     protected void callbackOnItemLongClickListener(int position, View view) {
 
+        position -= mHeadersCount;
         if (mOnItemLongClickListener != null)
             mOnItemLongClickListener.onItemLongClick(position, view, getItem(position));
+    }
+
+    public void setHeadersCount(int headersCount) {
+
+        mHeadersCount = headersCount;
+    }
+
+    public int getHeadersCount() {
+
+        return mHeadersCount;
     }
 }

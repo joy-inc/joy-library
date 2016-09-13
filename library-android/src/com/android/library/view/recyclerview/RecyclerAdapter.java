@@ -12,14 +12,14 @@ import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.library.adapter.ExRvAdapter;
+
 /**
  * Created by KEVIN.DAI on 15/12/1.
  */
 public class RecyclerAdapter extends Adapter<ViewHolder> {
 
-    /**
-     * The real adapter for RecyclerView
-     */
+    // the real adapter for RecyclerView
     private Adapter<ViewHolder> mAdapter;
     private LayoutManager mLayoutManager;
     private SparseArray<View> mHeaderArrays, mFooterArrays;
@@ -168,6 +168,10 @@ public class RecyclerAdapter extends Adapter<ViewHolder> {
 
             mHeaderArrays.put(mHeaderArrays.keyAt(mHeaderArrays.size() - 1) + 1, v);
             notifyItemInserted(getHeadersCount() - 1);
+        }
+        if (mAdapter instanceof ExRvAdapter) {
+
+            ((ExRvAdapter) mAdapter).setHeadersCount(getHeadersCount());
         }
     }
 
