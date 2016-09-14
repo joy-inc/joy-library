@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <string name="app_name">Joy-Library</string>
+
     <!-- toast common -->
     <string name="toast_common_no_network">无网络连接，请检查你的网络设置</string>
     <string name="toast_common_timeout">连接服务器超时了，再试试呢</string>
