@@ -26,6 +26,7 @@ import com.android.library.utils.ViewUtil;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
 import static android.support.design.widget.Snackbar.LENGTH_SHORT;
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 /**
  * 基本的UI框架
@@ -52,9 +53,9 @@ public abstract class BaseUiFragment extends RxFragment implements BaseView, Dim
         initContentView();
     }
 
-    protected void setContentView(@LayoutRes int layoutResID) {
+    protected void setContentView(@LayoutRes int layoutResId) {
 
-        setContentView(inflateLayout(layoutResID));
+        setContentView(inflateLayout(layoutResId));
     }
 
     protected void setContentView(View contentView) {
@@ -71,7 +72,7 @@ public abstract class BaseUiFragment extends RxFragment implements BaseView, Dim
 //        mFlRoot.setLayoutTransition(lt);
 
         // content view
-        rootView.addView(contentView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        rootView.addView(contentView, new LayoutParams(MATCH_PARENT, MATCH_PARENT));
     }
 
     protected void initData() {
@@ -211,5 +212,10 @@ public abstract class BaseUiFragment extends RxFragment implements BaseView, Dim
     protected View inflateLayout(@LayoutRes int layoutResId, @Nullable ViewGroup root) {
 
         return getActivity().getLayoutInflater().inflate(layoutResId, root);
+    }
+
+    protected View inflateLayout(@LayoutRes int layoutResId, @Nullable ViewGroup root, boolean attachToRoot) {
+
+        return getActivity().getLayoutInflater().inflate(layoutResId, root, attachToRoot);
     }
 }

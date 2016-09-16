@@ -82,9 +82,9 @@ public abstract class BaseTabActivity extends RxAppCompatActivity implements Bas
     }
 
     @Override
-    public final void setContentView(@LayoutRes int layoutResID) {
+    public final void setContentView(@LayoutRes int layoutResId) {
 
-        setContentView(inflateLayout(layoutResID));
+        setContentView(inflateLayout(layoutResId));
     }
 
     @Override

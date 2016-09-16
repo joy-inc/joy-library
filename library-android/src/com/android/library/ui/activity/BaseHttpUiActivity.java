@@ -40,13 +40,13 @@ public abstract class BaseHttpUiActivity<T> extends BaseUiActivity {
     private boolean mContentHasDisplayed;
 
     @Override
-    protected void wrapContentView(FrameLayout rootView, View contentView) {
+    protected void wrapContentView(FrameLayout contentParent, View contentView) {
 
-        super.wrapContentView(rootView, contentView);
+        super.wrapContentView(contentParent, contentView);
         // tip view
-        addTipView(rootView);
+        addTipView(contentParent);
         // loading view
-        addLoadingView(rootView);
+        addLoadingView(contentParent);
     }
 
     @Override

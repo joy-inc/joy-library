@@ -34,6 +34,8 @@ import com.android.library.view.MagicToolbar;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import static android.support.design.widget.Snackbar.LENGTH_SHORT;
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.Window.ID_ANDROID_CONTENT;
 
 /**
  * 基本的UI框架
@@ -50,21 +52,28 @@ public abstract class BaseUiActivity extends RxAppCompatActivity implements Base
 //    private TintManager mTintManager;
 
     @Override
-    public final void setContentView(@LayoutRes int layoutResID) {
+    public final void setContentView(@LayoutRes int layoutResId) {
 
-        setContentView(inflateLayout(layoutResID));
+        setContentView(inflateLayout(layoutResId));
     }
 
     @Override
     public final void setContentView(View contentView) {
 
+        setContentView(contentView, new LayoutParams(MATCH_PARENT, MATCH_PARENT));
+    }
+
+    @Override
+    public void setContentView(View contentView, ViewGroup.LayoutParams params) {
+
+        contentView.setLayoutParams(params);
         mContentView = contentView;
 
         resolveThemeAttribute();
 
-        mFlRoot = new FrameLayout(this);
+        mFlRoot = (FrameLayout) findViewById(ID_ANDROID_CONTENT);
         wrapContentView(mFlRoot, contentView);
-        super.setContentView(mFlRoot);
+//        super.setContentView(contentView, params);
 
         initData();
         initTitleView();
@@ -98,7 +107,7 @@ public abstract class BaseUiActivity extends RxAppCompatActivity implements Base
     }
 
     @SuppressWarnings("ResourceType")
-    protected void wrapContentView(FrameLayout rootView, View contentView) {
+    protected void wrapContentView(FrameLayout contentParent, View contentView) {
 
         // add transition animation
 //        LayoutTransition lt = new LayoutTransition();
@@ -106,8 +115,11 @@ public abstract class BaseUiActivity extends RxAppCompatActivity implements Base
 //        rootView.setLayoutTransition(lt);
 
         // content view
-        LayoutParams contentLp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        rootView.addView(contentView, contentLp);
+//        LayoutParams contentLp = new LayoutParams(MATCH_PARENT, MATCH_PARENT);
+//        rootView.addView(contentView, contentLp);
+
+        contentParent.addView(contentView);
+        LayoutParams contentLp = (LayoutParams) contentView.getLayoutParams();
 
         if (isNoTitle) {
 
@@ -119,10 +131,10 @@ public abstract class BaseUiActivity extends RxAppCompatActivity implements Base
             // toolbar
             mToolbar = (MagicToolbar) inflateLayout(R.layout.lib_view_toolbar);
             setSupportActionBar(mToolbar);
-            LayoutParams toolbarLp = new LayoutParams(LayoutParams.MATCH_PARENT, mTbHeight);
+            LayoutParams toolbarLp = new LayoutParams(MATCH_PARENT, mTbHeight);
             toolbarLp.topMargin = isSystemBarTrans ? STATUS_BAR_HEIGHT : 0;
             toolbarLp.gravity = Gravity.TOP;
-            rootView.addView(mToolbar, toolbarLp);
+            contentParent.addView(mToolbar, toolbarLp);
             setTitle(null);
         }
     }
@@ -244,7 +256,7 @@ public abstract class BaseUiActivity extends RxAppCompatActivity implements Base
         mToolbar.setTitle(text);
     }
 
-    protected final void setSubTitle(@StringRes int resId) {
+    protected final void setSubtitle(@StringRes int resId) {
 
         setSubtitle(getString(resId));
     }
@@ -271,7 +283,7 @@ public abstract class BaseUiActivity extends RxAppCompatActivity implements Base
 
     protected final ImageButton addTitleLeftBackView() {
 
-        return addTitleLeftBackView(R.drawable.ic_back);
+        return addTitleLeftBackView(R.drawable.ic_arrow_back_white_24dp);
     }
 
     protected final ImageButton addTitleLeftBackView(@DrawableRes int resId) {
@@ -301,7 +313,7 @@ public abstract class BaseUiActivity extends RxAppCompatActivity implements Base
 
     protected final View addTitleMiddleViewMatchParent(View v) {
 
-        return mToolbar.addTitleMiddleViewWithLp(v, new Toolbar.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        return mToolbar.addTitleMiddleViewWithLp(v, new Toolbar.LayoutParams(MATCH_PARENT, MATCH_PARENT));
     }
 
     protected final ImageButton addTitleRightView(@DrawableRes int resId) {
@@ -465,5 +477,10 @@ public abstract class BaseUiActivity extends RxAppCompatActivity implements Base
     protected View inflateLayout(@LayoutRes int layoutResId, @Nullable ViewGroup root) {
 
         return getLayoutInflater().inflate(layoutResId, root);
+    }
+
+    protected View inflateLayout(@LayoutRes int layoutResId, @Nullable ViewGroup root, boolean attachToRoot) {
+
+        return getLayoutInflater().inflate(layoutResId, root, attachToRoot);
     }
 }
