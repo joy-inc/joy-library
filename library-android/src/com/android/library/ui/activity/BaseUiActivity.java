@@ -43,7 +43,7 @@ import static android.view.Window.ID_ANDROID_CONTENT;
  */
 public abstract class BaseUiActivity extends RxAppCompatActivity implements BaseView, DimenCons {
 
-    private FrameLayout mFlRoot;
+    private FrameLayout mContentParent;
     private View mContentView;
     private MagicToolbar mToolbar;
     private int mTbHeight;
@@ -64,15 +64,15 @@ public abstract class BaseUiActivity extends RxAppCompatActivity implements Base
     }
 
     @Override
-    public void setContentView(View contentView, ViewGroup.LayoutParams params) {
+    public final void setContentView(View contentView, ViewGroup.LayoutParams params) {
 
         contentView.setLayoutParams(params);
         mContentView = contentView;
 
         resolveThemeAttribute();
 
-        mFlRoot = (FrameLayout) findViewById(ID_ANDROID_CONTENT);
-        wrapContentView(mFlRoot, contentView);
+        mContentParent = (FrameLayout) findViewById(ID_ANDROID_CONTENT);
+        wrapContentView(mContentParent, contentView);
 //        super.setContentView(contentView, params);
 
         initData();
@@ -119,7 +119,7 @@ public abstract class BaseUiActivity extends RxAppCompatActivity implements Base
 //        rootView.addView(contentView, contentLp);
 
         contentParent.addView(contentView);
-        LayoutParams contentLp = (LayoutParams) contentView.getLayoutParams();
+        LayoutParams contentLp = getContentViewLp();
 
         if (isNoTitle) {
 
@@ -148,25 +148,25 @@ public abstract class BaseUiActivity extends RxAppCompatActivity implements Base
     protected void initContentView() {
     }
 
-    protected final FrameLayout getRootView() {
+    protected final FrameLayout getContentParent() {
 
-        return mFlRoot;
+        return mContentParent;
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     protected final void setBackground(Drawable background) {
 
-        mFlRoot.setBackground(background);
+        mContentParent.setBackground(background);
     }
 
     protected final void setBackgroundResource(@DrawableRes int resId) {
 
-        mFlRoot.setBackgroundResource(resId);
+        mContentParent.setBackgroundResource(resId);
     }
 
     protected final void setBackgroundColor(@ColorInt int color) {
 
-        mFlRoot.setBackgroundColor(color);
+        mContentParent.setBackgroundColor(color);
     }
 
     protected final View getContentView() {
@@ -194,17 +194,17 @@ public abstract class BaseUiActivity extends RxAppCompatActivity implements Base
         return mTbHeight;
     }
 
-    boolean isNoTitle() {
+    final boolean isNoTitle() {
 
         return isNoTitle;
     }
 
-    boolean isOverlay() {
+    final boolean isOverlay() {
 
         return isOverlay;
     }
 
-    boolean isSystemBarTrans() {
+    final boolean isSystemBarTrans() {
 
         return isSystemBarTrans;
     }
@@ -396,7 +396,7 @@ public abstract class BaseUiActivity extends RxAppCompatActivity implements Base
 
     @Override
     @SuppressWarnings("ResourceType")
-    public void showSnackbar(@NonNull CharSequence text) {
+    public final void showSnackbar(@NonNull CharSequence text) {
 
         showSnackbar(text, LENGTH_SHORT);
     }
@@ -469,17 +469,17 @@ public abstract class BaseUiActivity extends RxAppCompatActivity implements Base
         ViewUtil.goneImageView(v);
     }
 
-    protected View inflateLayout(@LayoutRes int layoutResId) {
+    protected final View inflateLayout(@LayoutRes int layoutResId) {
 
         return inflateLayout(layoutResId, null);
     }
 
-    protected View inflateLayout(@LayoutRes int layoutResId, @Nullable ViewGroup root) {
+    protected final View inflateLayout(@LayoutRes int layoutResId, @Nullable ViewGroup root) {
 
         return getLayoutInflater().inflate(layoutResId, root);
     }
 
-    protected View inflateLayout(@LayoutRes int layoutResId, @Nullable ViewGroup root, boolean attachToRoot) {
+    protected final View inflateLayout(@LayoutRes int layoutResId, @Nullable ViewGroup root, boolean attachToRoot) {
 
         return getLayoutInflater().inflate(layoutResId, root, attachToRoot);
     }

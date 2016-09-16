@@ -1,7 +1,6 @@
 package com.android.library.ui.fragment;
 
 import android.app.Activity;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -22,7 +21,6 @@ import com.android.library.widget.JLoadingView;
 import com.android.volley.RequestQueue;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static com.android.library.httptask.RequestMode.CACHE_AND_REFRESH;
 import static com.android.library.httptask.RequestMode.CACHE_ONLY;
 import static com.android.library.httptask.RequestMode.REFRESH_AND_CACHE;
@@ -243,21 +241,6 @@ public abstract class BaseHttpUiFragment<T> extends BaseUiFragment {
 
         mTipResId = DISABLED_RES_ID;
         showImageView(mIvTip, mTipResId);
-    }
-
-    protected void addCustomView(View v) {
-
-        hideContent();
-        hideTipView();
-        LayoutParams lp = new LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
-        lp.gravity = Gravity.CENTER;
-        getRootView().addView(v, lp);
-        makeCenterIfNecessary(v);
-    }
-
-    protected void removeCustomView(View v) {
-
-        getRootView().removeView(v);
     }
 
     protected void showLoading() {

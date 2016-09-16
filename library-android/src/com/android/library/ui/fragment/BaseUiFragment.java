@@ -35,14 +35,14 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 public abstract class BaseUiFragment extends RxFragment implements BaseView, DimenCons {
 
     private CharSequence mLableText;
-    private FrameLayout mFlRoot;
+    private FrameLayout mContentParent;
     private View mContentView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        mFlRoot = new FrameLayout(getActivity());
-        return mFlRoot;
+        mContentParent = new FrameLayout(getActivity());
+        return mContentParent;
     }
 
     @Override
@@ -53,15 +53,15 @@ public abstract class BaseUiFragment extends RxFragment implements BaseView, Dim
         initContentView();
     }
 
-    protected void setContentView(@LayoutRes int layoutResId) {
+    protected final void setContentView(@LayoutRes int layoutResId) {
 
-        setContentView(inflateLayout(layoutResId, mFlRoot, true));
+        setContentView(inflateLayout(layoutResId, mContentParent, true));
     }
 
-    protected void setContentView(View contentView) {
+    protected final void setContentView(View contentView) {
 
         mContentView = contentView;
-        wrapContentView(mFlRoot, mContentView);
+        wrapContentView(mContentParent, mContentView);
     }
 
     protected void wrapContentView(FrameLayout contentParent, View contentView) {
@@ -69,7 +69,7 @@ public abstract class BaseUiFragment extends RxFragment implements BaseView, Dim
         // add transition animation
 //        LayoutTransition lt = new LayoutTransition();
 //        lt.setDuration(100);
-//        mFlRoot.setLayoutTransition(lt);
+//        mContentParent.setLayoutTransition(lt);
 
         // content view
         if (contentParent != contentView)
@@ -82,29 +82,29 @@ public abstract class BaseUiFragment extends RxFragment implements BaseView, Dim
     protected void initContentView() {
     }
 
-    protected FrameLayout getRootView() {
+    protected final FrameLayout getContentParent() {
 
-        return mFlRoot;
+        return mContentParent;
     }
 
-    protected View getContentView() {
+    protected final View getContentView() {
 
         return mContentView;
     }
 
-    public BaseUiFragment setLableText(CharSequence lableText) {
+    public final BaseUiFragment setLableText(CharSequence lableText) {
 
         mLableText = lableText;
         return this;
     }
 
-    public BaseUiFragment setLableText(@StringRes int resId) {
+    public final BaseUiFragment setLableText(@StringRes int resId) {
 
         mLableText = getActivity() == null ? BaseApplication.getAppString(resId) : getString(resId);
         return this;
     }
 
-    public CharSequence getLableText() {
+    public final CharSequence getLableText() {
 
         return mLableText;
     }
@@ -113,32 +113,32 @@ public abstract class BaseUiFragment extends RxFragment implements BaseView, Dim
 
     }
 
-    protected boolean isFinishing() {
+    protected final boolean isFinishing() {
 
         return getActivity() == null || getActivity().isFinishing();
     }
 
     @Override
-    public void showToast(String text) {
+    public final void showToast(String text) {
 
         ToastUtil.showToast(text);
     }
 
     @Override
-    public void showToast(@StringRes int resId) {
+    public final void showToast(@StringRes int resId) {
 
         showToast(getString(resId));
     }
 
     @Override
-    public void showToast(@StringRes int resId, Object... formatArgs) {
+    public final void showToast(@StringRes int resId, Object... formatArgs) {
 
         showToast(getString(resId, formatArgs));
     }
 
     @Override
     @SuppressWarnings("ResourceType")
-    public void showSnackbar(@NonNull CharSequence text) {
+    public final void showSnackbar(@NonNull CharSequence text) {
 
         showSnackbar(text, LENGTH_SHORT);
     }
@@ -164,58 +164,58 @@ public abstract class BaseUiFragment extends RxFragment implements BaseView, Dim
     }
 
     @Override
-    public void showView(View v) {
+    public final void showView(View v) {
 
         ViewUtil.showView(v);
     }
 
     @Override
-    public void hideView(View v) {
+    public final void hideView(View v) {
 
         ViewUtil.hideView(v);
     }
 
     @Override
-    public void goneView(View v) {
+    public final void goneView(View v) {
 
         ViewUtil.goneView(v);
     }
 
     @Override
-    public void showImageView(ImageView v, @DrawableRes int resId) {
+    public final void showImageView(ImageView v, @DrawableRes int resId) {
 
         ViewUtil.showImageView(v, resId);
     }
 
     @Override
-    public void showImageView(ImageView v, Drawable drawable) {
+    public final void showImageView(ImageView v, Drawable drawable) {
 
         ViewUtil.showImageView(v, drawable);
     }
 
     @Override
-    public void hideImageView(ImageView v) {
+    public final void hideImageView(ImageView v) {
 
         ViewUtil.hideImageView(v);
     }
 
     @Override
-    public void goneImageView(ImageView v) {
+    public final void goneImageView(ImageView v) {
 
         ViewUtil.goneImageView(v);
     }
 
-    protected View inflateLayout(@LayoutRes int layoutResId) {
+    protected final View inflateLayout(@LayoutRes int layoutResId) {
 
         return inflateLayout(layoutResId, null);
     }
 
-    protected View inflateLayout(@LayoutRes int layoutResId, @Nullable ViewGroup root) {
+    protected final View inflateLayout(@LayoutRes int layoutResId, @Nullable ViewGroup root) {
 
         return getActivity().getLayoutInflater().inflate(layoutResId, root);
     }
 
-    protected View inflateLayout(@LayoutRes int layoutResId, @Nullable ViewGroup root, boolean attachToRoot) {
+    protected final View inflateLayout(@LayoutRes int layoutResId, @Nullable ViewGroup root, boolean attachToRoot) {
 
         return getActivity().getLayoutInflater().inflate(layoutResId, root, attachToRoot);
     }
