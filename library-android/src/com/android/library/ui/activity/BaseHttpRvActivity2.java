@@ -104,13 +104,23 @@ public abstract class BaseHttpRvActivity2 extends BaseHttpUiActivity2 implements
     @Override
     public final void addHeaderView(View v) {
 
-        ((RecyclerAdapter) mRecyclerView.getAdapter()).addHeaderView(v);
+        Adapter adapter = mRecyclerView.getAdapter();
+        if (adapter == null)
+            throw new IllegalStateException(
+                    "Cannot add header view to recycler -- setAdapter has not been called.");
+
+        ((RecyclerAdapter) adapter).addHeaderView(v);
     }
 
     @Override
     public final void addFooterView(View v) {
 
-        ((RecyclerAdapter) mRecyclerView.getAdapter()).addFooterView(v);
+        Adapter adapter = mRecyclerView.getAdapter();
+        if (adapter == null)
+            throw new IllegalStateException(
+                    "Cannot add footer view to recycler -- setAdapter has not been called.");
+
+        ((RecyclerAdapter) adapter).addFooterView(v);
     }
 
     @Override

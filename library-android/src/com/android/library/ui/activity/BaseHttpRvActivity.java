@@ -241,12 +241,22 @@ public abstract class BaseHttpRvActivity<T> extends BaseHttpUiActivity<T> {
 
     protected void addHeaderView(View v) {
 
-        ((RecyclerAdapter) mRecyclerView.getAdapter()).addHeaderView(v);
+        Adapter adapter = mRecyclerView.getAdapter();
+        if (adapter == null)
+            throw new IllegalStateException(
+                    "Cannot add header view to recycler -- setAdapter has not been called.");
+
+        ((RecyclerAdapter) adapter).addHeaderView(v);
     }
 
     protected void addFooterView(View v) {
 
-        ((RecyclerAdapter) mRecyclerView.getAdapter()).addFooterView(v);
+        Adapter adapter = mRecyclerView.getAdapter();
+        if (adapter == null)
+            throw new IllegalStateException(
+                    "Cannot add footer view to recycler -- setAdapter has not been called.");
+
+        ((RecyclerAdapter) adapter).addFooterView(v);
     }
 
     protected void removeHeaderView(View v) {
