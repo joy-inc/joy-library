@@ -55,7 +55,7 @@ public abstract class BaseUiFragment extends RxFragment implements BaseView, Dim
 
     protected void setContentView(@LayoutRes int layoutResId) {
 
-        setContentView(inflateLayout(layoutResId));
+        setContentView(inflateLayout(layoutResId, mFlRoot, true));
     }
 
     protected void setContentView(View contentView) {
@@ -64,7 +64,7 @@ public abstract class BaseUiFragment extends RxFragment implements BaseView, Dim
         wrapContentView(mFlRoot, mContentView);
     }
 
-    protected void wrapContentView(FrameLayout rootView, View contentView) {
+    protected void wrapContentView(FrameLayout contentParent, View contentView) {
 
         // add transition animation
 //        LayoutTransition lt = new LayoutTransition();
@@ -72,7 +72,8 @@ public abstract class BaseUiFragment extends RxFragment implements BaseView, Dim
 //        mFlRoot.setLayoutTransition(lt);
 
         // content view
-        rootView.addView(contentView, new LayoutParams(MATCH_PARENT, MATCH_PARENT));
+        if (contentParent != contentView)
+            contentParent.addView(contentView, new LayoutParams(MATCH_PARENT, MATCH_PARENT));
     }
 
     protected void initData() {

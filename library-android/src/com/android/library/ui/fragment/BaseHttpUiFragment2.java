@@ -29,13 +29,13 @@ public abstract class BaseHttpUiFragment2 extends BaseUiFragment implements Base
     private final int EMPTY_RES_ID = R.drawable.ic_tip_empty;
 
     @Override
-    protected void wrapContentView(FrameLayout rootView, View contentView) {
+    protected void wrapContentView(FrameLayout contentParent, View contentView) {
 
-        super.wrapContentView(rootView, contentView);
+        super.wrapContentView(contentParent, contentView);
         // tip view
-        addTipView(rootView);
+        addTipView(contentParent);
         // loading view
-        addLoadingView(rootView);
+        addLoadingView(contentParent);
     }
 
     private void addTipView(ViewGroup frame) {
