@@ -36,11 +36,9 @@ public class BaseWebViewModule {
     WebView provideWebView() {
 
         WebView webView = new WebView(mActivity);
-//        if (SDK_INT >= KITKAT)
-//            webView.setLayerType(LAYER_TYPE_HARDWARE, null);
         WebSettings settings = webView.getSettings();
-//        settings.setRenderPriority(WebSettings.RenderPriority.HIGH);
         settings.setJavaScriptEnabled(true);
+
         settings.setSupportZoom(false);
         settings.setBuiltInZoomControls(false);
         settings.setDisplayZoomControls(false);

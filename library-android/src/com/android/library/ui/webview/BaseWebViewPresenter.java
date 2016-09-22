@@ -2,17 +2,16 @@ package com.android.library.ui.webview;
 
 import android.graphics.Bitmap;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.android.library.ui.activity.interfaces.BaseViewNet;
 import com.android.library.utils.LogMgr;
-//import com.joy.router.Router;
-//import com.joy.router.RxBus;
 
 import javax.inject.Inject;
+
+//import com.joy.router.Router;
+//import com.joy.router.RxBus;
 
 /**
  * Created by Daisw on 16/8/14.
@@ -49,7 +48,7 @@ public class BaseWebViewPresenter {
             }
 
             @Override
-            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
 
                 isError = true;
                 LogMgr.d("daisw", "onReceivedError");
@@ -70,17 +69,9 @@ public class BaseWebViewPresenter {
             }
 
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-
-                LogMgr.d("daisw", "shouldOverrideUrlLoading 1");
-                return super.shouldOverrideUrlLoading(view, request);
-//                return Router.dispatch(view.getContext(), view.getUrl());
-            }
-
-            @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
-                LogMgr.d("daisw", "shouldOverrideUrlLoading 2");
+                LogMgr.d("daisw", "shouldOverrideUrlLoading");
                 return super.shouldOverrideUrlLoading(view, url);
 //                return Router.dispatch(view.getContext(), url);
             }
