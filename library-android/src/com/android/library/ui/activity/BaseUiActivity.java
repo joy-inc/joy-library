@@ -417,7 +417,7 @@ public abstract class BaseUiActivity extends RxAppCompatActivity implements Base
     public final void showSnackbar(@NonNull CharSequence text, @Snackbar.Duration int duration, @ColorInt int bgColor, @ColorInt int textColor) {
 
         if (textColor == -1)
-            textColor = getColor(R.color.color_text_primary);
+            textColor = getResources().getColor(R.color.color_text_primary);
         SnackbarUtil.showSnackbar(getContentView(), text, duration, bgColor, textColor);
     }
 
