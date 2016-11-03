@@ -117,7 +117,7 @@ public abstract class BaseTabActivity extends RxAppCompatActivity implements Bas
         // toolbar
         mToolbar = (MagicToolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        setTitle(null);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
     protected void initContentView() {

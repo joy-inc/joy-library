@@ -57,10 +57,10 @@ public class BaseWebViewActivity extends BaseHttpUiActivity2 {
     @Override
     protected void initTitleView() {
 
-        ShareUtil shareUtil = new ShareUtil(this);
+        ShareUtil joyShare = new ShareUtil(this);
 
-        addTitleLeftBackView(R.drawable.ic_arrow_back_white_24dp);
-        addTitleRightView(R.drawable.ic_more_vert_white_24dp, (v) -> shareUtil.show());
+        addTitleLeftBackView();
+        addTitleRightView(R.drawable.ic_more_vert_white_24dp, (v) -> joyShare.show());
         if (TextUtil.isNotEmpty(mTitle))
             mTvTitle = addTitleMiddleView(mTitle);
     }

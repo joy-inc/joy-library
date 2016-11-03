@@ -12,6 +12,7 @@ import com.android.library.injection.component.AppComponent;
 import com.android.library.injection.component.DaggerAppComponent;
 import com.android.library.injection.module.AppModule;
 import com.android.library.utils.LogMgr;
+import com.android.library.utils.ToastUtil;
 import com.android.volley.Cache;
 import com.android.volley.RequestQueue.RequestFinishedListener;
 import com.android.volley.VolleyLog;
@@ -147,5 +148,6 @@ public class BaseApplication extends Application {
 //        releaseFresco();
         releaseVolley();
 //        releaseContext();
+        ToastUtil.release();
     }
 }

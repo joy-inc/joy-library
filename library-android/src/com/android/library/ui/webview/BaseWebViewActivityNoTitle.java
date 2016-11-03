@@ -67,13 +67,13 @@ public class BaseWebViewActivityNoTitle extends BaseHttpUiActivity2 {
 
     private View initNavigationBar() {
 
-        ShareUtil shareUtil = new ShareUtil(this);
+        ShareUtil joyShare = new ShareUtil(this);
 
         View v = inflateLayout(R.layout.lib_view_web_navigation_bar);
         v.findViewById(R.id.ivBack).setOnClickListener((v1) -> mPresenter.goBack());
         v.findViewById(R.id.ivClose).setOnClickListener((v1) -> finish());
         v.findViewById(R.id.ivBrowser).setOnClickListener((v1) -> showToast("browser"));
-        v.findViewById(R.id.icMore).setOnClickListener((v1) -> shareUtil.show());
+        v.findViewById(R.id.icMore).setOnClickListener((v1) -> joyShare.show());
         return v;
     }
 

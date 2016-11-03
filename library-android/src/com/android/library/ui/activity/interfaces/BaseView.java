@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.trello.rxlifecycle.ActivityLifecycleProvider;
-import com.trello.rxlifecycle.FragmentLifecycleProvider;
 
 /**
  * Created by Daisw on 16/6/24.

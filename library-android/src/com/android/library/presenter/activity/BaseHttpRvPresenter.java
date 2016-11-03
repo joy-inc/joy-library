@@ -162,7 +162,7 @@ public class BaseHttpRvPresenter<T, V extends BaseViewNetRv> extends RequestLaun
                 } else {
 
                     adapter.notifyItemRangeRemoved(0, adapterItemCount);
-                    adapter.notifyItemRangeInserted(0, currentItemCount);
+                    adapter.notifyItemRangeInserted(0, currentItemCount);// TODO 可以合并成adapter.notifyItemRangeChanged(0, adapterItemCount);
                     getBaseView().getLayoutManager().scrollToPosition(0);
                 }
             } else {

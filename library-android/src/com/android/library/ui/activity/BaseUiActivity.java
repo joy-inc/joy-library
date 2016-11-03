@@ -131,11 +131,11 @@ public abstract class BaseUiActivity extends RxAppCompatActivity implements Base
             // toolbar
             mToolbar = (MagicToolbar) inflateLayout(R.layout.lib_view_toolbar);
             setSupportActionBar(mToolbar);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
             LayoutParams toolbarLp = new LayoutParams(MATCH_PARENT, mTbHeight);
             toolbarLp.topMargin = isSystemBarTrans ? STATUS_BAR_HEIGHT : 0;
             toolbarLp.gravity = Gravity.TOP;
             contentParent.addView(mToolbar, toolbarLp);
-            setTitle(null);
         }
     }
 
@@ -395,6 +395,12 @@ public abstract class BaseUiActivity extends RxAppCompatActivity implements Base
     }
 
     @Override
+    public final void showToast(@StringRes int resId, Object... formatArgs) {
+
+        showToast(getString(resId, formatArgs));
+    }
+
+    @Override
     @SuppressWarnings("ResourceType")
     public final void showSnackbar(@NonNull CharSequence text) {
 
@@ -419,12 +425,6 @@ public abstract class BaseUiActivity extends RxAppCompatActivity implements Base
         if (textColor == -1)
             textColor = getResources().getColor(R.color.color_text_primary);
         SnackbarUtil.showSnackbar(getContentView(), text, duration, bgColor, textColor);
-    }
-
-    @Override
-    public final void showToast(@StringRes int resId, Object... formatArgs) {
-
-        showToast(getString(resId, formatArgs));
     }
 
     @Override
